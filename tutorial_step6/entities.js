@@ -194,7 +194,7 @@
 		update : function ()
 		{
 			// do nothing if not visible
-			if (!this.visible)
+			if (!this.inViewport)
 				return false;
 				
 			if (this.alive)
