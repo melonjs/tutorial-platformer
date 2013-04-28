@@ -124,8 +124,7 @@
 	when trying to load a level map. <br/></p>
 
 <p><b>Additional Credits :</b><br/>
-    - <a href=
-                 "http://www.spicypixel.net/2008/01/10/gfxlib-fuzed-a-free-developer-graphic-library/">
+    - <a href="http://www.spicypixel.net/2008/01/10/gfxlib-fuzed-a-free-developer-graphic-library/">
         SpicyPixel.NET</a> for the GfxLib-Fuzed assets<br/>
     - <a href="http://www.nosoapradio.us/">noSoapRadio</a> for the in game music</p>
 
@@ -156,8 +155,7 @@
     foreground layer. Feel free to use your imagination and do whatever you want. I named
     them logically "background" and "foreground", but you can put whatever you want.</p>
 
-<p>Here's what my level looked like when I finished it : <img src=
-                                                                      "media/step1_tiled_level_design.png"
+<p>Here's what my level looked like when I finished it : <img src="media/step1_tiled_level_design.png"
                                                               alt="Tiled level design"/></p>
 
 <p>Finally, let's define a background color for our level, by using the color picker tool (Map/Map Properties), and just specify any
@@ -169,76 +167,52 @@
 
 <h2>Part 2: Loading our level</h2>
 
-<p>First let's have a look at our main.js skeleton :</p>
+<p>First let's have a look at our js/game.js skeleton :</p>
 
 <pre class="brush: js">
 
-// game resources
-var g_resources = [];
-
-var jsApp = {
-    /* ---
-
-     Initialize the jsApp
-
-     --- */
-    onload: function() {
-
-        // init the video
-        if (!me.video.init('jsapp', 640, 480, false, 1.0)) {
-            alert("Sorry but your browser does not support html 5 canvas.");
+/* game namespace */
+var game = {
+    // Run on page load.
+    "onload" : function () {
+        // Initialize the video.
+        if (!me.video.init("screen", 480, 320, true, 'auto')) {
+            alert("Your browser does not support HTML5 canvas.");
             return;
         }
+		
+		// add "#debug" to the URL to enable the debug Panel
+		if (document.location.hash === "#debug") {
+			window.onReady(function () {
+				me.plugin.register.defer(debugPanel, "debug");
+			});
+		}
 
-        // initialize the "audio"
+        // Initialize the audio.
         me.audio.init("mp3,ogg");
 
-        // set all resources to be loaded
+        // Set a callback to run when loading is complete.
         me.loader.onload = this.loaded.bind(this);
+     
+        // Load the resources.
+        me.loader.preload(game.resources);
 
-        // set all resources to be loaded
-        me.loader.preload(g_resources);
-
-        // load everything &amp; display a loading screen
+        // Initialize melonJS and display a loading screen.
         me.state.change(me.state.LOADING);
     },
 
-    /* ---
 
-     callback when everything is loaded
 
-     --- */
-    loaded: function() {
-        // set the "Play/Ingame" Screen Object
-        me.state.set(me.state.PLAY, new PlayScreen());
+    // Run on game resources loaded.
+    "loaded" : function () {
+        me.state.set(me.state.MENU, new game.TitleScreen());
+        me.state.set(me.state.PLAY, new game.PlayScreen());
 
-        // start the game
+        // Start the game.
         me.state.change(me.state.PLAY);
     }
-
 };
-// jsApp
-/* the in game stuff*/
-var PlayScreen = me.ScreenObject.extend({
 
-    onResetEvent: function() {
-        // stuff to reset on state change
-    },
-
-    /* ---
-
-     action to perform when game is finished (state change)
-
-     --- */
-    onDestroyEvent: function() {
-    }
-
-});
-
-//bootstrap :)
-window.onReady(function() {
-    jsApp.onload();
-});
 
 </pre>
 
@@ -250,7 +224,7 @@ window.onReady(function() {
     etc...).</p>
 
 <p>So in order to load our level, the next thing is to add the resources to be loaded
-    by adding the following information into here (for example) the <b>g_resources</b>
+    by adding the following information into <b>game.resources</b> (js/resources.js)
     object :</p>
 
 <ul>
@@ -260,15 +234,19 @@ window.onReady(function() {
 </ul>
 <pre class="brush: js">
 //game resources
-var g_resources = [{
-    name: "area01_level_tiles",
-    type: "image",
-    src: "data/area01_tileset/area01_level_tiles.png"
-}, {
-    name: "area01",
-    type: "tmx",
-    src: "data/area01.tmx"
-}];
+game.resources = [
+	/**
+	 * Graphics.
+	 */
+	// our level tileset
+	{name: "area01_level_tiles",  type:"image",	src: "data/img/map/area01_level_tiles.png"},
+	
+	/* 
+	 * Maps. 
+ 	 */
+	{name: "area01", type: "tmx", src: "data/map/area01.tmx"}
+
+];
 
 </pre>
 
@@ -276,11 +254,11 @@ var g_resources = [{
     filename, else the level loader will not be able to find the tileset and will
     fail.</p>
 
-<p>Finally, in the <a href="http://www.melonjs.org/docs/symbols/me.ScreenObject.html#onResetEvent">onResetEvent()</a> function (which is called on a state
+<p>Finally, let's open the js/screens/play.js file and in the <a href="http://www.melonjs.org/docs/symbols/me.ScreenObject.html#onResetEvent">onResetEvent()</a> function (which is called on a state
     change), we ask the <a href="http://www.melonjs.org/docs/symbols/me.levelDirector.html">level director</a> to display our previously preloaded level :</p>
 <pre class="brush: js">
 /* the in game stuff*/
-var PlayScreen = me.ScreenObject.extend({
+game.PlayScreen = me.ScreenObject.extend({
 
     onResetEvent: function() {
         // stuff to reset on state change
@@ -330,18 +308,18 @@ var PlayScreen = me.ScreenObject.extend({
     after our map :</p>
 <pre class="brush: js">
 //game resources
-var g_resources = [{
-    name: "area01_level_tiles",
-    type: "image",
-    src: "data/area01_tileset/area01_level_tiles.png"
-}, {
-    name: "area01",
-    type: "tmx",
-    src: "data/area01.tmx"
-}, {
-    name: "gripe_run_right",
-    type: "image",
-    src: "data/sprite/gripe_run_right.png"
+game.resources = [{
+	/**
+	 * Graphics.
+	 */
+	// our level tileset
+	{name: "area01_level_tiles", type:"image", src: "data/img/map/area01_level_tiles.png"},
+	// the main player spritesheet
+	{name: "gripe_run_right", type:"image", src: "data/img/sprite/gripe_run_right.png"},
+	/* 
+	 * Maps. 
+ 	 */
+	{name: "area01", type: "tmx", src: "data/map/area01.tmx"}
 }];
 </pre>
 
@@ -351,7 +329,7 @@ var g_resources = [{
 /*------------------- 
 a player entity
 -------------------------------- */
-var PlayerEntity = me.ObjectEntity.extend({
+game.PlayerEntity = me.ObjectEntity.extend({
 
     /* -----
 
@@ -442,7 +420,7 @@ var PlayerEntity = me.ObjectEntity.extend({
 loaded: function ()
 {
    // set the "Play/Ingame" Screen Object
-   me.state.set(me.state.PLAY, new PlayScreen());
+   me.state.set(me.state.PLAY, game.PlayScreen());
     
    // add our player entity in the entity pool
    me.entityPool.add("mainPlayer", PlayerEntity);
@@ -584,35 +562,23 @@ init: function(x, y, settings) {
 <p>Let's add them in the resource list:</p>
 <pre class="brush: js">
 // game resources
-var g_resources = [
-// our level tileset
-{
-    name: "area01_level_tiles",
-    type: "image",
-    src: "data/area01_tileset/area01_level_tiles.png"
-}, 
-// our level
-{
-    name: "area01",
-    type: "tmx",
-    src: "data/area01.tmx"
-}, 
-// the main player spritesheet
-{
-    name: "gripe_run_right",
-    type: "image",
-    src: "data/sprite/gripe_run_right.png"
-}, 
-// the parallax background
-{
-    name: "area01_bkg0",
-    type: "image",
-    src: "data/area01_parallax/area01_bkg0.png"
-}, {
-    name: "area01_bkg1",
-    type: "image",
-    src: "data/area01_parallax/area01_bkg1.png"
-}];
+game.resources = [
+	/**
+	 * Graphics.
+	 */
+	// our level tileset
+	{name: "area01_level_tiles",  type:"image",	src: "data/img/map/area01_level_tiles.png"},
+	// the main player spritesheet
+	{name: "gripe_run_right",     type:"image",	src: "data/img/sprite/gripe_run_right.png"},
+	// the parallax background
+	{name: "area01_bkg0",         type:"image",	src: "data/img/area01_bkg0.png"},
+	{name: "area01_bkg1",         type:"image",	src: "data/img/area01_bkg1.png"},
+	
+	/* 
+	 * Maps. 
+ 	 */
+	{name: "area01",  type: "tmx",	src: "data/map/area01.tmx"}
+];
 </pre>
 
 <p>Open Tiled, and add two new <a href="http://www.melonjs.org/docs/symbols/me.ImageLayer.html"> <b>Image Layers</b></a>, name them to whatever you like 
@@ -656,47 +622,27 @@ and make sure to adjust correctly the layer order (the display order being from 
 <p>As always, add them to the resource list:</p>
 <pre class="brush: js">
 // game resources
-var g_resources = [
-// our level tileset
-{
-    name: "area01_level_tiles",
-    type: "image",
-    src: "data/area01_tileset/area01_level_tiles.png"
-}, 
-// our level
-{
-    name: "area01",
-    type: "tmx",
-    src: "data/area01.tmx"
-}, 
-// the main player spritesheet
-{
-    name: "gripe_run_right",
-    type: "image",
-    src: "data/sprite/gripe_run_right.png"
-}, 
-// the parallax background
-{
-    name: "area01_bkg0",
-    type: "image",
-    src: "data/area01_parallax/area01_bkg0.png"
-}, {
-    name: "area01_bkg1",
-    type: "image",
-    src: "data/area01_parallax/area01_bkg1.png"
-}, 
-// the spinning coin spritesheet
-{
-    name: "spinning_coin_gold",
-    type: "image",
-    src: "data/sprite/spinning_coin_gold.png"
-}, 
-// our enemty entity
-{
-    name: "wheelie_right",
-    type: "image",
-    src: "data/sprite/wheelie_right.png"
-}];
+game.resources = [
+	/**
+	 * Graphics.
+	 */
+	// our level tileset
+	{name: "area01_level_tiles",  type:"image",	src: "data/img/map/area01_level_tiles.png"},
+	// the main player spritesheet
+	{name: "gripe_run_right",     type:"image",	src: "data/img/sprite/gripe_run_right.png"},
+	// the parallax background
+	{name: "area01_bkg0",         type:"image",	src: "data/img/area01_bkg0.png"},
+	{name: "area01_bkg1",         type:"image",	src: "data/img/area01_bkg1.png"},
+	// the spinning coin spritesheet
+	{name: "spinning_coin_gold",  type:"image",	src: "data/img/sprite/spinning_coin_gold.png"},
+	// our enemty entity
+	{name: "wheelie_right",       type:"image",	src: "data/img/sprite/wheelie_right.png"},
+	
+	/* 
+	 * Maps. 
+ 	 */
+	{name: "area01",              type: "tmx",	src: "data/map/area01.tmx"}
+];
 </pre>
 <br/>
 
@@ -709,7 +655,7 @@ var g_resources = [
 /*----------------
  a Coin entity
 ------------------------ */
-var CoinEntity = me.CollectableEntity.extend({
+game.CoinEntity = me.CollectableEntity.extend({
     // extending the init function is not mandatory
     // unless you need to add some extra initialization
     init: function(x, y, settings) {
@@ -745,7 +691,7 @@ var CoinEntity = me.CollectableEntity.extend({
 /* --------------------------
 an enemy Entity
 ------------------------ */
-var EnemyEntity = me.ObjectEntity.extend({
+game.EnemyEntity = me.ObjectEntity.extend({
     init: function(x, y, settings) {
         // define this here instead of tiled
         settings.image = "wheelie_right";
@@ -829,9 +775,9 @@ var EnemyEntity = me.ObjectEntity.extend({
 <p>Then again, we add these new objects in the entityPool</p>
 <pre class="brush: js">
 // add our object entities in the entity pool
-me.entityPool.add("mainPlayer", PlayerEntity);
-me.entityPool.add("CoinEntity", CoinEntity);
-me.entityPool.add("EnemyEntity", EnemyEntity);
+me.entityPool.add("mainPlayer", game.PlayerEntity);
+me.entityPool.add("CoinEntity", game.CoinEntity);
+me.entityPool.add("EnemyEntity", game.EnemyEntity);
 </pre>
 <br/>
 
@@ -933,7 +879,7 @@ update: function() {
     score, as always we need to add it in our list of resources to be loaded :</p>
 <pre class="brush: js">
 // game resources
-var g_resources = [
+game.resources = [
 // our level tileset
 {
     name: "area01_level_tiles",
@@ -990,7 +936,7 @@ var g_resources = [
 a score HUD Item
 --------------------- */
 
-var ScoreObject = me.HUD_Item.extend({
+game.ScoreObject = me.HUD_Item.extend({
     init: function(x, y) {
         // call the parent constructor
         this.parent(x, y);
@@ -1015,7 +961,7 @@ var ScoreObject = me.HUD_Item.extend({
 <p>And display it when we start a new game :</p>
 <pre class="brush: js">
 /* the in game stuff*/
-var PlayScreen = me.ScreenObject.extend({
+game.PlayScreen = me.ScreenObject.extend({
 
     onResetEvent: function() {
         // load a level
@@ -1025,7 +971,7 @@ var PlayScreen = me.ScreenObject.extend({
         me.game.addHUD(0, 430, 640, 60);
 
         // add a new HUD item
-        me.game.HUD.addItem("score", new ScoreObject(620, 10));
+        me.game.HUD.addItem("score", new game.ScoreObject(620, 10));
 
         // make sure everyhting is in the right order
         me.game.sort();
@@ -1099,75 +1045,42 @@ onCollision : function ()
 <p>Then we will first add them to our resource list:</p>
 <pre class="brush: js">
 //game resources
-var g_resources = [
-// our level tileset
-{
-    name: "area01_level_tiles",
-    type: "image",
-    src: "data/area01_tileset/area01_level_tiles.png"
-}, 
-// our level
-{
-    name: "area01",
-    type: "tmx",
-    src: "data/area01.tmx"
-}, 
-// the main player spritesheet
-{
-    name: "gripe_run_right",
-    type: "image",
-    src: "data/sprite/gripe_run_right.png"
-}, 
-// the parallax background
-{
-    name: "area01_bkg0",
-    type: "image",
-    src: "data/area01_parallax/area01_bkg0.png"
-}, {
-    name: "area01_bkg1",
-    type: "image",
-    src: "data/area01_parallax/area01_bkg1.png"
-}, 
-// the spinning coin spritesheet
-{
-    name: "spinning_coin_gold",
-    type: "image",
-    src: "data/sprite/spinning_coin_gold.png"
-}, 
-// our enemty entity
-{
-    name: "wheelie_right",
-    type: "image",
-    src: "data/sprite/wheelie_right.png"
-}, 
-// game font
-{
-    name: "32x32_font",
-    type: "image",
-    src: "data/sprite/32x32_font.png"
-}, 
-// audio resources
-{
-    name: "cling",
-    type: "audio",
-    src: "data/audio/",
-    channel: 2
-}, {
-    name: "stomp",
-    type: "audio",
-    src: "data/audio/",
-    channel: 1
-}, {
-    name: "jump",
-    type: "audio",
-    src: "data/audio/",
-    channel: 1
-}, {
-    name: "DST-InertExponent",
-    type: "audio",
-    src: "data/audio/",
-    channel: 1
-}];
+game.resources = [
+	/**
+	 * Graphics.
+	 */
+	// our level tileset
+	{name: "area01_level_tiles",  type:"image",	src: "data/img/map/area01_level_tiles.png"},
+	// the main player spritesheet
+	{name: "gripe_run_right",     type:"image",	src: "data/img/sprite/gripe_run_right.png"},
+	// the parallax background
+	{name: "area01_bkg0",         type:"image",	src: "data/img/area01_bkg0.png"},
+	{name: "area01_bkg1",         type:"image",	src: "data/img/area01_bkg1.png"},
+	// the spinning coin spritesheet
+	{name: "spinning_coin_gold",  type:"image",	src: "data/img/sprite/spinning_coin_gold.png"},
+	// our enemty entity
+	{name: "wheelie_right",       type:"image",	src: "data/img/sprite/wheelie_right.png"},
+	// game font
+	{name: "32x32_font",          type:"image",	src: "data/img/font/32x32_font.png"},
+	
+	/* 
+	 * Maps. 
+ 	 */
+	{name: "area01",              type: "tmx",	src: "data/map/area01.tmx"},
+
+
+	/* 
+	 * Background music. 
+	 */	
+	{name: "dst-inertexponent", type: "audio", src: "data/bgm/", channel : 1},
+	
+	/* 
+	 * Sound effects. 
+	 */
+	{name: "cling", type: "audio", src: "data/sfx/", channel : 2},
+	{name: "stomp", type: "audio", src: "data/sfx/", channel : 1},
+	{name: "jump",  type: "audio", src: "data/sfx/", channel : 1}
+];
 </pre>
 
 <p>In case you did not notice yet, we didn't specify any extension when adding the
@@ -1338,7 +1251,7 @@ onDestroyEvent: function() {
 
     ----------------------*/
 
-var TitleScreen = me.ScreenObject.extend({
+game.TitleScreen = me.ScreenObject.extend({
     // constructor
     init: function() {
         this.parent(true);
@@ -1379,7 +1292,7 @@ var TitleScreen = me.ScreenObject.extend({
 
   ----------------------*/
 
-var TitleScreen = me.ScreenObject.extend({
+game.TitleScreen = me.ScreenObject.extend({
     // constructor
     init: function() {
         this.parent(true);
@@ -1492,18 +1405,18 @@ var TitleScreen = me.ScreenObject.extend({
     --- */
 loaded: function() {
     // set the "Play/Ingame" Screen Object
-    me.state.set(me.state.MENU, new TitleScreen());
+    me.state.set(me.state.MENU, game.TitleScreen());
 
     // set the "Play/Ingame" Screen Object
-    me.state.set(me.state.PLAY, new PlayScreen());
+    me.state.set(me.state.PLAY, game.PlayScreen());
 
     // set a global fading transition for the screen
     me.state.transition("fade", "#FFFFFF", 250);
 
     // add our player entity in the entity pool
-    me.entityPool.add("mainPlayer", PlayerEntity);
-    me.entityPool.add("CoinEntity", CoinEntity);
-    me.entityPool.add("EnemyEntity", EnemyEntity);
+    me.entityPool.add("mainPlayer", game.PlayerEntity);
+    me.entityPool.add("CoinEntity", game.CoinEntity);
+    me.entityPool.add("EnemyEntity", game.EnemyEntity);
 
     // enable the keyboard
     me.input.bindKey(me.input.KEY.LEFT, "left");
