@@ -101,8 +101,8 @@
 	and which contains the following :
 		<ul>
 			<li>a level tileset and a metatileset for collision </li>
-			<li>two background for parallax layers</li>
-			<li>some basic spritesheet </li>
+			<li>two backgrounds for parallax layers</li>
+			<li>some basic spritesheets </li>
 			<li>some audio sfx and music</li>
 			<li>a title screen background</li>
 		</ul>
@@ -250,9 +250,8 @@ game.resources = [
 
 </pre>
 
-<p>Be sure as well to correctly name the tileset resource name accordingly to the
-    filename, else the level loader will not be able to find the tileset and will
-    fail.</p>
+<p>Be sure to name the tileset resource name according to the
+    filename, or else the level loader will not be able to find the tileset and will fail.</p>
 
 <p>Finally, let's open the js/screens/play.js file and in the <a href="http://www.melonjs.org/docs/symbols/me.ScreenObject.html#onResetEvent">onResetEvent()</a> function (which is called on a state
     change), we ask the <a href="http://www.melonjs.org/docs/symbols/me.levelDirector.html">level director</a> to display our previously preloaded level :</p>
@@ -279,7 +278,7 @@ game.PlayScreen = me.ScreenObject.extend({
 </pre>
 
 <p><br/>
-    That's all! If you did everything correctly, and open you index.html (Remember that if you don’t use a web server, you will need to allow your browser to access local files, please refer to the “Testing/debugging” at the beginning of the tutorial if required) :<br/>
+    That's all! If you did everything correctly, and open your index.html (Remember that if you don’t use a web server, you will need to allow your browser to access local files, please refer to the “Testing/debugging” at the beginning of the tutorial if required) :<br/>
     </br>
 	(click on the image to see it running in your browser), you should see
     something like this </br>
@@ -289,9 +288,9 @@ game.PlayScreen = me.ScreenObject.extend({
             "Step 2 results"/></a><br/>
     Yes, nothing fancy yet, but that's only the beginning!</p>
 
-<p>Also in case you didn't noticed, since we defined a 640x480 display in our
+<p>Also in case you didn't notice, since we defined a 640x480 display in our
     application, we only see a part of the map (the half of it to be exact), which is
-    normal. <b>melonJS</b> automatically create a corresponding viewport, and we will be
+    normal. <b>melonJS</b> automatically creates a corresponding viewport, and we will be
     able to navigate through the map in the next step, when we will add a "main
     player"</p>
 
@@ -437,9 +436,10 @@ loaded: function ()
 </pre>
 <br/>
 
-<p>And now we can add our entity into the level! Go back to Tiled, add an new Object
-    Layer, and finally add a new Rectangle Object inside that Object Layer.<br/>
-    Right-click on the newly created object and name it (case does not matter) <b>mainPlayer</b> (or using the same name you used
+<p>And now we can add our entity into the level! Go back to Tiled, add an new Object Layer, and finally a new Entity.
+    To create a new Entity use the "Insert Rectangle" Tool to add a rectangle to the object layer, 
+    then you can right click the object and add the properties below.<br/>
+	Name it (case does not matter) <b>mainPlayer</b> (or using the same name you used
     when adding our Object into the entityPool), and add two properties to the Object
     :<br/>
     - <b>image</b> with the <b>gripe_run_right</b> value (name of our resource<br/>
@@ -493,7 +493,7 @@ make sure you are also resizing the object rectangle in Tiled to match with your
         "Drawing the collision layer"/>
 
 <p><br/>
-    Save everything, and if you now re-open you index.html, you should see something like
+    Save everything, and if you now re-open your index.html, you should see something like
     this :<br/>
     (click on the image to see it running in your browser) <a href=
                                                                       "./tutorial_step3/index.html"><img
@@ -602,7 +602,7 @@ and make sure to adjust correctly the layer order (the display order being from 
  
 
 <p><br/>
-    "Et voila!". If you now open you index.html, you should see:<br/>
+    "Et voila!". If you now open your index.html, you should see:<br/>
     <a href="./tutorial_step4/index.html"><img src="media/tutorial_step4.png" alt=
             "Step 4 results"/></a><br/></p>
 
