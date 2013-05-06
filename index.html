@@ -176,7 +176,7 @@ var game = {
     // Run on page load.
     "onload" : function () {
         // Initialize the video.
-        if (!me.video.init("screen", 480, 320, true, 'auto')) {
+        if (!me.video.init("screen", 640, 480, true, 'auto')) {
             alert("Your browser does not support HTML5 canvas.");
             return;
         }
@@ -220,8 +220,11 @@ var game = {
     called, the display and audio is initialized, and all game resources begin loading.
     We also define a callback to be called when everything is ready to be used. Within
     the callback, we define a new state that will be used for the in game stuff, together
-    with a <a href="http://www.melonjs.org/docs/symbols/me.ScreenObject.html"> <b>PlayScreen</b> object</a> that we will use to manage the game event (reset,
+    with a <a href="http://melonjs.github.io/docs/me.ScreenObject.html"> <b>PlayScreen</b> object</a> that we will use to manage the game event (reset,
     etc...).</p>
+	
+<p>The only change will do in the default project template is the given video resolution for the `me.video.init()` function, as for the tutorial we will create a 640x480 canvas. 
+   You will notice as well later that in the final version of the tutoria, I disable video scaling ('auto') parameter, as my intention was to have it fitting my html template.</p>
 
 <p>So in order to load our level, the next thing is to add the resources to be loaded
     by adding the following information into <b>game.resources</b> (js/resources.js)
@@ -253,8 +256,8 @@ game.resources = [
 <p>Be sure to name the tileset resource name according to the
     filename, or else the level loader will not be able to find the tileset and will fail.</p>
 
-<p>Finally, let's open the js/screens/play.js file and in the <a href="http://www.melonjs.org/docs/symbols/me.ScreenObject.html#onResetEvent">onResetEvent()</a> function (which is called on a state
-    change), we ask the <a href="http://www.melonjs.org/docs/symbols/me.levelDirector.html">level director</a> to display our previously preloaded level :</p>
+<p>Finally, let's open the js/screens/play.js file and in the <a href="http://melonjs.github.io/docs/me.ScreenObject.html#onResetEvent">onResetEvent()</a> function (which is called on a state
+    change), we ask the <a href="http://melonjs.github.io/docs/me.levelDirector.html">level director</a> to display our previously preloaded level :</p>
 <pre class="brush: js">
 /* the in game stuff*/
 game.PlayScreen = me.ScreenObject.extend({
@@ -271,7 +274,7 @@ game.PlayScreen = me.ScreenObject.extend({
 
     --- */
     onDestroyEvent: function() {
-}
+	}
 
 });
 
@@ -283,7 +286,7 @@ game.PlayScreen = me.ScreenObject.extend({
 	(click on the image to see it running in your browser), you should see
     something like this </br>
 	 <a href=
-                                                                      "./tutorial_step2/index.html"><img
+             "./tutorial_step2/index.html"><img
             src="media/tutorial_step2.png" alt=
             "Step 2 results"/></a><br/>
     Yes, nothing fancy yet, but that's only the beginning!</p>
@@ -296,7 +299,7 @@ game.PlayScreen = me.ScreenObject.extend({
 
 <h2>Part 3: Add a main player</h2>
 
-<p>Here we will create a new object by extending the default <a href="http://www.melonjs.org/docs/symbols/me.ObjectEntity.html"> me.ObjectEntity</a>, to create
+<p>Here we will create a new object by extending the default <a href="http://melonjs.github.io/docs/me.ObjectEntity.html"> me.ObjectEntity</a>, to create
     our player. We will use the provided simple spritesheet <b>(gripe_run_right.png)</b>
     to animate our character. It's of course possible to define different animation for
     the same entity, but let's keep things simple first.</p><img src=
@@ -399,13 +402,13 @@ game.PlayerEntity = me.ObjectEntity.extend({
 </pre>
 
 <p>I think the above code is quite easy to understand. Basically, we extend the
-    <a href="http://www.melonjs.org/docs/symbols/me.ObjectEntity.html"> ObjectEntity</a>, configure the default player speed, tweak the camera, 
-	test if some keys are pressed and manage our player movement (by setting player speed, and then calling the <a href="http://www.melonjs.org/docs/symbols/me.ObjectEntity.html#updateMovement"> updateMovement</a> function). Also, you may notice that I'm
+    <a href="http://melonjs.github.io/docs/me.ObjectEntity.html"> ObjectEntity</a>, configure the default player speed, tweak the camera, 
+	test if some keys are pressed and manage our player movement (by setting player speed, and then calling the <a href="http://melonjs.github.io/docs/me.ObjectEntity.html#updateMovement"> updateMovement</a> function). Also, you may notice that I'm
     testing the final velocity (this.vel.x and this.vel.y) of my object, which allows me to
     know if my object actually moved, and control if I want the sprite animation to run or not.</p>
 
 <p>Then, we have to modify our "main" to actually declare our new Object in the
-    <a href="http://www.melonjs.org/docs/symbols/me.entityPool.html"> EntityPool</a> (that is used by the engine to instantiate object), and finally to map the
+    <a href="http://melonjs.github.io/docs/me.entityPool.html"> EntityPool</a> (that is used by the engine to instantiate object), and finally to map the
     keys we will use for the player movement. So our <b>loaded()</b> function will become
     :</p>
 <pre class="brush: js">
@@ -416,7 +419,7 @@ game.PlayerEntity = me.ObjectEntity.extend({
 	
    ---	*/
 	
-loaded: function ()
+"loaded" : function ()
 {
    // set the "Play/Ingame" Screen Object
    me.state.set(me.state.PLAY, game.PlayScreen());
@@ -448,7 +451,7 @@ loaded: function ()
     - <b>spriteheight</b> we don't define this value here since we use a single line spritesheet,
 	and since in this case the engine will take the actual image height as a value for it.<br/>
 	<br/>
-    These two parameters will be passed as parameters (<a href="http://www.melonjs.org/docs/symbols/me.ObjectSettings.html"><b>settings</b> object</a> here above
+    These two parameters will be passed as parameters (<a href="http://melonjs.github.io/docs/me.ObjectSettings.html"><b>settings</b> object</a> here above
     used by the constructor) when the object will be created. Now you can either specify
     these fields here in Tiled, or directly in your code (when dealing with multiple
     objects, it can be easier to just specify the name in Tiled, and manage the rest in
@@ -553,10 +556,10 @@ init: function(x, y, settings) {
 
 <p>Then we will use the two following backgrounds :</p>
 
-<p><b>/data/area01_parallax/area01_bkg0.png</b> for the first background
+<p><b>/data/img/area01_bkg0.png</b> for the first background
     layer</p><img src="media/area01_bkg0.png" alt="Parallax background 1"/>
 
-<p><b>/data/area01_parallax/area01_bkg1.png</b> for the second background
+<p><b>/data/img/area01_bkg1.png</b> for the second background
     layer</p><img src="media/area01_bkg1.png" alt="Parallax background 2"/>
 
 <p>Let's add them in the resource list:</p>
@@ -581,7 +584,7 @@ game.resources = [
 ];
 </pre>
 
-<p>Open Tiled, and add two new <a href="http://www.melonjs.org/docs/symbols/me.ImageLayer.html"> <b>Image Layers</b></a>, name them to whatever you like 
+<p>Open Tiled, and add two new <a href="http://melonjs.github.io/docs/me.ImageLayer.html"> <b>Image Layers</b></a>, name them to whatever you like 
 and make sure to adjust correctly the layer order (the display order being from bottom to top)
 </p><img src="media/step4_layer.png" alt="Layering parallax layers"/>
 
@@ -593,11 +596,11 @@ and make sure to adjust correctly the layer order (the display order being from 
 <p><img src="media/step4_Imagelayer_property.png" alt=
         "Configuring Image Layer properties"/></p>
 		
-	- And finally add a <a href="http://www.melonjs.org/docs/symbols/me.ImageLayer.html#ratio"> <b>ratio</b></a> property to specify the scrolling speed of each layer : we will specify the <b>0.25</b> value for the first layer
+	- And finally add a <a href="http://melonjs.github.io/docs/me.ImageLayer.html#ratio"> <b>ratio</b></a> property to specify the scrolling speed of each layer : we will specify the <b>0.25</b> value for the first layer
      (<b>Parallax_layer1</b> on the picture) and the <b>0.35</b> value for the second (keep in mind that the smaller the ratio is, the slower the scrolling speed will be).
  <br/></p>
 
-<p>Note that default behavior for Image Layer is to be automatically <a href="http://www.melonjs.org/docs/symbols/me.ImageLayer.html#repeat"> <b>repeated</b></a> on both x and y axis, which is exactly what we want here to create the parallax effect.
+<p>Note that default behavior for Image Layer is to be automatically <a href="http://melonjs.github.io/docs/me.ImageLayer.html#repeat"> <b>repeated</b></a> on both x and y axis, which is exactly what we want here to create the parallax effect.
 </p>
  
 
@@ -646,7 +649,7 @@ game.resources = [
 </pre>
 <br/>
 
-<p>The coin itself is pretty easy; we just extend the <a href="http://www.melonjs.org/docs/symbols/me.CollectableEntity.html"> me.CollectableEntity</a>. Actually,
+<p>The coin itself is pretty easy; we just extend the <a href="http://melonjs.github.io/docs/me.CollectableEntity.html"> me.CollectableEntity</a>. Actually,
     we could directly use it in Tiled (without needing to create CoinEntity here), but
     since we will add some score and some audio sfx later when the coin is collected,
     let's do it directly this way.</p>
@@ -771,6 +774,9 @@ game.EnemyEntity = me.ObjectEntity.extend({
     Also, I am using the <b>width</b> property given by Tiled to specify a path on which
     this enemy will run. Finally, in the onCollision method, I make the enemy flicker if
     something is jumping on top of it.</p>
+	
+	<p>Note that an Object Entity drawable component (either a single sprite of animation) is 
+	accessible through the Entity `renderable` property, which explains here why we do here the following : `this.renderable.flicker(45);`</p>
 
 <p>Then again, we add these new objects in the entityPool</p>
 <pre class="brush: js">
@@ -785,7 +791,7 @@ me.entityPool.add("EnemyEntity", game.EnemyEntity);
                                                                   "media/tutorial_tiled_step5.png" alt="Step 5"/></p>
 
 <p>Before testing, we also need to modify our player to check for collision with other
-    entities. In order to do this, we add a call to the <a href="http://www.melonjs.org/docs/symbols/me.game.html#collide"> <b>me.game.collide(this)</b></a>
+    entities. In order to do this, we add a call to the <a href="http://melonjs.github.io/docs/me.game.html#collide"> <b>me.game.collide(this)</b></a>
     function in our mainPlayer code, see below :</p>
 <pre class="brush: js">
 /* -----
@@ -929,7 +935,7 @@ game.resources = [
 </pre>
 <br/>
 
-<p>Let's then define a new Object, that will extend the <a href="http://www.melonjs.org/docs/symbols/me.HUD_Item.html">me.HUD_Item</a>, 
+<p>Let's then define a new Object, that will extend the <a href="http://melonjs.github.io/docs/me.HUD_Item.html">me.HUD_Item</a>, 
    in which we will draw the object value using our font.</p>
 <pre class="brush: js">
 /*-------------- 
@@ -973,7 +979,7 @@ game.PlayScreen = me.ScreenObject.extend({
         // add a new HUD item
         me.game.HUD.addItem("score", new game.ScoreObject(620, 10));
 
-        // make sure everyhting is in the right order
+        // make sure everything is in the right order
         me.game.sort();
 
     },
@@ -991,13 +997,13 @@ game.PlayScreen = me.ScreenObject.extend({
 });
 </pre>
 
-<p>The <a href="http://www.melonjs.org/docs/symbols/me.game.html#addHUD">me.game.addHUD()</a> function is used to enable a <a href="http://www.melonjs.org/docs/symbols/me.HUD_Object.html">HUD Object</a> (specifying the HUD
+<p>The <a href="http://melonjs.github.io/docs/me.game.html#addHUD">me.game.addHUD()</a> function is used to enable a <a href="http://melonjs.github.io/docs/me.HUD_Object.html">HUD Object</a> (specifying the HUD
     size), and we can then add our previously created score HUD Item by calling the
-    <a href="http://www.melonjs.org/docs/symbols/me.HUD_Object.html#addItem">me.game.HUD.addItem()</a> function (and specifying its position within the HUD). We
+    <a href="http://melonjs.github.io/docs/me.HUD_Object.html#addItem">me.game.HUD.addItem()</a> function (and specifying its position within the HUD). We
     also assign the <b>"score"</b> keyword to that item, so that we can later access and
     modify it's value.</p>
 
-<p>Additionally, we also add a call to <a href="http://www.melonjs.org/docs/symbols/me.game.html#disableHUD">me.game.disableHUD()</a> in the
+<p>Additionally, we also add a call to <a href="http://melonjs.github.io/docs/me.game.html#disableHUD">me.game.disableHUD()</a> in the
     <b>onDestroyEvent()</b> function, so that the HUD is removed when exiting the "play"
     state.</p>
 
@@ -1019,7 +1025,7 @@ onCollision : function ()
 </pre>
 
 <p>As you can see, in the <b>onCollision function</b>, we just call the
-    <a href="http://www.melonjs.org/docs/symbols/me.HUD_Object.html#updateItemValue">me.game.HUD.updateItemValue</a> function, giving the "score" keyword (we
+    <a href="http://melonjs.github.io/docs/me.HUD_Object.html#updateItemValue">me.game.HUD.updateItemValue</a> function, giving the "score" keyword (we
     previously defined), and the value to be added to the score. Then we ensure the object cannot be collected again, and remove the coin</p>
 
 <p><br/>
@@ -1090,7 +1096,7 @@ game.resources = [
     accordingly.</p>
 
 <p>If we take a look back on how we first initialized the audio, you can see that I
-    passed the <b>"mp3,ogg"</b> parameter to the <a href="http://www.melonjs.org/docs/symbols/me.audio.html#init">initialization function</a>, asking to try
+    passed the <b>"mp3,ogg"</b> parameter to the <a href="http://melonjs.github.io/docs/me.audio.html#init">initialization function</a>, asking to try
     to use first the mp3 format, and then ogg as a fallback if mp3 is not supported. This
     also means, in this case, I must provide two versions of my audio files, one as mp3,
     and one as ogg. The engine will then use the right based on your browser
@@ -1113,7 +1119,7 @@ me.audio.init("mp3,ogg");
 </ul>
 
 <p>In the CoinEntity code, where we previously managed our earned points, we just
-    need to add a new call to <a href="http://www.melonjs.org/docs/symbols/me.audio.html#play"><b>me.audio.play()</b></a> and use the <b>"cling"</b> audio
+    need to add a new call to <a href="http://melonjs.github.io/docs/me.audio.html#play"><b>me.audio.play()</b></a> and use the <b>"cling"</b> audio
     resource. that's all !</p><br/>
 <pre class="brush: js">
 onCollision : function ()
@@ -1139,7 +1145,7 @@ onCollision : function ()
 </ul>
 
 <p>In the <b>update()</b> function of the mainPlayer, we also add a call to
-    <a href="http://www.melonjs.org/docs/symbols/me.audio.html#play"><b>me.audio.play()</b></a> and use the <b>"jump"</b> audio resource. You can also note
+    <a href="http://melonjs.github.io/docs/me.audio.html#play"><b>me.audio.play()</b></a> and use the <b>"jump"</b> audio resource. You can also note
     that I added a test on the return value of doJump(). doJump can return false in case
     you are not allowed to jump (already jumping, etc..) and in that case there is no
     need to play the sound sfx.</p><br/>
@@ -1193,7 +1199,7 @@ if (res) {
 </ul>
 
 <p>In our main, in the <b>onResetEvent()</b> function, we just add a call to the
-    <a href="http://www.melonjs.org/docs/symbols/me.audio.html#playTrack"><b>me.audio.playTrack()</b></a> function, specifying the audio track to be used:</p><br/>
+    <a href="http://melonjs.github.io/docs/me.audio.html#playTrack"><b>me.audio.playTrack()</b></a> function, specifying the audio track to be used:</p><br/>
 <pre class="brush: js">
 onResetEvent: function() {
     // play the audio track
@@ -1222,7 +1228,7 @@ onDestroyEvent: function() {
 <p>You should know how to create a level now. However, here I will show you how to go
     to another level.</p>
 
-<p>To do this, melonJS has an Object call <a href="http://www.melonjs.org/docs/symbols/me.LevelEntity.html">me.LevelEntity</a>, that we will add in Tiled
+<p>To do this, melonJS has an Object call <a href="http://melonjs.github.io/docs/me.LevelEntity.html">me.LevelEntity</a>, that we will add in Tiled
     and specify what to do when our main player hit it :</p><img src=
                                                                          "media/step8_next_level.png"
                                                                  alt="Creating an object to go to next level"/>
@@ -1239,11 +1245,11 @@ onDestroyEvent: function() {
 <h2>Part 9: Adding a title screen</h2>
 
 <p>To finish, let's add a title screen to our game, using the <b>title_screen.png</b>
-    files in the <b>"/data/GUI"</b> folder (and of course to be added in the ressource list, as we done it previously for other images) : <img src="media/title_screen.jpg" alt=
+    files in the <b>"/data/img/gui/"</b> folder (and of course to be added in the ressource list, as we done it previously for other images) : <img src="media/title_screen.jpg" alt=
             "Title screen"/> and on top of it we will add some message, and wait for the user
     input to start the game !</p>
 
-<p>First let's declare a new Object, extending <a href="http://www.melonjs.org/docs/symbols/me.ScreenObject.html">me.ScreenObject</a> :</p>
+<p>First let's declare a new Object, extending <a href="http://melonjs.github.io/docs/me.ScreenObject.html">me.ScreenObject</a> :</p>
 <pre class="brush: js">
 /*----------------------
 
@@ -1393,7 +1399,7 @@ game.TitleScreen = me.ScreenObject.extend({
 
 <p>And of course the very last thing is to indicate to the engine we created a new
     object and associate it to the corresponding state (here, <b>MENU</b>). Also, using
-    the transition function of <a href="http://www.melonjs.org/docs/symbols/me.state.html">me.state</a>, I'm telling the engine to add a fading effect between state
+    the transition function of <a href="http://melonjs.github.io/docs/me.state.html">me.state</a>, I'm telling the engine to add a fading effect between state
     changes.<br/>
     Finally, instead of switching to the <b>PLAY</b> state at the end of the loaded
     function, I'm switching now to the <b>MENU</b> state:<br/></p>
@@ -1403,7 +1409,7 @@ game.TitleScreen = me.ScreenObject.extend({
     callback when everything is loaded
 
     --- */
-loaded: function() {
+"loaded": function() {
     // set the "Play/Ingame" Screen Object
     me.state.set(me.state.MENU, game.TitleScreen());
 
