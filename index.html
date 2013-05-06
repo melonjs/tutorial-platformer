@@ -109,7 +109,7 @@
 	</li>
 
 	<li>The melonJS <a href="http://www.melonjs.org/download.html"> library</a>, 
-		to be copied under the /lib directory (be sure download both the minified and plain version, as the latter might potentially be required for debugging purpose)
+		to be copied under the /lib directory (be sure to download both the minified and plain version, as the latter might potentially be required for debugging purpose)
     </li>
 
     <li>The melonJS <a href="http://www.melonjs.org/docs/index.html">documentation</a>
@@ -223,8 +223,8 @@ var game = {
     with a <a href="http://melonjs.github.io/docs/me.ScreenObject.html"> <b>PlayScreen</b> object</a> that we will use to manage the game event (reset,
     etc...).</p>
 	
-<p>The only change will do in the default project template is the given video resolution for the `me.video.init()` function, as for the tutorial we will create a 640x480 canvas. 
-   You will notice as well later that in the final version of the tutoria, I disable video scaling ('auto') parameter, as my intention was to have it fitting my html template.</p>
+<p>The only change we will do in the default project template is the given video resolution for the `me.video.init()` function, as for the tutorial we will create a 640x480 canvas. 
+   You will notice as well later that in the final version of the tutorial, I disabled video scaling by removing the 'auto' parameter, as my intention was to have it fitting my html template.</p>
 
 <p>So in order to load our level, the next thing is to add the resources to be loaded
     by adding the following information into <b>game.resources</b> (js/resources.js)
