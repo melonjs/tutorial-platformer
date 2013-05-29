@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.0" orientation="orthogonal" width="40" height="15" tilewidth="32" tileheight="32">
  <tileset firstgid="1" name="area01_level_tiles" tilewidth="32" tileheight="32">
-  <image source="area01_tileset/area01_level_tiles.png" width="640" height="241"/>
+  <image source="../img/map/area01_level_tiles.png" width="640" height="241"/>
  </tileset>
  <tileset firstgid="141" name="metatiles32x32" tilewidth="32" tileheight="32">
-  <image source="area01_tileset/metatiles32x32.png" width="160" height="32"/>
+  <image source="../img/map/metatiles32x32.png" width="160" height="32"/>
   <tile id="0">
    <properties>
     <property name="type" value="solid"/>
@@ -17,13 +17,13 @@
   </tile>
  </tileset>
  <imagelayer name="Parallax1" width="40" height="15">
-  <image source="area01_parallax/area01_bkg0.png"/>
+  <image source="../img/area01_bkg0.png"/>
   <properties>
    <property name="ratio" value="0.25"/>
   </properties>
  </imagelayer>
  <imagelayer name="Parallax2" width="40" height="15">
-  <image source="area01_parallax/area01_bkg1.png"/>
+  <image source="../img/area01_bkg1.png"/>
   <properties>
    <property name="ratio" value="0.35"/>
   </properties>
