@@ -1421,10 +1421,10 @@ game.TitleScreen = me.ScreenObject.extend({
     --- */
 "loaded": function() {
     // set the "Play/Ingame" Screen Object
-    me.state.set(me.state.MENU, game.TitleScreen());
+    me.state.set(me.state.MENU, new game.TitleScreen());
 
     // set the "Play/Ingame" Screen Object
-    me.state.set(me.state.PLAY, game.PlayScreen());
+    me.state.set(me.state.PLAY, new game.PlayScreen());
 
     // set a global fading transition for the screen
     me.state.transition("fade", "#FFFFFF", 250);
