@@ -27,7 +27,11 @@ h2
 { font: normal 175% 'century gothic', arial, sans-serif;
   color: #1293EE;}
 
-h4, h5, h6
+h3
+{ font: normal 150% 'century gothic', arial, sans-serif;
+  color: #1293EE;}
+
+h4
 { margin: 0;
   padding: 0 0 5px 0;
   font: normal 120% arial, sans-serif;
@@ -41,12 +45,12 @@ h5, h6
 h6
 { color: #362C20;}
 
-a, a:hover
+a[href], a[href]:hover
 { outline: none;
   text-decoration: underline;
   color: #A4AA04;}
 
-a:hover
+a[href]:hover
 { text-decoration: none;}
 
 .left
@@ -71,18 +75,10 @@ blockquote
   background: #FFF;}
 
 ul
-{ margin: 2px 0 22px 17px;}
+{ margin: 5px 0 10px 25px;}
 
 ul li
-{ list-style-type: circle;
-  margin: 0 0 6px 0; 
-  padding: 0 0 4px 5px;}
-
-ol
-{ margin: 8px 0 22px 20px;}
-
-ol li
-{ margin: 0 0 11px 0;}
+{ list-style-type: circle;}
 
 #main, #logo, #menubar, #site_content, #footer
 { margin-left: auto; 
@@ -189,15 +185,10 @@ ul#menu li a:hover, ul#menu li.selected a, ul#menu li.selected a:hover
   width: 595px;
   padding: 0;}
 
-#content ul
-{ margin: 2px 0 22px 0px;}
-
 #content ul li
 { list-style-type: none;
   background: url(bullet.png) no-repeat;
-  margin: 0 0 6px 0; 
-  padding: 0 0 4px 25px;
-  line-height: 1.5em;}
+  padding: 0 0 4px 25px;}
 
 #footer
 { width: 878px;

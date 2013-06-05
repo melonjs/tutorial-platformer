@@ -43,7 +43,8 @@
         }
 
         p.c1 {
-            font-weight: bold
+            font-weight: bold;
+            padding: 0;
         }
 
             /*]]>*/
@@ -98,7 +99,7 @@
 	</li>
 	<li>
 	The tutorial <a href="tutorial_data.zip">data files</a>, to be uncompressed into the (here above) template data directory, 
-	and which contains the following :
+	and which contains the following :</li>
 		<ul>
 			<li>a level tileset and a metatileset for collision </li>
 			<li>two backgrounds for parallax layers</li>
@@ -106,7 +107,6 @@
 			<li>some audio sfx and music</li>
 			<li>a title screen background</li>
 		</ul>
-	</li>
 
 	<li>The melonJS <a href="http://www.melonjs.org/download.html"> library</a>, 
 		to be copied under the /lib directory (be sure to download both the minified and plain version, as the latter might potentially be required for debugging purpose)
@@ -123,16 +123,19 @@
 	when launching the browser in order to test any local content, else the browser will complain 
 	when trying to load a level map. <br/></p>
 
-<p><b>Additional Credits :</b><br/>
-    - <a href="http://www.spicypixel.net/2008/01/10/gfxlib-fuzed-a-free-developer-graphic-library/">
-        SpicyPixel.NET</a> for the GfxLib-Fuzed assets<br/>
-    - <a href="http://www.nosoapradio.us/">noSoapRadio</a> for the in game music</p>
+<p class="c1">Additional Credits :</p>
+
+<ul>
+    <li><a href="http://www.spicypixel.net/2008/01/10/gfxlib-fuzed-a-free-developer-graphic-library/">
+        SpicyPixel.NET</a> for the GfxLib-Fuzed assets</li>
+    <li><a href="http://www.nosoapradio.us/">noSoapRadio</a> for the in game music</li>
+</ul>
 
 <p>Feel free to modify whatever you want. We also assume here, that you are already
     familiar with Tiled; if you need more help with the tool, you can check the Tiled
     homepage and <a href="https://github.com/bjorn/tiled/wiki">wiki</a> for further help.</p>
 
-<h2>Part 1: Creating a level using Tiled</h2>
+<h2><a id="part1">Part 1: Creating a level using Tiled</a></h2>
 
 <p>melonJS supports only <i><b>uncompressed</b></i> tilemaps, so before continuing, 
    please check that your settings are correct (Tiled/Preferences). I recommend the 
@@ -165,7 +168,7 @@
 <p>To finish, let's save our new map as "area01" under the "data" folder. We are done
     the first step!</p>
 
-<h2>Part 2: Loading our level</h2>
+<h2><a id="part2">Part 2: Loading our level</a></h2>
 
 <p>First let's have a look at our js/game.js skeleton :</p>
 
@@ -282,8 +285,11 @@ game.PlayScreen = me.ScreenObject.extend({
 
 <p><br/>
     That's all! If you did everything correctly, and open your index.html (Remember that if you don’t use a web server, you will need to allow your browser to access local files, please refer to the “Testing/debugging” at the beginning of the tutorial if required) :<br/>
-    </br>
-	(click on the image to see it running in your browser), you should see
+</p>
+
+<h3><a id="part2_try">Try it out</a></h3>
+
+<p>(click on the image to see it running in your browser), you should see
     something like this </br>
 	 <a href=
              "./tutorial_step2/index.html"><img
@@ -297,7 +303,7 @@ game.PlayScreen = me.ScreenObject.extend({
     able to navigate through the map in the next step, when we will add a "main
     player"</p>
 
-<h2>Part 3: Add a main player</h2>
+<h2><a id="part3">Part 3: Add a main player</a></h2>
 
 <p>Here we will create a new object by extending the default <a href="http://melonjs.github.io/docs/me.ObjectEntity.html"> me.ObjectEntity</a>, to create
     our player. We will use the provided simple spritesheet <b>(gripe_run_right.png)</b>
@@ -439,18 +445,18 @@ game.PlayerEntity = me.ObjectEntity.extend({
 </pre>
 <br/>
 
-<p>And now we can add our entity into the level! Go back to Tiled, add an new Object Layer, and finally a new Entity.
+<p>And now we can add our entity into the level! Go back to Tiled, add a new Object Layer, and finally a new Entity.
     To create a new Entity use the "Insert Rectangle" Tool to add a rectangle to the object layer, 
-    then you can right click the object and add the properties below.<br/>
-	Name it (case does not matter) <b>mainPlayer</b> (or using the same name you used
-    when adding our Object into the entityPool), and add two properties to the Object
-    :<br/>
-    - <b>image</b> with the <b>gripe_run_right</b> value (name of our resource<br/>
-    - <b>spritewidth</b> with the value <b>64</b> which is the size of a single sprite in
-    the spritesheet<br/>
-    - <b>spriteheight</b> we don't define this value here since we use a single line spritesheet,
-	and since in this case the engine will take the actual image height as a value for it.<br/>
-	<br/>
+    then you can right click the object and add the properties below.</p>
+
+<p>Name it (case does not matter) <b>mainPlayer</b> (or using the same name you used
+    when adding our Object into the entityPool), and add two properties to the Object:
+    <ul>
+		<li><b>image</b> : with the <b>gripe_run_right</b> value (name of our resource</li>
+		<li><b>spritewidth</b> : with the value <b>64</b> which is the size of a single sprite in the spritesheet</li>
+		<li><b>spriteheight</b> : we don't define this value here since we use a single line spritesheet,
+		and since in this case the engine will take the actual image height as a value for it.</li>
+	</ul>
     These two parameters will be passed as parameters (<a href="http://melonjs.github.io/docs/me.ObjectSettings.html"><b>settings</b> object</a> here above
     used by the constructor) when the object will be created. Now you can either specify
     these fields here in Tiled, or directly in your code (when dealing with multiple
@@ -466,6 +472,7 @@ game.PlayerEntity = me.ObjectEntity.extend({
 make sure you are also resizing the object rectangle in Tiled to match with your actual sprite size.
 <img src="media/step3_object_position.png"alt="positioning an entity"/></p>
 
+<h3><a id="define_collision_layer">Define the collision layer</a></h3>
 
 <p>We are almost done! The last step is to define the collision layer, for this we
     will use the other tileset we previously added into Tiled, and specify for each tile
@@ -492,11 +499,12 @@ make sure you are also resizing the object rectangle in Tiled to match with your
     for the engine to recognize it as a collision layer.</p>
 
 <p>Once the layer added, select it, and just "draw" you level collision map. At the
-    end it should look like this:</p><img src="media/step3_collision_draw.png" alt=
-        "Drawing the collision layer"/>
+    end it should look like this:</p>
+<p><img src="media/step3_collision_draw.png" alt="Drawing the collision layer"/></p>
 
-<p><br/>
-    Save everything, and if you now re-open your index.html, you should see something like
+<h3><a id="part3_try">Try it out</a></h3>
+
+<p>Save everything, and if you now re-open your index.html, you should see something like
     this :<br/>
     (click on the image to see it running in your browser) <a href=
                                                                       "./tutorial_step3/index.html"><img
@@ -544,12 +552,12 @@ init: function(x, y, settings) {
     change the height, so we specify -1.</p><img src="media/step3_hitbox2.png" alt=
         "Tweaking the hit box"/>
 
-<h2>Part 4: Add a scrolling background</h2>
+<h2><a id="part4">Part 4: Add a scrolling background</a></h2>
 
 <p>This one is very easy. We don't even have to add a single line of code, since
     everything is done through Tiled.</p>
 
-<p>First, let's remove in Tiled the backgroun d color that we added previously at the end of Part 1.
+<p>First, remove the background color that we added previously at the end of Part 1.
    (to do so, you will need to text edit the TMX file and remove the `backgroundcolor` property).
    Since the background will be filled with our scrolling layers, we don't need the display to be 
    cleared with a specific color (furthermore it will save some precious frames).</p>
@@ -603,15 +611,15 @@ and make sure to adjust correctly the layer order (the display order being from 
 <p>Note that default behavior for Image Layer is to be automatically <a href="http://melonjs.github.io/docs/me.ImageLayer.html#repeat"> <b>repeated</b></a> on both x and y axis, which is exactly what we want here to create the parallax effect.
 </p>
  
+<h3><a id="part4_try">Try it out</a></h3>
 
-<p><br/>
-    "Et voila!". If you now open your index.html, you should see:<br/>
+<p>"Et voila!". If you now open your index.html, you should see:<br/>
     <a href="./tutorial_step4/index.html"><img src="media/tutorial_step4.png" alt=
             "Step 4 results"/></a><br/></p>
 
 <p>Play around with your player, and enjoy the view :)</p>
 
-<h2>Part 5: Adding some basic objects and enemies</h2>
+<h2><a id="part5">Part 5: Adding some basic objects and enemies</a></h2>
 
 <p>In this part we will add a collectible coin (that we will use later to add to our
     score), using the <b>spinning_coin_gold.png</b> spritesheet : <img src=
@@ -869,15 +877,16 @@ update: function() {
 });
 </pre>
 
-<p><br/>
-    And this is what you should get (note that I completed the level a little bit, adding
+<h3><a id="part5_try">Try it out</a></h3>
+
+<p>And this is what you should get (note that I completed the level a little bit, adding
     platforms, etc...) :<br/>
     <a href="./tutorial_step5/index.html"><img src="media/tutorial_step5.png" alt=
             "Step 5 results"/></a><br/></p>
 
 <p>Try to collect your coins, avoid the enemy or jump on it!</p>
 
-<h2>Part 6: Adding some basic HUD information</h2>
+<h2><a id="part6">Part 6: Adding some basic HUD information</a></h2>
 
 <p>It's time now to display some score when we collect those coins, right?</p>
 
@@ -1028,13 +1037,14 @@ onCollision : function ()
     <a href="http://melonjs.github.io/docs/me.HUD_Object.html#updateItemValue">me.game.HUD.updateItemValue</a> function, giving the "score" keyword (we
     previously defined), and the value to be added to the score. Then we ensure the object cannot be collected again, and remove the coin</p>
 
-<p><br/>
-    We can now check the result, and we should now have our score displayed in the
+<h3><a id="part6_try">Try it out</a></h3>
+
+<p>We can now check the result, and we should now have our score displayed in the
     bottom-right corner of the screen :<br/>
     <a href="./tutorial_step6/index.html"><img src="media/tutorial_step6.png" alt=
             "Step 6 results"/></a><br/></p>
 
-<h2>Part 7: Adding some audio</h2>
+<h2><a id="part7">Part 7: Adding some audio</a></h2>
 
 <p>In this section we will add some audio to our game:</p>
 
@@ -1223,7 +1233,7 @@ onDestroyEvent: function() {
 <p>That's all! click <a href="./tutorial_step7/index.html">here</a> to see the final
     result.</p>
 
-<h2>Part 8: Adding a second level</h2>
+<h2><a id="part8">Part 8: Adding a second level</a></h2>
 
 <p>You should know how to create a level now. However, here I will show you how to go
     to another level.</p>
@@ -1242,7 +1252,7 @@ onDestroyEvent: function() {
 
 <p>click <a href="./tutorial_step8/index.html">here</a> to see the final result.</p>
 
-<h2>Part 9: Adding a title screen</h2>
+<h2><a id="part9">Part 9: Adding a title screen</a></h2>
 
 <p>To finish, let's add a title screen to our game, using the <b>title_screen.png</b>
     files in the <b>"/data/img/gui/"</b> folder (and of course to be added in the ressource list, as we done it previously for other images) : <img src="media/title_screen.jpg" alt=
@@ -1435,13 +1445,15 @@ game.TitleScreen = me.ScreenObject.extend({
 
 </pre>
 
+<h3><a id="part9_try">Try it out</a></h3>
+
 <p>.... and ... congratulations! You reached the end of this tutorial, time to test
     it, and you should have something like this:</p><a href=
                                                                "./tutorial_final/index.html"><img
         src="media/tutorial_final.png" alt=
         "Your completed game"/></a>
 
-<h2>Part 10: Conclusion</h2>
+<h2><a id="part10">Part 10: Conclusion</a></h2>
 
 <p>Well, I hope that you enjoyed this time spent together with this little
     introduction of melonJS. I hope you like it and are willing to give it a try! Please
