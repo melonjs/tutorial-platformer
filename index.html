@@ -428,7 +428,7 @@ game.PlayerEntity = me.ObjectEntity.extend({
 "loaded" : function ()
 {
    // set the "Play/Ingame" Screen Object
-   me.state.set(me.state.PLAY, game.PlayScreen());
+   me.state.set(me.state.PLAY, new game.PlayScreen());
     
    // add our player entity in the entity pool
    me.entityPool.add("mainPlayer", game.PlayerEntity);
