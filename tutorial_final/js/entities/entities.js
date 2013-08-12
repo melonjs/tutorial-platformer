@@ -127,7 +127,7 @@ game.CoinEntity = me.CollectableEntity.extend(
 		// do something when collide
 		me.audio.play("cling");
 		// give some score
-		me.game.HUD.updateItemValue("score", 250);
+		game.data.score += 250;
 		// make sure it cannot be collected "again"
 		this.collidable = false;
 		// remove it
@@ -221,29 +221,4 @@ game.EnemyEntity = me.ObjectEntity.extend(
 		}
 		return false;
 	}
-});
-
-/**
- * a Score HUD Item
- */
-game.ScoreObject = me.HUD_Item.extend(
-{	
-	init: function(x, y)
-	{
-	 // call the parent constructor
-		this.parent(x, y);
-		// create a font
-		this.font = new me.BitmapFont("32x32_font", 32);
-		this.font.set("right");
-	},
-	/* -----
-
-		draw our score
-		
-	------			*/
-	draw : function (context, x, y)
-	{
-		this.font.draw (context, this.value, this.pos.x +x, this.pos.y+y);
-	}
-
 });

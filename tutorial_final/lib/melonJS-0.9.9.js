@@ -899,7 +899,7 @@ window.me = window.me || {};
 
 	/**
 	 * me.game represents your current game, it contains all the objects, tilemap layers,<br>
-	 * HUD information, current viewport, collision map, etc..<br>
+	 * current viewport, collision map, etc...<br>
 	 * me.game is also responsible for updating (each frame) the object status and draw them<br>
 	 * @namespace me.game
 	 * @memberOf me
@@ -939,14 +939,6 @@ window.me = window.me || {};
 		 * @memberOf me.game
 		 */
 		api.viewport = null;
-		/**
-		 * a reference to the game HUD (if defined).
-		 * @public
-		 * @type me.HUD_Object
-		 * @name HUD
-		 * @memberOf me.game
-		 */
-		api.HUD = null;
 		
 		/**
 		 * a reference to the game collision Map
@@ -1094,8 +1086,7 @@ window.me = window.me || {};
 
 		/**
 		 * reset the game Object manager<p>
-		 * destroy all current object except the HUD
-		 * @see me.game#disableHUD
+		 * destroy all current objects
 		 * @name reset
 		 * @memberOf me.game
 		 * @public
@@ -1324,47 +1315,6 @@ window.me = window.me || {};
 		api.getEntityByProp = function(prop, value) {
 			return api.world.getEntityByProp(prop, value);
 		};
-		
-		/**
-		 * add a HUD obj to the game manager
-		 * @name addHUD
-		 * @memberOf me.game
-		 * @public
-		 * @function
-		 * @param {int} x x position of the HUD
-		 * @param {int} y y position of the HUD
-		 * @param {int} w width of the HUD
-		 * @param {int} h height of the HUD
-		 * @param {String} [bg] a CSS string specifying the background color (e.g. "#0000ff" or "rgb(0,0,255)")
-		 */
-		api.addHUD = function(x, y, w, h, bg) {
-			// if no HUD existing
-			if (api.HUD == null) {
-				// create a new default HUD object
-				api.HUD = new me.HUD_Object(x, y, w, h, bg);
-				api.add(api.HUD);
-			}
-		};
-
-		/**
-		 * disable the current HUD
-		 * @name disableHUD
-		 * @memberOf me.game
-		 * @public
-		 * @function
-		 */
-		api.disableHUD = function() {
-
-			// if no HUD existing
-			if (api.HUD != null) {
-				// remove the HUD object
-				api.remove(api.HUD);
-				// nullify it
-				api.HUD = null;
-
-			}
-		};
-
 
 		/**
 		 * Returns the entity container of the specified Child in the game world
@@ -1528,10 +1478,10 @@ window.me = window.me || {};
 		api.update = function() {
 			
 			// update all objects
-			isDirty |= api.world.update();
+			isDirty = api.world.update() || isDirty;
 			
 			// update the camera/viewport
-			isDirty |= api.viewport.update(isDirty);
+			isDirty = api.viewport.update(isDirty) || isDirty;
 
 			return isDirty;
 			
@@ -1571,7 +1521,7 @@ window.me = window.me || {};
 				//restore context
 				frameBuffer.restore();
 				
-				// call the viewport draw function (for effects)
+				// draw our camera/viewport
 				api.viewport.draw(frameBuffer);
 			}
 			isDirty = false;
@@ -4063,8 +4013,149 @@ window.me = window.me || {};
 				if (this._fadeOut.alpha==0.0)
 					this._fadeOut.tween = null;
 			}
+			
+			// blit our frame
+			me.video.blitSurface();
 		}
+	});
+
+	/*---------------------------------------------------------*/
+	// END END END
+	/*---------------------------------------------------------*/
+})(window);
+
+/*
+ * MelonJS Game Engine
+ * Copyright (C) 2011 - 2013, Olivier BIOT
+ * http://www.melonjs.org
+ *
+ */
+
+(function($) {
+	
+	/**
+	 * GUI Object<br>
+	 * A very basic object to manage GUI elements <br>
+	 * The object simply register on the "mousedown" <br>
+	 * or "touchstart" event and call the onClick function" 
+	 * @class
+	 * @extends me.SpriteObject
+	 * @memberOf me
+	 * @constructor
+	 * @param {Number} x the x coordinate of the GUI Object
+	 * @param {Number} y the y coordinate of the GUI Object
+	 * @param {me.ObjectSettings} settings Object settings
+	 * @example
+	 *
+	 * // create a basic GUI Object
+	 * var myButton = me.GUI_Object.extend(
+	 * {	
+	 *    init:function(x, y)
+	 *    {
+	 *       settings = {}
+	 *       settings.image = "button";
+	 *       settings.spritewidth = 100;
+	 *       settings.spriteheight = 50;
+	 *       // parent constructor
+	 *       this.parent(x, y, settings);
+	 *    },
+	 *	
+	 *    // output something in the console
+	 *    // when the object is clicked
+	 *    onClick:function(event)
+	 *    {
+	 *       console.log("clicked!");
+	 *       // don't propagate the event
+	 *       return false;
+	 *    }
+	 * });
+	 * 
+	 * // add the object at pos (10,10), z index 4
+	 * me.game.add((new myButton(10,10)),4);
+	 *
+	 */
+	me.GUI_Object = me.SpriteObject.extend({
+	/** @scope me.GUI_Object.prototype */
+	
+		/**
+		 * object can be clicked or not
+		 * @public
+		 * @type boolean
+		 * @name me.GUI_Object#isClickable
+		 */
+		isClickable : true,
 		
+		// object has been updated (clicked,etc..)	
+		updated : false,
+
+		/**
+		 * @ignore
+		 */
+		 init : function(x, y, settings) {
+			this.parent(x, y, 
+						((typeof settings.image == "string") ? me.loader.getImage(settings.image) : settings.image), 
+						settings.spritewidth, 
+						settings.spriteheight);
+			
+			// GUI items use screen coordinates
+			this.floating = true;
+			
+			// register on mouse event
+			me.input.registerPointerEvent('mousedown', this, this.clicked.bind(this));
+
+		},
+
+		/**
+		 * return true if the object has been clicked
+		 * @ignore
+		 */
+		update : function() {
+			if (this.updated) {
+				// clear the flag
+				this.updated = false;
+				return true;
+			}
+			return false;
+		},
+		
+		/**
+		 * function callback for the mousedown event
+		 * @ignore
+		 */
+		clicked : function(event) {
+			if (this.isClickable) {
+				this.updated = true;
+				return this.onClick(event);
+			}
+		},
+	
+		/**
+		 * function called when the object is clicked <br>
+		 * to be extended <br>
+		 * return false if we need to stop propagating the event
+		 * @name onClick
+		 * @memberOf me.GUI_Object
+		 * @public
+		 * @function
+		 * @param {Event} event the event object
+		 */
+		onClick : function(event) {
+			return false;
+		},
+		
+		/**
+		 * OnDestroy notification function<br>
+		 * Called by engine before deleting the object<br>
+		 * be sure to call the parent function if overwritten
+		 * @name onDestroyEvent
+		 * @memberOf me.GUI_Object
+		 * @public
+		 * @function
+		 */
+		onDestroyEvent : function() {
+			me.input.releasePointerEvent('mousedown', this);
+		}
+
 	});
 
 	/*---------------------------------------------------------*/
@@ -5360,7 +5451,7 @@ window.me = window.me || {};
 (function(window) {
 
 	/**
-	 * EntityContainer represents a collection of entity objects
+	 * EntityContainer represents a collection of child objects
 	 * @class
 	 * @extends me.Renderable
 	 * @memberOf me
@@ -5415,7 +5506,10 @@ window.me = window.me || {};
 		collidable : true,
 		
 
-		// constructor
+		/** 
+		 * constructor
+		 * @ignore
+		 */
 		init : function(x, y, width, height) {
 			// call the parent constructor
 			this.parent(
@@ -5437,7 +5531,7 @@ window.me = window.me || {};
 		 * @name addChild
 		 * @memberOf me.EntityContainer
 		 * @function
-		 * @param {me.ObjectEntity} child
+		 * @param {me.Renderable} child
 		 */
 		addChild : function(child) {
 			if(typeof(child.ancestor) !== 'undefined') {
@@ -5457,7 +5551,7 @@ window.me = window.me || {};
 		 * @name addChildAt
 		 * @memberOf me.EntityContainer
 		 * @function
-		 * @param {me.ObjectEntity} child
+		 * @param {me.Renderable} child
 		 */
 		addChildAt : function(child, index) {
 			if((index >= 0) && (index < this.children.length)) {
@@ -5480,8 +5574,8 @@ window.me = window.me || {};
 		 * @name swapChildren
 		 * @memberOf me.EntityContainer
 		 * @function
-		 * @param {me.ObjectEntity} child
-		 * @param {me.ObjectEntity} child
+		 * @param {me.Renderable} child
+		 * @param {me.Renderable} child
 		 */
 		swapChildren : function(child, child2) {
 			var index = this.getChildIndex( child );
@@ -5522,7 +5616,7 @@ window.me = window.me || {};
 		 * @name getChildAt
 		 * @memberOf me.EntityContainer
 		 * @function
-		 * @param {me.ObjectEntity} child
+		 * @param {me.Renderable} child
 		 */
 		getChildIndex : function(child) {
 			return this.children.indexOf( child );
@@ -5541,7 +5635,7 @@ window.me = window.me || {};
 		},
 		
 		/**
-		 * return the entity corresponding to the property and value<br>
+		 * return the child corresponding to the given property and value.<br>
 		 * note : avoid calling this function every frame since
 		 * it parses the whole object tree each time
 		 * @name getEntityByProp
@@ -5550,7 +5644,7 @@ window.me = window.me || {};
 		 * @function
 		 * @param {String} prop Property name
 		 * @param {String} value Value of the property
-		 * @return {me.ObjectEntity[]} Array of object entities
+		 * @return {me.Renderable[]} Array of childs
 		 * @example
 		 * // get the first entity called "mainPlayer" in a specific container :
 		 * ent = myContainer.getEntityByProp("name", "mainPlayer");
@@ -5582,7 +5676,7 @@ window.me = window.me || {};
 		 * @name removeChild
 		 * @memberOf me.EntityContainer
 		 * @function
-		 * @param {me.ObjectEntity} child
+		 * @param {me.Renderable} child
 		 */
 		removeChild : function(child) {
 
@@ -5608,7 +5702,7 @@ window.me = window.me || {};
 		 * @name moveUp
 		 * @memberOf me.EntityContainer
 		 * @function
-		 * @param {me.ObjectEntity} child
+		 * @param {me.Renderable} child
 		 */
 		moveUp : function(child) {
 			var childIndex = this.getChildIndex(child);
@@ -5623,7 +5717,7 @@ window.me = window.me || {};
 		 * @name moveDown
 		 * @memberOf me.EntityContainer
 		 * @function
-		 * @param {me.ObjectEntity} child
+		 * @param {me.Renderable} child
 		 */
 		moveDown : function(child) {
 			var childIndex = this.getChildIndex(child);
@@ -5638,7 +5732,7 @@ window.me = window.me || {};
 		 * @name moveToTop
 		 * @memberOf me.EntityContainer
 		 * @function
-		 * @param {me.ObjectEntity} child
+		 * @param {me.Renderable} child
 		 */
 		moveToTop : function(child) {
 			var childIndex = this.getChildIndex(child);
@@ -5655,7 +5749,7 @@ window.me = window.me || {};
 		 * @name moveToBottom
 		 * @memberOf me.EntityContainer
 		 * @function
-		 * @param {me.ObjectEntity} child
+		 * @param {me.Renderable} child
 		 */
 		moveToBottom : function(child) {
 			var childIndex = this.getChildIndex(child);
@@ -5673,7 +5767,7 @@ window.me = window.me || {};
 		 * @memberOf me.EntityContainer
 		 * @public
 		 * @function
-		 * @param {me.ObjectEntity} obj Object to be tested for collision
+		 * @param {me.Renderable} obj Object to be tested for collision
 		 * @param {Boolean} [multiple=false] check for multiple collision
 		 * @return {me.Vector2d} collision vector or an array of collision vector (multiple collision){@link me.Rect#collideVsAABB}
 		 */
@@ -5687,7 +5781,7 @@ window.me = window.me || {};
 		 * @memberOf me.EntityContainer
 		 * @public
 		 * @function
-		 * @param {me.ObjectEntity} obj Object to be tested for collision
+		 * @param {me.Renderable} obj Object to be tested for collision
 		 * @param {String} [type=undefined] Entity type to be tested for collision
 		 * @param {Boolean} [multiple=false] check for multiple collision
 		 * @return {me.Vector2d} collision vector or an array of collision vector (multiple collision){@link me.Rect#collideVsAABB}
@@ -5740,7 +5834,7 @@ window.me = window.me || {};
 		},
 		
 		/**
-		 * Manually trigger the sort of all the objects in the container</p>
+		 * Manually trigger the sort of all the childs in the container</p>
 		 * @name sort
 		 * @memberOf me.EntityContainer
 		 * @public
@@ -6100,9 +6194,6 @@ window.me = window.me || {};
 
 				// draw the game objects
 				me.game.draw();
-
-				// blit our frame
-				me.video.blitSurface();
 			}
 		},
 
@@ -7905,513 +7996,6 @@ window.me = window.me || {};
  * Copyright (C) 2011 - 2013, Olivier BIOT
  * http://www.melonjs.org
  *
- */
-
-(function($) {
-	
-	/**
-	 * GUI Object<br>
-	 * A very basic object to manage GUI elements <br>
-	 * The object simply register on the "mousedown" <br>
-	 * or "touchstart" event and call the onClick function" 
-	 * @class
-	 * @extends me.SpriteObject
-	 * @memberOf me
-	 * @constructor
-	 * @param {Number} x the x coordinate of the GUI Object
-	 * @param {Number} y the y coordinate of the GUI Object
-	 * @param {me.ObjectSettings} settings Object settings
-	 * @example
-	 *
-	 * // create a basic GUI Object
-	 * var myButton = me.GUI_Object.extend(
-	 * {	
-	 *    init:function(x, y)
-	 *    {
-	 *       settings = {}
-	 *       settings.image = "button";
-	 *       settings.spritewidth = 100;
-	 *       settings.spriteheight = 50;
-	 *       // parent constructor
-	 *       this.parent(x, y, settings);
-	 *    },
-	 *	
-	 *    // output something in the console
-	 *    // when the object is clicked
-	 *    onClick:function(event)
-	 *    {
-	 *       console.log("clicked!");
-	 *       // don't propagate the event
-	 *       return false;
-	 *    }
-	 * });
-	 * 
-	 * // add the object at pos (10,10), z index 4
-	 * me.game.add((new myButton(10,10)),4);
-	 *
-	 */
-	me.GUI_Object = me.SpriteObject.extend({
-	/** @scope me.GUI_Object.prototype */
-	
-		/**
-		 * object can be clicked or not
-		 * @public
-		 * @type boolean
-		 * @name me.GUI_Object#isClickable
-		 */
-		isClickable : true,
-		
-		// object has been updated (clicked,etc..)	
-		updated : false,
-
-		/**
-		 * @ignore
-		 */
-		 init : function(x, y, settings) {
-			this.parent(x, y, 
-						((typeof settings.image == "string") ? me.loader.getImage(settings.image) : settings.image), 
-						settings.spritewidth, 
-						settings.spriteheight);
-			
-			// GUI items use screen coordinates
-			this.floating = true;
-			
-			// register on mouse event
-			me.input.registerPointerEvent('mousedown', this, this.clicked.bind(this));
-
-		},
-
-		/**
-		 * return true if the object has been clicked
-		 * @ignore
-		 */
-		update : function() {
-			if (this.updated) {
-				// clear the flag
-				this.updated = false;
-				return true;
-			}
-			return false;
-		},
-		
-		/**
-		 * function callback for the mousedown event
-		 * @ignore
-		 */
-		clicked : function(event) {
-			if (this.isClickable) {
-				this.updated = true;
-				return this.onClick(event);
-			}
-		},
-	
-		/**
-		 * function called when the object is clicked <br>
-		 * to be extended <br>
-		 * return false if we need to stop propagating the event
-		 * @name onClick
-		 * @memberOf me.GUI_Object
-		 * @public
-		 * @function
-		 * @param {Event} event the event object
-		 */
-		onClick : function(event) {
-			return false;
-		},
-		
-		/**
-		 * OnDestroy notification function<br>
-		 * Called by engine before deleting the object<br>
-		 * be sure to call the parent function if overwritten
-		 * @name onDestroyEvent
-		 * @memberOf me.GUI_Object
-		 * @public
-		 * @function
-		 */
-		onDestroyEvent : function() {
-			me.input.releasePointerEvent('mousedown', this);
-		}
-
-	});
-
-	/*---------------------------------------------------------*/
-	// END END END
-	/*---------------------------------------------------------*/
-})(window);
-
-/*
- * MelonJS Game Engine
- * Copyright (C) 2011 - 2013, Olivier BIOT
- * http://www.melonjs.org
- *
- *
- */
-
-(function($) {
-
-	/************************************************************************************/
-	/*      HUD FUNCTIONS :                                                             */
-	/*      a basic HUD to be extended                                                  */
-	/*                                                                                  */
-	/************************************************************************************/
-
-	/**
-	 * Item skeleton for HUD element 
-	 * @class
-	 * @extends Object
-	 * @memberOf me
-	 * @constructor
-	 * @param {int} x x position (relative to the HUD position)
-	 * @param {int} y y position (relative to the HUD position)
-	 * @param {int} [val=0] default value
-	 * @example
-	 * // create a "score object" that will use a Bitmap font
-	 * // to display the score value
-	 * ScoreObject = me.HUD_Item.extend(
-	 * {	
-	 *    // constructor
-	 *    init: function(x, y)
-	 *    {
-	 *       // call the parent constructor
-	 *       this.parent(x, y);
-	 *       // create a font
-	 *       this.font = new me.BitmapFont("font16px", 16);
-	 *    },
-	 *    // draw function
-	 *    draw : function (context, x, y)
-	 *    {
-	 *       this.font.draw (context, this.value, this.pos.x +x, this.pos.y +y);
-	 *    }
-	 * });
-	 * 
-	 * // add a default HUD to the game mngr (with no background)
-	 * me.game.addHUD(0,0,480,100);
-	 * // add the "score" HUD item
-	 * me.game.HUD.addItem("score", new ScoreObject(470,10));
-	 */
-	me.HUD_Item = Object.extend(
-	/** @scope me.HUD_Item.prototype */
-	{
-		/** @ignore */
-		init : function(x, y, val) {
-			/**
-			 * position of the item
-			 * @public
-			 * @type me.Vector2d
-			 * @name me.HUD_Item#pos
-			 */
-			this.pos = new me.Vector2d(x || 0, y || 0);
-
-			// visible or not...	
-			this.visible = true;
-
-			this.defaultvalue = val || 0;
-
-			/**
-			 * value of the item
-			 * @public
-			 * @type Int
-			 * @name me.HUD_Item#value
-			 */
-
-			this.value = val || 0;
-
-			this.updated = true;
-		},
-
-		/**
-		 * reset the item to the default value
-		 * @name reset
-		 * @memberOf me.HUD_Item
-		 * @public
-		 * @function
-		 */
-		reset : function() {
-			this.set(this.defaultvalue);
-		},
-		
-		/**
-		 * set the item value to the specified one
-		 * @name set
-		 * @memberOf me.HUD_Item
-		 * @public
-		 * @function
-		 */
-		set : function(value) {
-			this.value = value;
-			this.updated = true;
-			return true;
-		},
-
-		/**
-		 * update the item value
-		 * @name update
-		 * @memberOf me.HUD_Item
-		 * @public
-		 * @function
-		 * @param {int} value add the specified value
-		 */
-		update : function(value) {
-			return this.set(this.value + value);
-		},
-
-		/**
-		 * draw the HUD item
-		 * @name draw
-		 * @memberOf me.HUD_Item
-		 * @function
-		 * @protected
-		 * @param {Context2D} context 2D context
-		 * @param {Number} x
-		 * @param {Number} y
-		 */
-		draw : function(context, x, y) {
-			;// to be extended
-		}
-	});
-	/*---------------------------------------------------------*/
-
-	/**
-	 * HUD Object<br>
-	 * There is no constructor function for me.HUD_Object<br>
-	 * Object instance is accessible through {@link me.game.HUD} if previously initialized using me.game.addHUD(...);
-	 * @class
-	 * @extends Object
-	 * @memberOf me
-	 * @protected
-	 * @see me.game.addHUD
-	 * @example
-	 * // create a "score object" that will use a Bitmap font
-	 * // to display the score value
-	 * ScoreObject = me.HUD_Item.extend(
-	 * {	
-	 *    // constructor
-	 *    init: function(x, y)
-	 *    {
-	 *       // call the parent constructor
-	 *       this.parent(x, y);
-	 *       // create a font
-	 *       this.font = new me.BitmapFont("font16px", 16);
-	 *    },
-	 *    // draw function
-	 *    draw : function (context, x, y)
-	 *    {
-	 *       this.font.draw (context, this.value, this.pos.x +x, this.pos.y +y);
-	 *    }
-	 * });
-	 * 
-	 * // add a default HUD to the game mngr (with no background)
-	 * me.game.addHUD(0,0,480,100);
-	 * // add the "score" HUD item
-	 * me.game.HUD.addItem("score", new ScoreObject(470,10));
-	 */
-
-
-	me.HUD_Object = me.Renderable.extend(
-	/** @scope me.HUD_Object.prototype */
-	{	
-		/**
-		 * @ignore
-		 */
-		init : function(x, y, w, h, bg) {
-			// call the parent constructor
-			this.parent(new me.Vector2d(x || 0, y || 0), 
-						w || me.video.getWidth(), h || me.video.getHeight());
-
-			// default background color (if specified)
-			this.bgcolor = bg;
-
-			// hold all the items labels						
-			this.HUDItems = {};
-			// hold all the items objects
-			this.HUDobj = [];
-			// Number of items in the HUD
-			this.objCount = 0;
-
-			// visible or not...	
-			this.visible = true;
-			
-			// use screen coordinates
-			this.floating = true;
-
-			// state of HUD (to trigger redraw);
-			this.HUD_invalidated = true;
-
-			// create a canvas where to draw everything
-			this.HUDCanvas = me.video.createCanvas(this.width, this.height);
-			this.HUDCanvasSurface = me.video.getContext2d(this.HUDCanvas);
-			
-			// this is a little hack to ensure the HUD is always the first draw
-			this.z = 999;
-			
-			// ensure me.game.removeAll() will not remove the HUD
-			this.isPersistent = true;
-
-		},
-
-		/**
-		 * add an item to the me.game.HUD Object
-		 * @name me.HUD_Object#addItem
-		 * @public
-		 * @function
-		 * @param {String} name name of the item
-		 * @param {me.HUD_Item} item HUD Item to be added
-		 * @example
-		 * // add a "score" HUD item
-		 * me.game.HUD.addItem("score", new ScoreObject(470,10));
-		 */
-		addItem : function(name, item) {
-			this.HUDItems[name] = item;
-			this.HUDobj.push(this.HUDItems[name]);
-			this.objCount++;
-			this.HUD_invalidated = true;
-		},
-		
-		/**
-		 * remove an item from the me.game.HUD Object
-		 * @name me.HUD_Object#removeItem
-		 * @public
-		 * @function
-		 * @param {String} name name of the item
-		 * @example
-		 * // remove the "score" HUD item
-		 * me.game.HUD.removeItem("score");
-		 */
-		removeItem : function(name) {
-			if (this.HUDItems[name]) {
-				this.HUDobj.splice(this.HUDobj.indexOf(this.HUDItems[name]),1);
-				this.HUDItems[name] = null;
-				this.objCount--;
-				this.HUD_invalidated = true;
-			}
-		},
-		
-		/**
-		 * set the value of the specified item
-		 * @name me.HUD_Object#setItemValue
-		 * @public
-		 * @function
-		 * @param {String} name name of the item
-		 * @param {int} val value to be set 
-		 * @example
-		 * // set the "score" item value to 100
-		 * me.game.HUD.setItemValue("score", 100);
-		 */
-		setItemValue : function(name, value) {
-			if (this.HUDItems[name] && (this.HUDItems[name].set(value) == true))
-				this.HUD_invalidated = true;				
-		},
-
-		
-		/**
-		 * update (add) the value of the specified item
-		 * @name me.HUD_Object#updateItemValue
-		 * @public
-		 * @function
-		 * @param {String} name name of the item
-		 * @param {int} val value to be set 
-		 * @example
-		 * // add 10 to the current "score" item value
-		 * me.game.HUD.updateItemValue("score", 10);
-		 */
-		updateItemValue : function(name, value) {
-			if (this.HUDItems[name] && (this.HUDItems[name].update(value) == true))
-				this.HUD_invalidated = true;
-		},
-
-		/**
-		 * return the value of the specified item
-		 * @name me.HUD_Object#getItemValue
-		 * @public
-		 * @function
-		 * @param {String} name name of the item
-		 * @return {int}
-		 * @example
-		 * // return the value of the "score" item
-		 * score = me.game.HUD.getItemValue("score");
-		 */
-		getItemValue : function(name) {
-			return (this.HUDItems[name]) ? this.HUDItems[name].value : 0;
-		},
-		
-		/**
-		 * return true if the HUD has been updated
-		 * @ignore
-		 */
-		update : function() {
-			return this.HUD_invalidated;
-		},
-
-		/**
-		 * reset the specified item to default value
-		 * @name me.HUD_Object#reset
-		 * @public
-		 * @function
-		 * @param {String} [name="all"] name of the item
-		 */		
-		reset : function(name) {
-			if (name != undefined) {
-				// only reset the specified one
-				if (this.HUDItems[name])
-					this.HUDItems[name].reset();
-				this.HUD_invalidated = true;
-			} else {
-				// reset everything
-				this.resetAll();
-			}
-		},
-
-		/**
-		 * reset all items to default value
-		 * @ignore
-		 */
-		resetAll : function() {
-			for ( var i = this.objCount, obj; i--, obj = this.HUDobj[i];) {
-				obj.reset();
-			}
-			this.HUD_invalidated = true;
-		},
-
-		/**
-		 * draw the HUD
-		 * @ignore
-		 */
-		draw : function(context) {
-			if (this.HUD_invalidated) {
-				if (this.bgcolor) {
-					me.video.clearSurface(this.HUDCanvasSurface, this.bgcolor);
-				}
-				else {
-					this.HUDCanvas.width = this.HUDCanvas.width;
-				}
-				for ( var i = this.objCount, obj; i--, obj = this.HUDobj[i];) {
-					if (obj.visible) {
-						obj.draw(this.HUDCanvasSurface, 0, 0);
-						// clear the updated flag
-						if (obj.updated) {
-							obj.updated = false;
-						}
-					}
-				}
-			}
-			// draw the HUD
-			context.drawImage(this.HUDCanvas, this.pos.x, this.pos.y);
-			// reset the flag
-			this.HUD_invalidated = false;
-		}
-	});
-
-
-	/*---------------------------------------------------------*/
-	// END END END
-	/*---------------------------------------------------------*/
-})(window);
-
-/*
- * MelonJS Game Engine
- * Copyright (C) 2011 - 2013, Olivier BIOT
- * http://www.melonjs.org
- *
  * Audio Mngt Objects
  *
  *
@@ -9889,6 +9473,9 @@ window.me = window.me || {};
 		var keyboardInitialized = false;
 		var pointerInitialized = false;
 		var accelInitialized = false;
+		
+		// to keep track of the supported wheel event
+		var wheeltype = 'mousewheel';
 
 		// Track last event timestamp to prevent firing events out of order
 		var lastTimeStamp = 0;
@@ -9898,7 +9485,7 @@ window.me = window.me || {};
 		var mouseEventList =   ['mousewheel', 'mousemove', 'mousedown', 'mouseup', 'click', 'dblclick'];
 		var touchEventList =   [undefined, 'touchmove', 'touchstart', 'touchend', 'tap', 'dbltap'];
 		// (a polyfill will probably be required at some stage, once this will be fully standardized0
-		var pointerEventList = [undefined, 'PointerMove', 'PointerDown', 'PointerUp', undefined, undefined ];
+		var pointerEventList = ['mousewheel', 'PointerMove', 'PointerDown', 'PointerUp', undefined, undefined ];
 		
 		/**
 		 * enable keyboard event
@@ -9950,10 +9537,12 @@ window.me = window.me || {};
 					activeEventList = pointerEventList;
 					// check for backward compatibility with the 'MS' prefix
 					var useMSPrefix = window.navigator.msPointerEnabled;
-					for(var x = 0; x < activeEventList.length; ++x) {
+					for(var x = 1; x < activeEventList.length; ++x) {
 						if (activeEventList[x] && !activeEventList[x].contains('MS')) {
 							activeEventList[x] = useMSPrefix ? 'MS' + activeEventList[x] : activeEventList[x].toLowerCase();
 						}
+						// register mouse wheel event
+						window.addEventListener(activeEventList[0], onMouseWheel, false);
 					}
 					// register PointerEvents
 					registerEventListener(activeEventList, onPointerEvent);
@@ -9965,8 +9554,12 @@ window.me = window.me || {};
 				    } else {
 						// Regular Mouse events
 				        activeEventList = mouseEventList;
-						window.addEventListener('mousewheel', onMouseWheel, false);
 						registerEventListener(activeEventList, onPointerEvent);
+						
+						// detect wheel event support
+						// Modern browsers support "wheel", Webkit and IE support at least "mousewheel  
+						wheeltype = "onwheel" in document.createElement("div") ? "wheel" : "mousewheel";
+						window.addEventListener(wheeltype, onMouseWheel, false);						
 				    }
 				}
 				// set the PointerMove/touchMove/MouseMove event
@@ -10148,8 +9741,21 @@ window.me = window.me || {};
 		 */
 		function onMouseWheel(e) {
 			if (e.target == me.video.getScreenCanvas()) {
+				// create a (fake) normalized event object
+				var _event = {
+					deltaMode : 1,
+					type : "mousewheel",
+					deltaX: e.deltaX,
+					deltaY: e.deltaY,
+					deltaZ: e.deltaZ
+				};
+				if ( wheeltype == "mousewheel" ) {
+					_event.deltaY = - 1/40 * e.wheelDelta;
+					// Webkit also support wheelDeltaX
+					e.wheelDeltaX && ( _event.deltaX = - 1/40 * e.wheelDeltaX );
+				}
 				// dispatch mouse event to registered object
-				if (dispatchEvent(e)) {
+				if (dispatchEvent(_event)) {
 					// prevent default action
 					return preventDefault(e);
 				}
