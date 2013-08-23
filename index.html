@@ -938,7 +938,7 @@ game.resources = [
 <p>The boilerplate we used earlier already contains a HUD Skeleton that we will use as a base for our game. The skeleton is
 quite simple and consist of :
 <ul>
-    <li>an object called <b>game.HUD.Container</b>, that inherits from <a href="http://melonjs.github.io/docs/me.EntityContainer.html">me.EntityContainer</a></li>
+    <li>an object called <b>game.HUD.Container</b>, that inherits from <a href="http://melonjs.github.io/docs/me.ObjectContainer.html">me.ObjectContainer</a></li>
     <li>a basic score object called <b>game.HUD.ScoreItem</b>, that inherits from <a href="http://melonjs.github.io/docs/me.Renderable.html">me.Renderable</a></li>
 </ul>
 The HUD container is just basically an object container, that is defined as <b>persistent</b> (so that it can survive level changes), displayed on top of all others object (z propery set to Infinity),
@@ -954,7 +954,7 @@ The Score Object is defined as <b>floating</b> (so that when we add it to our HU
 game.HUD = game.HUD || {};
 
  
-game.HUD.Container = me.EntityContainer.extend({
+game.HUD.Container = me.ObjectContainer.extend({
 
 	init: function() {
 		// call the constructor
