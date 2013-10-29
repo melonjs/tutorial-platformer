@@ -178,6 +178,13 @@
 var game = {
     // Run on page load.
     "onload" : function () {
+	
+		// an object where to store game information
+		data : {
+			// score
+			score : 0
+		},
+
         // Initialize the video.
         if (!me.video.init("screen", 640, 480, true, 'auto')) {
             alert("Your browser does not support HTML5 canvas.");
@@ -260,25 +267,33 @@ game.resources = [
     filename, or else the level loader will not be able to find the tileset and will fail.</p>
 
 <p>Finally, let's open the js/screens/play.js file and in the <a href="http://melonjs.github.io/docs/me.ScreenObject.html#onResetEvent">onResetEvent()</a> function (which is called on a state
-    change), we ask the <a href="http://melonjs.github.io/docs/me.levelDirector.html">level director</a> to display our previously preloaded level :</p>
+    change), we ask the <a href="http://melonjs.github.io/docs/me.levelDirector.html">level director</a> to display our previously preloaded level, by adding a call to the <b>loadLevel</b> function and our default level name :</p>
 <pre class="brush: js">
-/* the in game stuff*/
 game.PlayScreen = me.ScreenObject.extend({
-
-    onResetEvent: function() {
-        // stuff to reset on state change
-        // load a level
-        me.levelDirector.loadLevel("area01");
-    },
-
-    /* ---
-
-    action to perform when game is finished (state change)
-
-    --- */
-    onDestroyEvent: function() {
+	/**	
+	 *  action to perform on state change
+	 */
+	onResetEvent: function() {	
+	
+		// load a level
+		me.levelDirector.loadLevel("area01");
+		
+		// reset the score
+		game.data.score = 0;
+		
+		// add our HUD to the game world	
+		me.game.add(new game.HUD.Container());
+		
+	},
+	
+	
+	/**	
+	 *  action to perform when leaving this screen (state change)
+	 */
+	onDestroyEvent: function() {
+		// remove the HUD from the game world
+		me.game.world.removeChild(me.game.world.getEntityByProp("name", "HUD")[0]);
 	}
-
 });
 
 </pre>
@@ -920,87 +935,189 @@ game.resources = [
 </pre>
 <br/>
 
-<p>Let's then define a new Object, that will extend the <a href="http://melonjs.github.io/docs/me.HUD_Item.html">me.HUD_Item</a>, 
-   in which we will draw the object value using our font.</p>
+<p>The boilerplate we used earlier already contains a HUD Skeleton that we will use as a base for our game. The skeleton is
+quite simple and consist of :
+<ul>
+    <li>an object called <b>game.HUD.Container</b>, that inherits from <a href="http://melonjs.github.io/docs/me.ObjectContainer.html">me.ObjectContainer</a></li>
+    <li>a basic score object called <b>game.HUD.ScoreItem</b>, that inherits from <a href="http://melonjs.github.io/docs/me.Renderable.html">me.Renderable</a></li>
+</ul>
+The HUD container is just basically an object container, that is defined as <b>persistent</b> (so that it can survive level changes), displayed on top of all others object (z propery set to Infinity),
+and we also make it non collidable so that it just be ignored during collision check.</p>
+<p>
+The Score Object is defined as <b>floating</b> (so that when we add it to our HUD container we use screen coordinates) and just for now caches the score value (defined under game.data).
+</p>
 <pre class="brush: js">
-/*-------------- 
-a score HUD Item
---------------------- */
+**
+ * a HUD container and child items
+ */
 
-game.ScoreObject = me.HUD_Item.extend({
-    init: function(x, y) {
-        // call the parent constructor
-        this.parent(x, y);
-        // create a font
-        this.font = new me.BitmapFont("32x32_font", 32);
-        this.font.set("right");
-    },
+game.HUD = game.HUD || {};
 
-    /* -----
+ 
+game.HUD.Container = me.ObjectContainer.extend({
 
-    draw our score
+	init: function() {
+		// call the constructor
+		this.parent();
+		
+		// persistent across level change
+		this.isPersistent = true;
+		
+		// non collidable
+		this.collidable = false;
+		
+		// make sure our object is always draw first
+		this.z = Infinity;
 
-    ------ */
-    draw: function(context, x, y) {
-        this.font.draw(context, this.value, this.pos.x + x, this.pos.y + y);
-    }
+		// give a name
+		this.name = "HUD";
+		
+		// add our child score object at the right-bottom position
+		this.addChild(new game.HUD.ScoreItem(630, 440));
+	}
+});
+
+
+/** 
+ * a basic HUD item to display score
+ */
+game.HUD.ScoreItem = me.Renderable.extend( {	
+	/** 
+	 * constructor
+	 */
+	init: function(x, y) {
+		
+		// call the parent constructor 
+		// (size does not matter here)
+		this.parent(new me.Vector2d(x, y), 10, 10); 
+
+		
+		// local copy of the global score
+		this.score = -1;
+
+		// make sure we use screen coordinates
+		this.floating = true;
+	},
+	
+	/**
+	 * update function
+	 */
+	update : function () {
+		// we don't draw anything fancy here, so just
+		// return true if the score has been updated
+		if (this.score !== me.game.score) {	
+			this.score = me.game.score;
+			return true;
+		}
+		return false;
+	},
+
+	/**
+	 * draw the score
+	 */
+	draw : function (context) {
+		// draw it baby !
+	}
 
 });
 </pre>
 <br/>
 
-<p>And display it when we start a new game :</p>
+<p>
+Now let's display our current score ! For that we will just simply complete the given scoreItem object, 
+by creating a local font property (using the previously bitmap font), and simply draw the score using our bitmap font :
+</p>
 <pre class="brush: js">
-/* the in game stuff*/
-game.PlayScreen = me.ScreenObject.extend({
+/** 
+ * a basic HUD item to display score
+ */
+game.HUD.ScoreItem = me.Renderable.extend( {	
+	/** 
+	 * constructor
+	 */
+	init: function(x, y) {
+		
+		// call the parent constructor 
+		// (size does not matter here)
+		this.parent(new me.Vector2d(x, y), 10, 10); 
+		
+		// create a font
+		this.font = new me.BitmapFont("32x32_font", 32);
+		this.font.set("right");
+		
+		// local copy of the global score
+		this.score = -1;
 
-    onResetEvent: function() {
-        // load a level
-        me.levelDirector.loadLevel("area01");
+		// make sure we use screen coordinates
+		this.floating = true;
+	},
+	
+	/**
+	 * update function
+	 */
+	update : function () {
+		// we don't draw anything fancy here, so just
+		// return true if the score has been updated
+		if (this.score !== me.game.score) {	
+			this.score = me.game.score;
+			return true;
+		}
+		return false;
+	},
 
-        // add a default HUD to the game mngr
-        me.game.addHUD(0, 430, 640, 60);
-
-        // add a new HUD item
-        me.game.HUD.addItem("score", new game.ScoreObject(620, 10));
-
-        // make sure everything is in the right order
-        me.game.sort();
-
-    },
-
-    /* ---
-
-    action to perform when game is finished (state change)
-
-    --- */
-    onDestroyEvent: function() {
-        // remove the HUD
-        me.game.disableHUD();
-    }
-
+	/**
+	 * draw the score
+	 */
+	draw : function (context) {
+		this.font.draw (context, game.data.score, this.pos.x, this.pos.y);
+	}
 });
 </pre>
+<br/>
 
-<p>The <a href="http://melonjs.github.io/docs/me.game.html#addHUD">me.game.addHUD()</a> function is used to enable a <a href="http://melonjs.github.io/docs/me.HUD_Object.html">HUD Object</a> (specifying the HUD
-    size), and we can then add our previously created score HUD Item by calling the
-    <a href="http://melonjs.github.io/docs/me.HUD_Object.html#addItem">me.game.HUD.addItem()</a> function (and specifying its position within the HUD). We
-    also assign the <b>"score"</b> keyword to that item, so that we can later access and
-    modify it's value.</p>
+<p>The HUD is already added and removed when we start the game, so there is nothing to do here : </p>
+<pre class="brush: js">
+game.PlayScreen = me.ScreenObject.extend({
+	/**	
+	 *  action to perform on state change
+	 */
+	onResetEvent: function() {	
+	
+		// load a level
+		me.levelDirector.loadLevel("area01");
+		
+		// reset the score
+		game.data.score = 0;
+		
+		// add our HUD to the game world	
+		me.game.add(new game.HUD.Container());
+		
+	},
+	
+	
+	/**	
+	 *  action to perform when leaving this screen (state change)
+	 */
+	onDestroyEvent: function() {
+		// remove the HUD from the game world
+		me.game.world.removeChild(me.game.world.getEntityByProp("name", "HUD")[0]);
+	}
+});
 
-<p>Additionally, we also add a call to <a href="http://melonjs.github.io/docs/me.game.html#disableHUD">me.game.disableHUD()</a> in the
-    <b>onDestroyEvent()</b> function, so that the HUD is removed when exiting the "play"
-    state.</p>
+</pre>
 
-<p>Now let's modify our Coin Object, and add some score when a coin is collected
-    :</p>
+
+
+<p>
+Last step is of course to actually change the score when a coin is collected ! Now let's modify our Coin Object :
+</p>
 <pre class="brush: js">
 onCollision : function ()
 {
     // do something when collected
 
     // give some score
-    me.game.HUD.updateItemValue("score", 250);
+    game.data.score += 250;
 
     // make sure it cannot be collected "again"
     this.collidable = false;
@@ -1009,9 +1126,7 @@ onCollision : function ()
 }
 </pre>
 
-<p>As you can see, in the <b>onCollision function</b>, we just call the
-    <a href="http://melonjs.github.io/docs/me.HUD_Object.html#updateItemValue">me.game.HUD.updateItemValue</a> function, giving the "score" keyword (we
-    previously defined), and the value to be added to the score. Then we ensure the object cannot be collected again, and remove the coin</p>
+<p>As you can see, in the <b>onCollision function</b>, we just change our game.data.score property by adding some value to it, then we ensure the object cannot be collected again, and remove the coin</p>
 
 <h3><a id="part6_try">Try it out</a></h3>
 
@@ -1116,7 +1231,7 @@ onCollision : function ()
     me.audio.play("cling");
 
     // give some score
-    me.game.HUD.updateItemValue("score", 250);
+    game.data.score += 250;
 
     // make sure it cannot be collected "again"
     this.collidable = false;
@@ -1190,7 +1305,8 @@ if (res) {
 onResetEvent: function() {
     // play the audio track
     me.audio.playTrack("DST-InertExponent");
-....
+
+	....
 },
 </pre>
 
@@ -1198,10 +1314,10 @@ onResetEvent: function() {
     current track when exiting the game :</p><br/>
 <pre class="brush: js">
 onDestroyEvent: function() {
-    // remove the HUD
-    me.game.disableHUD();
-
-    // stop the current audio track
+    
+	....
+    
+	// stop the current audio track
     me.audio.stopTrack();
 }
 </pre>

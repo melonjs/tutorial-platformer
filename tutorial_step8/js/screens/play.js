@@ -10,14 +10,11 @@ game.PlayScreen = me.ScreenObject.extend({
         // load a level
 		me.levelDirector.loadLevel("area01");
 		
-		// add a default HUD to the game mngr
-		me.game.addHUD(0,430,640,60);
+		// reset the score
+		game.data.score = 0;
 		
-		// add a new HUD item 
-		me.game.HUD.addItem("score", new game.ScoreObject(620,10));
-		
-		// make sure everyhting is in the right order
-		me.game.sort();
+		// add our HUD to the game world	
+		me.game.add(new game.HUD.Container());
 	},
 	
 	
@@ -25,7 +22,7 @@ game.PlayScreen = me.ScreenObject.extend({
 	 *  action to perform when leaving this screen (state change)
 	 */
 	onDestroyEvent: function() {
-	    // remove the HUD
-        me.game.disableHUD();
+		// remove the HUD from the game world
+		me.game.world.removeChild(me.game.world.getEntityByProp("name", "HUD")[0]);
 	}
 });

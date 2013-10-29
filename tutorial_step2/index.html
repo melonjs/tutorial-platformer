@@ -1,25 +1,32 @@
 <!DOCTYPE HTML>
 <html>
     <head>
-        <title>melonJS Template</title>
+        <title>melonJS Tutorial</title>
         <link rel="stylesheet" type="text/css" media="screen" href="index.css">
         <meta id="viewport" name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
         <meta name="apple-mobile-web-app-capable" content="yes">
         <meta name="apple-mobile-web-app-status-bar-style" content="black">
     </head>
     <body>
+		<!-- Canvas placeholder -->
         <div id="screen"></div>
-            <script type="text/javascript" src="lib/melonJS-0.9.7.js"></script>
-            <script type="text/javascript" src="lib/plugins/debugPanel.js"></script>
+			<!-- melonJS Library -->
+            <script type="text/javascript" src="../lib/melonJS-0.9.10.js"></script>
+			
+			<!-- Plugin(s) -->
+            <script type="text/javascript" src="../lib/plugins/debugPanel.js"></script>
 
+			<!-- Game Scripts -->
             <script type="text/javascript" src="js/game.js"></script>
             <script type="text/javascript" src="js/resources.js"></script>
 
 			<script type="text/javascript" src="js/entities/entities.js"></script>
-
+			<script type="text/javascript" src="js/entities/HUD.js"></script>
+						
             <script type="text/javascript" src="js/screens/title.js"></script>
             <script type="text/javascript" src="js/screens/play.js"></script>
 
+			<!-- Bootstrap & Mobile optimization tricks -->
             <script type="text/javascript">
 				/* Bootstrap */
 				window.onReady(function onReady() {
@@ -41,15 +48,8 @@
 
 						me.event.subscribe(me.event.WINDOW_ONRESIZE, function (e) {
 							window.scrollTo(0, 1);
+							me.video.onresize(null);
 						})
-
-						// Retina viewport settings
-						if (window.devicePixelRatio > 1) {
-							document.getElementById("viewport").setAttribute(
-								"content",
-								"width=device-width, initial-scale=0.5, maximum-scale=0.5, user-scalable=0"
-							);
-						}
 					}
 				});
             </script>
