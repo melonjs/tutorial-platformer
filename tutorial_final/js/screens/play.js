@@ -13,8 +13,9 @@ game.PlayScreen = me.ScreenObject.extend({
 		// reset the score
 		game.data.score = 0;
 		
-		// add our HUD to the game world	
-		me.game.add(new game.HUD.Container());
+		// add our HUD to the game world
+		this.HUD = new game.HUD.Container();
+		me.game.world.addChild(this.HUD);
 	},
 	
 	
@@ -23,7 +24,7 @@ game.PlayScreen = me.ScreenObject.extend({
 	 */
 	onDestroyEvent: function() {
 		// remove the HUD from the game world
-		me.game.world.removeChild(me.game.world.getEntityByProp("name", "HUD")[0]);
+		me.game.world.removeChild(this.HUD);
 		
 		// stop the audio track
 		me.audio.stopTrack();
