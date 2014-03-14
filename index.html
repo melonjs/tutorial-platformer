@@ -755,7 +755,7 @@ game.EnemyEntity = me.ObjectEntity.extend({
         // res.y &gt;0 means touched by something on the bottom
         // which mean at top position for this one
         if (this.alive &amp;&amp; (res.y &gt; 0) &amp;&amp; obj.falling) {
-            this.renderable.flicker(45);
+            this.renderable.flicker(2500);
         }
     },
 
@@ -803,7 +803,7 @@ game.EnemyEntity = me.ObjectEntity.extend({
     something is jumping on top of it.</p>
 	
 	<p>Note that an Object Entity drawable component (either a single sprite of animation) is 
-	accessible through the Entity `renderable` property, which explains here why we do here the following : `this.renderable.flicker(45);`</p>
+	accessible through the Entity `renderable` property, which explains here why we do here the following : `this.renderable.flicker(2500);`</p>
 
 <p>Then again, we add these new objects in the Object Pool</p>
 <pre class="brush: js">
@@ -818,7 +818,7 @@ me.pool.register("EnemyEntity", game.EnemyEntity);
                                                                   "media/tutorial_tiled_step5.png" alt="Step 5"/></p>
 
 <p>Before testing, we also need to modify our player to check for collision with other
-    entities. In order to do this, we add a call to the <a href="http://melonjs.github.io/docs/me.game.html#collide"> <b>me.game.collide(this)</b></a>
+    entities. In order to do this, we add a call to the <a href="http://melonjs.github.io/docs/me.ObjectContainer.html#collide"> <b>me.game.world.collide(this)</b></a>
     function in our mainPlayer code, see below :</p>
 <pre class="brush: js">
 /* -----
@@ -861,7 +861,7 @@ update: function() {
     this.updateMovement();
 
     // check for collision
-    var res = me.game.collide(this);
+    var res = me.game.world.collide(this);
 
     if (res) {
         // if we collide with an enemy
@@ -876,7 +876,7 @@ update: function() {
 
             } else {
                 // let's flicker in case we touched an enemy
-                this.renderable.flicker(45);
+                this.renderable.flicker(2500);
             }
         }
     }
@@ -1279,7 +1279,7 @@ if (me.input.isKeyPressed('jump')) {
     update function of the mainPlayer :</p><br/>
 <pre class="brush: js">
 // check for collision
-var res = me.game.collide(this);
+var res = me.game.world.collide(this);
 
 if (res) {
     if (res.obj.type == me.game.ENEMY_OBJECT) {
@@ -1293,7 +1293,7 @@ if (res) {
 			me.audio.play("stomp");
         } else {
             // let's flicker in case we touched an enemy
-            this.renderable.flicker(45);
+            this.renderable.flicker(2500);
         }
     }
 }

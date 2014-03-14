@@ -19,7 +19,8 @@ game.PlayerEntity = me.ObjectEntity.extend(
 		this.setVelocity(3, 15);
 	 
 		// adjust the bounding box
-		this.updateColRect(8,48, -1,0);
+        this.shapes[0].pos.x = 8;
+        this.shapes[0].resize(48, this.shapes[0].height);
 		
 		// set the display to follow our position on both axis
 		me.game.viewport.follow(this.pos, me.game.viewport.AXIS.BOTH);
@@ -70,7 +71,7 @@ game.PlayerEntity = me.ObjectEntity.extend(
 		updated = this.updateMovement();
 	 
 		// check for collision
-		var res = me.game.collide(this);
+		var res = me.game.world.collide(this);
 		 
 		if (res)
 		{
@@ -90,7 +91,7 @@ game.PlayerEntity = me.ObjectEntity.extend(
 			   else
 			   {
 				  // let's flicker in case we touched an enemy
-				  this.renderable.flicker(45);
+				  this.renderable.flicker(2500);
 			   }
 			}
 		}

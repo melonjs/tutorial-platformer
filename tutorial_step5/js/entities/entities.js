@@ -69,7 +69,7 @@ game.PlayerEntity = me.ObjectEntity.extend(
 		updated = this.updateMovement();
 	 
 		// check for collision
-		var res = me.game.collide(this);
+		var res = me.game.world.collide(this);
 		 
 		if (res)
 		{
@@ -86,7 +86,7 @@ game.PlayerEntity = me.ObjectEntity.extend(
 			   else
 			   {
 				  // let's flicker in case we touched an enemy
-				  this.renderable.flicker(45);
+				  this.renderable.flicker(2500);
 			   }
 			}
 		}
