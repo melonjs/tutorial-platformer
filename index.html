@@ -432,8 +432,8 @@ game.PlayerEntity = me.ObjectEntity.extend({
     testing the final velocity (this.vel.x and this.vel.y) of my object, which allows me to
     know if my object actually moved, and control if I want the sprite animation to run or not.</p>
 
-<p>Then, we have to modify our "main" to actually declare our new Object in the
-    <a href="http://melonjs.github.io/docs/me.entityPool.html"> EntityPool</a> (that is used by the engine to instantiate object), and finally to map the
+<p>Then, we have to modify our "main" to actually declare our new Object in the object
+    <a href="http://melonjs.github.io/docs/me.pool.html"> pool</a> (that is used by the engine to instantiate object), and finally to map the
     keys we will use for the player movement. So our <b>loaded()</b> function will become
     :</p>
 <pre class="brush: js">
@@ -449,8 +449,8 @@ game.PlayerEntity = me.ObjectEntity.extend({
    // set the "Play/Ingame" Screen Object
    me.state.set(me.state.PLAY, new game.PlayScreen());
     
-   // add our player entity in the entity pool
-   me.entityPool.add("mainPlayer", game.PlayerEntity);
+   // register our player entity in the object pool
+   me.pool.register("mainPlayer", game.PlayerEntity);
 			
    // enable the keyboard
    me.input.bindKey(me.input.KEY.LEFT,	"left");
@@ -469,7 +469,7 @@ game.PlayerEntity = me.ObjectEntity.extend({
     then you can right click the object and add the properties below.</p>
 
 <p>Name it (case does not matter) <b>mainPlayer</b> (or using the same name you used
-    when adding our Object into the entityPool), and add two properties to the Object:
+    when registering our Object into the Object Pool), and add two properties to the Object:
     <ul>
 		<li><b>image</b> : with the <b>gripe_run_right</b> value (name of our resource</li>
 		<li><b>spritewidth</b> : with the value <b>64</b> which is the size of a single sprite in the spritesheet</li>
@@ -805,12 +805,12 @@ game.EnemyEntity = me.ObjectEntity.extend({
 	<p>Note that an Object Entity drawable component (either a single sprite of animation) is 
 	accessible through the Entity `renderable` property, which explains here why we do here the following : `this.renderable.flicker(45);`</p>
 
-<p>Then again, we add these new objects in the entityPool</p>
+<p>Then again, we add these new objects in the Object Pool</p>
 <pre class="brush: js">
-// add our object entities in the entity pool
-me.entityPool.add("mainPlayer", game.PlayerEntity);
-me.entityPool.add("CoinEntity", game.CoinEntity);
-me.entityPool.add("EnemyEntity", game.EnemyEntity);
+// register our object entities in the object pool
+me.pool.register("mainPlayer", game.PlayerEntity);
+me.pool.register("CoinEntity", game.CoinEntity);
+me.pool.register("EnemyEntity", game.EnemyEntity);
 </pre>
 <br/>
 
@@ -1526,10 +1526,10 @@ game.TitleScreen = me.ScreenObject.extend({
     // set a global fading transition for the screen
     me.state.transition("fade", "#FFFFFF", 250);
 
-    // add our player entity in the entity pool
-    me.entityPool.add("mainPlayer", game.PlayerEntity);
-    me.entityPool.add("CoinEntity", game.CoinEntity);
-    me.entityPool.add("EnemyEntity", game.EnemyEntity);
+    // register our player entity in the object pool
+    me.pool.register("mainPlayer", game.PlayerEntity);
+    me.pool.register("CoinEntity", game.CoinEntity);
+    me.pool.register("EnemyEntity", game.EnemyEntity);
 
     // enable the keyboard
     me.input.bindKey(me.input.KEY.LEFT, "left");
