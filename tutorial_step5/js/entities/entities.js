@@ -17,11 +17,7 @@ game.PlayerEntity = me.ObjectEntity.extend(
 		
 		// set the default horizontal & vertical speed (accel vector)
 		this.setVelocity(3, 15);
-	 
-        // update the collision shape rect
-        this.shapes[0].pos.x = 8;
-        this.shapes[0].resize(48, this.shapes[0].height);
-		
+	 		
 		// set the display to follow our position on both axis
 		me.game.viewport.follow(this.pos, me.game.viewport.AXIS.BOTH);
 		

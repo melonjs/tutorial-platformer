@@ -197,7 +197,7 @@ var game = {
 		// add "#debug" to the URL to enable the debug Panel
 		if (document.location.hash === "#debug") {
 			window.onReady(function () {
-				me.plugin.register.defer(debugPanel, "debug");
+				me.plugin.register.defer(this, debugPanel, "debug");
 			});
 		}
 
@@ -525,51 +525,25 @@ make sure you are also resizing the object rectangle in Tiled to match with your
 
 <p>Save everything, and if you now re-open your index.html, you should see something like
     this :<br/>
-    (click on the image to see it running in your browser) <a href=
-                                                                      "./tutorial_step3/index.html"><img
-            src="media/tutorial_step3.png" alt=
-            "Step 3 Results"/></a><br/></p>
+    (click on the image to see it running in your browser) 
+    <a href="./tutorial_step3/index.html"><img src="media/tutorial_step3.png" alt="Step 3 Results"/></a>
+    <br/>
+</p>
 
 <p>You will also notice that display is automatically following our player.</p>
 
-<p>One last thing - when creating an object, a collision rectangle is automatically
-    created to manage collision between objects. For debugging purposes, you can use the
-    following debug settings in your main to enable it :</p>
-<pre class="brush: js">
-me.debug.renderHitBox = true;
-</pre>
+<p>One last thing - when creating an object, a default collision shape is automatically
+    created to manage collision between objects, based on the object size you defined in Tiled.
+    For debugging purposes, you can enable the debug panel by adding <b>#debug</b> to URL in the browser URL bar.</p>
 
-<p>If you reload the game, you will see this:</p><img src="media/step3_hitbox1.png"
-                                                      alt="Enabling hit box"/>
+<p>If you reload the game, and enable "hitbox" you will see this:
+    <img src="media/step3_debugpanel.png" alt="Enabling the debug panel"/>
+</p>
 
-<p>As you can see we have a lot of white space on the left and right of our
-    character, so let's adjust the collision rectangle to our sprite:</p>
-<pre class="brush: js">
-/* -----
+<p>The collision box can be adjusted from Tiled by changing the size of the object and match the above example. 
+   (Collision Shape can also manually adjusted by accessing the object entity <a href="http://melonjs.github.io/docs/me.ObjectEntity.html#shapes">shapes</a> property).
+</p>
 
-    constructor
-
-    ------ */
-
-init: function(x, y, settings) {
-    // call the constructor
-    this.parent(x, y, settings);
-
-    // set the walking &amp; jumping speed
-    this.setVelocity(3, 15);
-
-    // adjust the bounding box
-    this.updateColRect(8, 48, -1, 0);
-
-    // set the display to follow our position on both axis
-    me.game.viewport.follow(this.pos, me.game.viewport.AXIS.BOTH);
-
-},
-</pre>
-
-<p>Here we add a horizontal 8 pixel offset, and set it's width to 48 pixels. We don't
-    change the height, so we specify -1.</p><img src="media/step3_hitbox2.png" alt=
-        "Tweaking the hit box"/>
 
 <h2><a id="part4">Part 4: Add a scrolling background</a></h2>
 
