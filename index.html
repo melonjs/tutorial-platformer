@@ -381,7 +381,7 @@ game.PlayerEntity = me.ObjectEntity.extend({
     update the player pos
 
     ------ */
-    update: function() {
+    update: function(dt) {
 
         if (me.input.isKeyPressed('left')) {
             // flip the sprite on horizontal axis
@@ -414,7 +414,7 @@ game.PlayerEntity = me.ObjectEntity.extend({
         // update animation if necessary
         if (this.vel.x!=0 || this.vel.y!=0) {
             // update object animation
-            this.parent();
+            this.parent(dt);
             return true;
         }
 		
@@ -675,7 +675,7 @@ game.CoinEntity = me.CollectableEntity.extend({
         // make sure it cannot be collected "again"
         this.collidable = false;
         // remove it
-        me.game.remove(this);
+        me.game.world.removeChild(this);
     }
 
 });
@@ -698,28 +698,32 @@ an enemy Entity
 game.EnemyEntity = me.ObjectEntity.extend({
     init: function(x, y, settings) {
         // define this here instead of tiled
-        settings.image = "wheelie_right";
-        settings.spritewidth = 64;
+		settings.image = "wheelie_right";
+          
+        // save the area size defined in Tiled
+		var width = settings.width;
+		var height = settings.height;;
 
-        // call the parent constructor
-        this.parent(x, y, settings);
+		// adjust the size setting information to match the sprite size
+        // so that the entity object is created with the right size
+		settings.spritewidth = settings.width = 64;
+		settings.spritewidth = settings.height = 64;
+		
+		// call the parent constructor
+		this.parent(x, y , settings);
+		
+		// set start/end position based on the initial area size
+		x = this.pos.x;
+		this.startX = x;
+		this.endX   = x + width - settings.spritewidth
+		this.pos.x  = x + width - settings.spritewidth;
 
-        this.startX = x;
-        this.endX = x + settings.width - settings.spritewidth;
-        // size of sprite
-
-        // make him start from the right
-        this.pos.x = x + settings.width - settings.spritewidth;
-        this.walkLeft = true;
-
-        // walking &amp; jumping speed
-        this.setVelocity(4, 6);
-
-        // make it collidable
-        this.collidable = true;
-        // make it a enemy object
-        this.type = me.game.ENEMY_OBJECT;
-
+		// walking &amp jumping speed
+		this.setVelocity(4, 6);
+		
+		// make it collidable
+		this.collidable = true;
+		this.type = me.game.ENEMY_OBJECT;
     },
 
     // call by the engine when colliding with another object
@@ -729,12 +733,12 @@ game.EnemyEntity = me.ObjectEntity.extend({
         // res.y &gt;0 means touched by something on the bottom
         // which mean at top position for this one
         if (this.alive &amp;&amp; (res.y &gt; 0) &amp;&amp; obj.falling) {
-            this.renderable.flicker(2500);
+            this.renderable.flicker(750);
         }
     },
 
     // manage the enemy movement
-    update: function() {
+    update: function(dt) {
         // do nothing if not in viewport
         if (!this.inViewport)
             return false;
@@ -759,7 +763,7 @@ game.EnemyEntity = me.ObjectEntity.extend({
         // update animation if necessary
         if (this.vel.x!=0 || this.vel.y!=0) {
             // update object animation
-            this.parent();
+            this.parent(dt);
             return true;
         }
         return false;
@@ -777,7 +781,7 @@ game.EnemyEntity = me.ObjectEntity.extend({
     something is jumping on top of it.</p>
 	
 	<p>Note that an Object Entity drawable component (either a single sprite of animation) is 
-	accessible through the Entity `renderable` property, which explains here why we do here the following : `this.renderable.flicker(2500);`</p>
+	accessible through the Entity `renderable` property, which explains here why we do here the following : `this.renderable.flicker(750);`</p>
 
 <p>Then again, we add these new objects in the Object Pool</p>
 <pre class="brush: js">
@@ -798,7 +802,7 @@ me.pool.register("EnemyEntity", game.EnemyEntity);
 /* -----
 update the player pos
 ------ */
-update: function() {
+update: function(dt) {
 
     if (me.input.isKeyPressed('left'))
 	{
@@ -850,7 +854,7 @@ update: function() {
 
             } else {
                 // let's flicker in case we touched an enemy
-                this.renderable.flicker(2500);
+                this.renderable.flicker(750);
             }
         }
     }
@@ -858,7 +862,7 @@ update: function() {
     // update animation if necessary
     if (this.vel.x!=0 || this.vel.y!=0) {
         // update object animation
-        this.parent();
+        this.parent(dt);
         return true;
     }
     // else inform the engine we did not perform
@@ -980,7 +984,7 @@ game.HUD.ScoreItem = me.Renderable.extend( {
 	/**
 	 * update function
 	 */
-	update : function () {
+	update : function (dt) {
 		// we don't do anything fancy here, so just
 		// return true if the score has been updated
 		if (this.score !== game.data.score) {	
@@ -1033,7 +1037,7 @@ game.HUD.ScoreItem = me.Renderable.extend( {
 	/**
 	 * update function
 	 */
-	update : function () {
+	update : function (dt) {
 		// we don't draw anything fancy here, so just
 		// return true if the score has been updated
 		if (this.score !== game.data.score) {
@@ -1091,8 +1095,7 @@ game.PlayScreen = me.ScreenObject.extend({
 Last step is of course to actually change the score when a coin is collected ! Now let's modify our Coin Object :
 </p>
 <pre class="brush: js">
-onCollision : function ()
-{
+onCollision : function () {
     // do something when collected
 
     // give some score
@@ -1101,7 +1104,7 @@ onCollision : function ()
     // make sure it cannot be collected "again"
     this.collidable = false;
     // remove it
-    me.game.remove(this);
+    me.game.world.removeChild(this);
 }
 </pre>
 
@@ -1202,8 +1205,7 @@ me.audio.init("mp3,ogg");
     need to add a new call to <a href="http://melonjs.github.io/docs/me.audio.html#play"><b>me.audio.play()</b></a> and use the <b>"cling"</b> audio
     resource. that's all !</p><br/>
 <pre class="brush: js">
-onCollision : function ()
-{
+onCollision : function () {
     // do something when collected
 
     // play a "coin collected" sound
@@ -1215,7 +1217,7 @@ onCollision : function ()
     // make sure it cannot be collected "again"
     this.collidable = false;
     // remove it
-    me.game.remove(this);
+    me.game.world.removeChild(this);
 }
 </pre>
 <br/>
@@ -1267,7 +1269,7 @@ if (res) {
 			me.audio.play("stomp");
         } else {
             // let's flicker in case we touched an enemy
-            this.renderable.flicker(2500);
+            this.renderable.flicker(750);
         }
     }
 }
@@ -1373,109 +1375,95 @@ game.TitleScreen = me.ScreenObject.extend({
     - wait for user input (pressing enter)<br/>
     Additionally, I also want to add a small scrolling text about this tutorial.</p>
 <pre class="brush: js">
-/*----------------------
-
-    A title screen
-
-  ----------------------*/
-
+/**
+ * A title screen 
+ **/
 game.TitleScreen = me.ScreenObject.extend({
-    // constructor
-    init: function() {
-        this.parent(true);
 
-        // title screen image
-        this.title = null;
-
-        this.font = null;
-        this.scrollerfont = null;
-        this.scrollertween = null;
-
-        this.scroller = "A SMALL STEP BY STEP TUTORIAL FOR GAME CREATION WITH MELONJS       ";
-        this.scrollerpos = 600;
-    },
-
-    // reset function
-    onResetEvent: function() {
-        if (this.title == null) {
-            // init stuff if not yet done
-            this.title = me.loader.getImage("title_screen");
-            // font to display the menu items
-            this.font = new me.BitmapFont("32x32_font", 32);
-
-            // set the scroller
-            this.scrollerfont = new me.BitmapFont("32x32_font", 32);
-
-        }
-
-        // reset to default value
-        this.scrollerpos = 640;
-
-        // a tween to animate the arrow
-        this.scrollertween = new me.Tween(this).to({
-            scrollerpos: -2200
-        }, 10000).onComplete(this.scrollover.bind(this)).start();
-
-        // enable the keyboard
+    /**    
+     *  action to perform on state change
+     */
+    onResetEvent : function() {
+        
+        // title screen
+        me.game.world.addChild(
+            new me.SpriteObject (
+                0,0, 
+                me.loader.getImage('title_screen')
+            ),
+            1
+        );
+    
+        // add a new renderable component with the scrolling text
+        me.game.world.addChild(new (me.Renderable.extend ({
+            // constructor
+            init : function() {
+                this.parent(new me.Vector2d(0, 0), me.game.viewport.width, me.game.viewport.height);
+                // font for the scrolling text
+                this.font = new me.BitmapFont("32x32_font", 32);
+                
+                 // a tween to animate the arrow
+                this.scrollertween = new me.Tween(this).to({scrollerpos: -2200 }, 10000).onComplete(this.scrollover.bind(this)).start();
+        
+                this.scroller = "A SMALL STEP BY STEP TUTORIAL FOR GAME CREATION WITH MELONJS       ";
+                this.scrollerpos = 600;
+            },
+            
+            // some callback for the tween objects
+            scrollover : function() {
+                // reset to default value
+                this.scrollerpos = 640;
+                this.scrollertween.to({scrollerpos: -2200 }, 10000).onComplete(this.scrollover.bind(this)).start();
+            },
+        
+            update : function (dt) {
+                return true;
+            },
+            
+            draw : function (context) {
+                this.font.draw (context, "PRESS ENTER TO PLAY", 20, 240);
+                this.font.draw(context, this.scroller, this.scrollerpos, 440);
+            },
+            onDestroyEvent : function() {
+                //just in case
+                this.scrollertween.stop();
+            }
+        })), 2);
+        
+        // change to play state on press Enter or click/tap
         me.input.bindKey(me.input.KEY.ENTER, "enter", true);
-
-        // play something
-        me.audio.play("cling");
-
+        me.input.bindPointer(me.input.mouse.LEFT, me.input.KEY.ENTER);
+        this.handler = me.event.subscribe(me.event.KEYDOWN, function (action, keyCode, edge) {
+            if (action === "enter") {
+                // play something on tap / enter
+                // this will unlock audio on mobile devices
+                me.audio.play("cling");
+                me.state.change(me.state.PLAY);
+            }
+        });
     },
 
-    // some callback for the tween objects
-    scrollover: function() {
-        // reset to default value
-        this.scrollerpos = 640;
-        this.scrollertween.to({
-            scrollerpos: -2200
-        }, 10000).onComplete(this.scrollover.bind(this)).start();
-    },
-
-    // update function
-    update: function() {
-        // enter pressed ?
-        if (me.input.isKeyPressed('enter')) {
-            me.state.change(me.state.PLAY);
-        }
-        return true;
-    },
-
-    // draw function
-    draw: function(context) {
-        context.drawImage(this.title, 0, 0);
-
-        this.font.draw(context, "PRESS ENTER TO PLAY", 20, 240);
-        this.scrollerfont.draw(context, this.scroller, this.scrollerpos, 440);
-    },
-
-    // destroy function
-    onDestroyEvent: function() {
+    /**    
+     *  action to perform when leaving this screen (state change)
+     */
+    onDestroyEvent : function() {
         me.input.unbindKey(me.input.KEY.ENTER);
-
-        //just in case
-        this.scrollertween.stop();
-    }
-
+        me.input.unbindPointer(me.input.mouse.LEFT);
+        me.event.unsubscribe(this.handler);
+   }
 });
 </pre>
 
 <p>What do we have above?<br/>
-    1) In the constructor, we declare a few objects to handle the background tile, a font
-    for displaying our message, and our scroller.<br/>
+    1) In the onResetEvent function, we create two renderables components and add them to our game world.
+    The first is a basic Sprite object that will display our title background image, and the
+    second handles the "press ENTER" message and a scroller based on a Tween object.<br/>
 	Note : Concerning the font, if you check carefully the corresponding asset 
 	(32x32_font.png), you will notice that it only contains uppercase letters, so be sure 
 	as well to only use uppercase letter in your text.<br/>
-    2) In the reset function, we load the resources we need (image, font, etc..) and
-    reset our scrolling text position, add a tween object for it (with a callback to
-    reset the scrolling text), and bind the ENTER key. Additionally, I'm also playing the
-    "cling" sound, when the title menu is loaded, because it's nice :)<br/>
-    3) In the update function, we check for user input (to press enter) and switch to the
+    2) We also register to key event, or mouse/tap event to automatically switch to the
     PLAY state if pressed.<br/>
-    4) In the draw function, we draw our background (using the drawImage function), draw
-    both the static and scrolling text.<br/>
-    5) On destroy, we unbind the ENTER key, and stop the tween!<br/>
+    5) On destroy, we unbind the key and pointer events.<br/>
     Easy, no?</p>
 
 <p>And of course the very last thing is to indicate to the engine we created a new
