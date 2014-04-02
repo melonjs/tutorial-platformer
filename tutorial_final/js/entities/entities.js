@@ -17,10 +17,7 @@ game.PlayerEntity = me.ObjectEntity.extend(
 		
 		// set the default horizontal & vertical speed (accel vector)
 		this.setVelocity(3, 15);
-	 
-		// adjust the bounding box
-		this.updateColRect(8,48, -1,0);
-		
+	 		
 		// set the display to follow our position on both axis
 		me.game.viewport.follow(this.pos, me.game.viewport.AXIS.HORIZONTAL);
 		
@@ -31,7 +28,7 @@ game.PlayerEntity = me.ObjectEntity.extend(
 		update the player pos
 		
 	  ------			*/
-	update : function ()
+	update : function (dt)
 	{
 			
 		if (me.input.isKeyPressed('left'))
@@ -70,7 +67,7 @@ game.PlayerEntity = me.ObjectEntity.extend(
 		this.updateMovement();
 	 
 		// check for collision
-		var res = me.game.collide(this);
+		var res =  me.game.world.collide(this)
 		 
 		if (res)
 		{
@@ -89,7 +86,7 @@ game.PlayerEntity = me.ObjectEntity.extend(
 			   else
 			   {
 				  // let's flicker in case we touched an enemy
-				  this.renderable.flicker(45);
+				  this.renderable.flicker(750);
 			   }
 			}
 		}
@@ -99,7 +96,7 @@ game.PlayerEntity = me.ObjectEntity.extend(
 		if (this.vel.x!=0 || this.vel.y!=0)
 		{
 			// update object animation
-			this.parent();
+			this.parent(dt);
 			return true;
 		}
 		
@@ -131,7 +128,7 @@ game.CoinEntity = me.CollectableEntity.extend(
 		// make sure it cannot be collected "again"
 		this.collidable = false;
 		// remove it
-		me.game.remove(this);
+		me.game.world.removeChild(this);
 	}
 
 	
@@ -146,18 +143,24 @@ game.EnemyEntity = me.ObjectEntity.extend(
 	{
 		// define this here instead of tiled
 		settings.image = "wheelie_right";
-		settings.spritewidth = 64;
+          
+        // save the area size defined in Tiled
+		var width = settings.width;
+		var height = settings.height;;
+
+		// adjust the size setting information to match the sprite size
+        // so that the entity object is created with the right size
+		settings.spritewidth = settings.width = 64;
+		settings.spritewidth = settings.height = 64;
 		
 		// call the parent constructor
 		this.parent(x, y , settings);
 		
+		// set start/end position based on the initial area size
+		x = this.pos.x;
 		this.startX = x;
-		this.endX   = x+settings.width - settings.spritewidth; // size of sprite
-		
-		
-		// make him start from the right
-		this.pos.x = x + settings.width - settings.spritewidth;
-		this.walkLeft = true;
+		this.endX   = x + width - settings.spritewidth
+		this.pos.x  = x + width - settings.spritewidth;
 
 		// walking & jumping speed
 		this.setVelocity(4, 6);
@@ -165,10 +168,6 @@ game.EnemyEntity = me.ObjectEntity.extend(
 		// make it collidable
 		this.collidable = true;
 		this.type = me.game.ENEMY_OBJECT;
-		
-		// bounding box
-		this.updateColRect(4,56,8,56);
-		
 	},
 	
 		
@@ -180,13 +179,13 @@ game.EnemyEntity = me.ObjectEntity.extend(
 		if (this.alive && (res.y > 0) && obj.falling)
 		{
 			// make it flicker
-			this.renderable.flicker(45);
+			this.renderable.flicker(750);
 		}
 	},
 
 	
 	// manage the enemy movement
-	update : function ()
+	update : function (dt)
 	{
 		// do nothing if not in viewport
 		if (!this.inViewport)
@@ -212,11 +211,11 @@ game.EnemyEntity = me.ObjectEntity.extend(
 		}
 		// check & update movement
 		this.updateMovement();
-			
+		
 		if (this.vel.x!=0 ||this.vel.y!=0)
 		{
 			// update the object animation
-			this.parent();
+			this.parent(dt);
 			return true;
 		}
 		return false;

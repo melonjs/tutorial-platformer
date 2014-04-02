@@ -19,7 +19,7 @@ var game = {
 		// add "#debug" to the URL to enable the debug Panel
 		if (document.location.hash === "#debug") {
 			window.onReady(function () {
-				me.plugin.register.defer(debugPanel, "debug");
+				me.plugin.register.defer(this, debugPanel, "debug");
 			});
 		}
 
@@ -44,7 +44,7 @@ var game = {
         me.state.set(me.state.PLAY, new game.PlayScreen());
 		
 		// add our player entity in the entity pool
-		me.entityPool.add("mainPlayer", game.PlayerEntity);
+		me.pool.register("mainPlayer", game.PlayerEntity);
 
 		// enable the keyboard
 		me.input.bindKey(me.input.KEY.LEFT,		"left");

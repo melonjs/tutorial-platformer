@@ -24,11 +24,11 @@
 
         //]]>
     </script>
-	  <script type="text/javascript" src="SyntaxHighlighter/shCore.js"></script>
-	 <script type="text/javascript" src="SyntaxHighlighter/shBrushJScript.js"></script>
-	 <link href="SyntaxHighlighter/shCore.css" rel="stylesheet" type="text/css" />
-	 <link href="SyntaxHighlighter/shThemeDefault.css" rel="stylesheet" type="text/css" />
-	 <style type="text/css">
+      <script type="text/javascript" src="SyntaxHighlighter/shCore.js"></script>
+     <script type="text/javascript" src="SyntaxHighlighter/shBrushJScript.js"></script>
+     <link href="SyntaxHighlighter/shCore.css" rel="stylesheet" type="text/css" />
+     <link href="SyntaxHighlighter/shThemeDefault.css" rel="stylesheet" type="text/css" />
+     <style type="text/css">
             /*<![CDATA[*/
         pre.c2 {
             font-family: Andale Mono, Lucida Console, Monaco, fixed, monospace;
@@ -68,7 +68,7 @@
 
     <div id="site_content">
         <a href="https://github.com/melonjs/melonjs"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_white_ffffff.png" alt="Fork me on GitHub"></a>
-	<div class="sidebar">
+    <div class="sidebar">
         <p><img src="media/HTML5_Badge_128.png" alt="HTML5 badge"/></p>
 
         <h3>Useful Links</h3>
@@ -91,25 +91,25 @@
     <li>The <a href="http://www.mapeditor.org/">Tiled Map Editor</a>, installed
         and running (0.9.0 or later)
     </li>
-	
+    
  
-	<li>
-	The melonJS <a href="https://github.com/melonjs/boilerplate/archive/master.zip">boilerplate</a>, 
-	that we will use as default template project for our tutorial. 
-	</li>
-	<li>
-	The tutorial <a href="tutorial_data.zip">data files</a>, to be uncompressed into the (here above) template data directory, 
-	and which contains the following :</li>
-		<ul>
-			<li>a level tileset and a metatileset for collision </li>
-			<li>two backgrounds for parallax layers</li>
-			<li>some basic spritesheets </li>
-			<li>some audio sfx and music</li>
-			<li>a title screen background</li>
-		</ul>
+    <li>
+    The melonJS <a href="https://github.com/melonjs/boilerplate/archive/master.zip">boilerplate</a>, 
+    that we will use as default template project for our tutorial. 
+    </li>
+    <li>
+    The tutorial <a href="tutorial_data.zip">data files</a>, to be uncompressed into the (here above) template data directory, 
+    and which contains the following :</li>
+        <ul>
+            <li>a level tileset and a metatileset for collision </li>
+            <li>two backgrounds for parallax layers</li>
+            <li>some basic spritesheets </li>
+            <li>some audio sfx and music</li>
+            <li>a title screen background</li>
+        </ul>
 
-	<li>The melonJS <a href="http://www.melonjs.org/download.html"> library</a>, 
-		to be copied under the /lib directory (be sure to download both the minified and plain version, as the latter might potentially be required for debugging purpose)
+    <li>The melonJS <a href="http://www.melonjs.org/download.html"> library</a>, 
+        to be copied under the /lib directory (be sure to download both the minified and plain version, as the latter might potentially be required for debugging purpose)
     </li>
 
     <li>The melonJS <a href="http://www.melonjs.org/docs/index.html">documentation</a>
@@ -119,9 +119,9 @@
 
 <p><b>Testing/debugging :</b><br/>
     When using Chrome, and due to the "cross-origin request" security mechanism implemented, 
-	you need to use the "--disable-web-security" parameter or better "--allow-file-access-from-files" 
-	when launching the browser in order to test any local content, else the browser will complain 
-	when trying to load a level map. <br/></p>
+    you need to use the "--disable-web-security" parameter or better "--allow-file-access-from-files" 
+    when launching the browser in order to test any local content, else the browser will complain 
+    when trying to load a level map. <br/></p>
 
 <p class="c1">Additional Credits :</p>
 
@@ -193,13 +193,13 @@ var game = {
             alert("Your browser does not support HTML5 canvas.");
             return;
         }
-		
-		// add "#debug" to the URL to enable the debug Panel
-		if (document.location.hash === "#debug") {
-			window.onReady(function () {
-				me.plugin.register.defer(debugPanel, "debug");
-			});
-		}
+        
+        // add "#debug" to the URL to enable the debug Panel
+        if (document.location.hash === "#debug") {
+            window.onReady(function () {
+                me.plugin.register.defer(this, debugPanel, "debug");
+            });
+        }
 
         // Initialize the audio.
         me.audio.init("mp3,ogg");
@@ -235,7 +235,7 @@ var game = {
     the callback, we define a new state that will be used for the in game stuff, together
     with a <a href="http://melonjs.github.io/docs/me.ScreenObject.html"> <b>PlayScreen</b> object</a> that we will use to manage the game event (reset,
     etc...).</p>
-	
+    
 <p>The only change we will do in the default project template is the given video resolution for the `me.video.init()` function, as for the tutorial we will create a 640x480 canvas. 
    You will notice as well later that in the final version of the tutorial, I disabled video scaling by removing the 'auto' parameter, as my intention was to have it fitting my html template.</p>
 
@@ -251,16 +251,16 @@ var game = {
 <pre class="brush: js">
 //game resources
 game.resources = [
-	/**
-	 * Graphics.
-	 */
-	// our level tileset
-	{name: "area01_level_tiles",  type:"image",	src: "data/img/map/area01_level_tiles.png"},
-	
-	/* 
-	 * Maps. 
- 	 */
-	{name: "area01", type: "tmx", src: "data/map/area01.tmx"}
+    /**
+     * Graphics.
+     */
+    // our level tileset
+    {name: "area01_level_tiles",  type:"image", src: "data/img/map/area01_level_tiles.png"},
+    
+    /* 
+     * Maps. 
+     */
+    {name: "area01", type: "tmx", src: "data/map/area01.tmx"}
 
 ];
 
@@ -273,31 +273,31 @@ game.resources = [
     change), we ask the <a href="http://melonjs.github.io/docs/me.levelDirector.html">level director</a> to display our previously preloaded level, by adding a call to the <b>loadLevel</b> function and our default level name :</p>
 <pre class="brush: js">
 game.PlayScreen = me.ScreenObject.extend({
-	/**	
-	 *  action to perform on state change
-	 */
-	onResetEvent: function() {	
-	
-		// load a level
-		me.levelDirector.loadLevel("area01");
-		
-		// reset the score
-		game.data.score = 0;
-		
-		// add our HUD to the game world
-		this.HUD = new game.HUD.Container();
-		me.game.world.addChild(this.HUD);
-		
-	},
-	
-	
-	/**	
-	 *  action to perform when leaving this screen (state change)
-	 */
-	onDestroyEvent: function() {
-		// remove the HUD from the game world
-		me.game.world.removeChild(this.HUD);
-	}
+    /** 
+     *  action to perform on state change
+     */
+    onResetEvent: function() {  
+    
+        // load a level
+        me.levelDirector.loadLevel("area01");
+        
+        // reset the score
+        game.data.score = 0;
+        
+        // add our HUD to the game world
+        this.HUD = new game.HUD.Container();
+        me.game.world.addChild(this.HUD);
+        
+    },
+    
+    
+    /** 
+     *  action to perform when leaving this screen (state change)
+     */
+    onDestroyEvent: function() {
+        // remove the HUD from the game world
+        me.game.world.removeChild(this.HUD);
+    }
 });
 
 </pre>
@@ -310,7 +310,7 @@ game.PlayScreen = me.ScreenObject.extend({
 
 <p>(click on the image to see it running in your browser), you should see
     something like this </br>
-	 <a href=
+     <a href=
              "./tutorial_step2/index.html"><img
             src="media/tutorial_step2.png" alt=
             "Step 2 results"/></a><br/>
@@ -336,17 +336,17 @@ game.PlayScreen = me.ScreenObject.extend({
 <pre class="brush: js">
 //game resources
 game.resources = [{
-	/**
-	 * Graphics.
-	 */
-	// our level tileset
-	{name: "area01_level_tiles", type:"image", src: "data/img/map/area01_level_tiles.png"},
-	// the main player spritesheet
-	{name: "gripe_run_right", type:"image", src: "data/img/sprite/gripe_run_right.png"},
-	/* 
-	 * Maps. 
- 	 */
-	{name: "area01", type: "tmx", src: "data/map/area01.tmx"}
+    /**
+     * Graphics.
+     */
+    // our level tileset
+    {name: "area01_level_tiles", type:"image", src: "data/img/map/area01_level_tiles.png"},
+    // the main player spritesheet
+    {name: "gripe_run_right", type:"image", src: "data/img/sprite/gripe_run_right.png"},
+    /* 
+     * Maps. 
+     */
+    {name: "area01", type: "tmx", src: "data/map/area01.tmx"}
 }];
 </pre>
 
@@ -368,7 +368,7 @@ game.PlayerEntity = me.ObjectEntity.extend({
         // call the constructor
         this.parent(x, y, settings);
 
-		// set the default horizontal &amp; vertical speed (accel vector)
+        // set the default horizontal &amp; vertical speed (accel vector)
         this.setVelocity(3, 15);
 
         // set the display to follow our position on both axis
@@ -381,30 +381,30 @@ game.PlayerEntity = me.ObjectEntity.extend({
     update the player pos
 
     ------ */
-    update: function() {
+    update: function(dt) {
 
         if (me.input.isKeyPressed('left')) {
             // flip the sprite on horizontal axis
-			this.flipX(true);
-			// update the entity velocity
-			this.vel.x -= this.accel.x * me.timer.tick;
+            this.flipX(true);
+            // update the entity velocity
+            this.vel.x -= this.accel.x * me.timer.tick;
         } else if (me.input.isKeyPressed('right')) {
             // unflip the sprite
-			this.flipX(false);
-			// update the entity velocity
-			this.vel.x += this.accel.x * me.timer.tick;
+            this.flipX(false);
+            // update the entity velocity
+            this.vel.x += this.accel.x * me.timer.tick;
         } else {
             this.vel.x = 0;
         }
         if (me.input.isKeyPressed('jump')) {
-			// make sure we are not already jumping or falling
+            // make sure we are not already jumping or falling
             if (!this.jumping &amp;&amp; !this.falling) {
-				// set current vel to the maximum defined value
-				// gravity will then do the rest
-				this.vel.y = -this.maxVel.y * me.timer.tick;
-				// set the jumping flag
-				this.jumping = true;
-			}
+                // set current vel to the maximum defined value
+                // gravity will then do the rest
+                this.vel.y = -this.maxVel.y * me.timer.tick;
+                // set the jumping flag
+                this.jumping = true;
+            }
 
         }
 
@@ -414,12 +414,12 @@ game.PlayerEntity = me.ObjectEntity.extend({
         // update animation if necessary
         if (this.vel.x!=0 || this.vel.y!=0) {
             // update object animation
-            this.parent();
+            this.parent(dt);
             return true;
         }
-		
-		// else inform the engine we did not perform
-		// any update (e.g. position, animation)
+        
+        // else inform the engine we did not perform
+        // any update (e.g. position, animation)
         return false;
     }
 
@@ -428,12 +428,12 @@ game.PlayerEntity = me.ObjectEntity.extend({
 
 <p>I think the above code is quite easy to understand. Basically, we extend the
     <a href="http://melonjs.github.io/docs/me.ObjectEntity.html"> ObjectEntity</a>, configure the default player speed, tweak the camera, 
-	test if some keys are pressed and manage our player movement (by setting player speed, and then calling the <a href="http://melonjs.github.io/docs/me.ObjectEntity.html#updateMovement"> updateMovement</a> function). Also, you may notice that I'm
+    test if some keys are pressed and manage our player movement (by setting player speed, and then calling the <a href="http://melonjs.github.io/docs/me.ObjectEntity.html#updateMovement"> updateMovement</a> function). Also, you may notice that I'm
     testing the final velocity (this.vel.x and this.vel.y) of my object, which allows me to
     know if my object actually moved, and control if I want the sprite animation to run or not.</p>
 
-<p>Then, we have to modify our "main" to actually declare our new Object in the
-    <a href="http://melonjs.github.io/docs/me.entityPool.html"> EntityPool</a> (that is used by the engine to instantiate object), and finally to map the
+<p>Then, we have to modify our "main" to actually declare our new Object in the object
+    <a href="http://melonjs.github.io/docs/me.pool.html"> pool</a> (that is used by the engine to instantiate object), and finally to map the
     keys we will use for the player movement. So our <b>loaded()</b> function will become
     :</p>
 <pre class="brush: js">
@@ -441,20 +441,20 @@ game.PlayerEntity = me.ObjectEntity.extend({
 /* ---
 
    callback when everything is loaded
-	
-   ---	*/
-	
+    
+   ---  */
+    
 "loaded" : function ()
 {
    // set the "Play/Ingame" Screen Object
    me.state.set(me.state.PLAY, new game.PlayScreen());
     
-   // add our player entity in the entity pool
-   me.entityPool.add("mainPlayer", game.PlayerEntity);
-			
+   // register our player entity in the object pool
+   me.pool.register("mainPlayer", game.PlayerEntity);
+            
    // enable the keyboard
-   me.input.bindKey(me.input.KEY.LEFT,	"left");
-   me.input.bindKey(me.input.KEY.RIGHT,	"right");
+   me.input.bindKey(me.input.KEY.LEFT,  "left");
+   me.input.bindKey(me.input.KEY.RIGHT, "right");
    me.input.bindKey(me.input.KEY.X,     "jump", true);
      
    // start the game 
@@ -469,13 +469,13 @@ game.PlayerEntity = me.ObjectEntity.extend({
     then you can right click the object and add the properties below.</p>
 
 <p>Name it (case does not matter) <b>mainPlayer</b> (or using the same name you used
-    when adding our Object into the entityPool), and add two properties to the Object:
+    when registering our Object into the Object Pool), and add two properties to the Object:
     <ul>
-		<li><b>image</b> : with the <b>gripe_run_right</b> value (name of our resource</li>
-		<li><b>spritewidth</b> : with the value <b>64</b> which is the size of a single sprite in the spritesheet</li>
-		<li><b>spriteheight</b> : we don't define this value here since we use a single line spritesheet,
-		and since in this case the engine will take the actual image height as a value for it.</li>
-	</ul>
+        <li><b>image</b> : with the <b>gripe_run_right</b> value (name of our resource</li>
+        <li><b>spritewidth</b> : with the value <b>64</b> which is the size of a single sprite in the spritesheet</li>
+        <li><b>spriteheight</b> : we don't define this value here since we use a single line spritesheet,
+        and since in this case the engine will take the actual image height as a value for it.</li>
+    </ul>
     These two parameters will be passed as parameters (<a href="http://melonjs.github.io/docs/me.ObjectSettings.html"><b>settings</b> object</a> here above
     used by the constructor) when the object will be created. Now you can either specify
     these fields here in Tiled, or directly in your code (when dealing with multiple
@@ -525,51 +525,25 @@ make sure you are also resizing the object rectangle in Tiled to match with your
 
 <p>Save everything, and if you now re-open your index.html, you should see something like
     this :<br/>
-    (click on the image to see it running in your browser) <a href=
-                                                                      "./tutorial_step3/index.html"><img
-            src="media/tutorial_step3.png" alt=
-            "Step 3 Results"/></a><br/></p>
+    (click on the image to see it running in your browser) 
+    <a href="./tutorial_step3/index.html"><img src="media/tutorial_step3.png" alt="Step 3 Results"/></a>
+    <br/>
+</p>
 
 <p>You will also notice that display is automatically following our player.</p>
 
-<p>One last thing - when creating an object, a collision rectangle is automatically
-    created to manage collision between objects. For debugging purposes, you can use the
-    following debug settings in your main to enable it :</p>
-<pre class="brush: js">
-me.debug.renderHitBox = true;
-</pre>
+<p>One last thing - when creating an object, a default collision shape is automatically
+    created to manage collision between objects, based on the object size you defined in Tiled.
+    For debugging purposes, you can enable the debug panel by adding <b>#debug</b> to URL in the browser URL bar.</p>
 
-<p>If you reload the game, you will see this:</p><img src="media/step3_hitbox1.png"
-                                                      alt="Enabling hit box"/>
+<p>If you reload the game, and enable "hitbox" you will see this:
+    <img src="media/step3_debugpanel.png" alt="Enabling the debug panel"/>
+</p>
 
-<p>As you can see we have a lot of white space on the left and right of our
-    character, so let's adjust the collision rectangle to our sprite:</p>
-<pre class="brush: js">
-/* -----
+<p>The collision box can be adjusted from Tiled by changing the size of the object and match the above example. 
+   (Collision Shape can also manually adjusted by accessing the object entity <a href="http://melonjs.github.io/docs/me.ObjectEntity.html#shapes">shapes</a> property).
+</p>
 
-    constructor
-
-    ------ */
-
-init: function(x, y, settings) {
-    // call the constructor
-    this.parent(x, y, settings);
-
-    // set the walking &amp; jumping speed
-    this.setVelocity(3, 15);
-
-    // adjust the bounding box
-    this.updateColRect(8, 48, -1, 0);
-
-    // set the display to follow our position on both axis
-    me.game.viewport.follow(this.pos, me.game.viewport.AXIS.BOTH);
-
-},
-</pre>
-
-<p>Here we add a horizontal 8 pixel offset, and set it's width to 48 pixels. We don't
-    change the height, so we specify -1.</p><img src="media/step3_hitbox2.png" alt=
-        "Tweaking the hit box"/>
 
 <h2><a id="part4">Part 4: Add a scrolling background</a></h2>
 
@@ -593,21 +567,21 @@ init: function(x, y, settings) {
 <pre class="brush: js">
 // game resources
 game.resources = [
-	/**
-	 * Graphics.
-	 */
-	// our level tileset
-	{name: "area01_level_tiles",  type:"image",	src: "data/img/map/area01_level_tiles.png"},
-	// the main player spritesheet
-	{name: "gripe_run_right",     type:"image",	src: "data/img/sprite/gripe_run_right.png"},
-	// the parallax background
-	{name: "area01_bkg0",         type:"image",	src: "data/img/area01_bkg0.png"},
-	{name: "area01_bkg1",         type:"image",	src: "data/img/area01_bkg1.png"},
-	
-	/* 
-	 * Maps. 
- 	 */
-	{name: "area01",  type: "tmx",	src: "data/map/area01.tmx"}
+    /**
+     * Graphics.
+     */
+    // our level tileset
+    {name: "area01_level_tiles",  type:"image", src: "data/img/map/area01_level_tiles.png"},
+    // the main player spritesheet
+    {name: "gripe_run_right",     type:"image", src: "data/img/sprite/gripe_run_right.png"},
+    // the parallax background
+    {name: "area01_bkg0",         type:"image", src: "data/img/area01_bkg0.png"},
+    {name: "area01_bkg1",         type:"image", src: "data/img/area01_bkg1.png"},
+    
+    /* 
+     * Maps. 
+     */
+    {name: "area01",  type: "tmx",  src: "data/map/area01.tmx"}
 ];
 </pre>
 
@@ -622,8 +596,8 @@ and make sure to adjust correctly the layer order (the display order being from 
 
 <p><img src="media/step4_Imagelayer_property.png" alt=
         "Configuring Image Layer properties"/></p>
-		
-	- And finally add a <a href="http://melonjs.github.io/docs/me.ImageLayer.html#ratio"> <b>ratio</b></a> property to specify the scrolling speed of each layer : we will specify the <b>0.25</b> value for the first layer
+        
+    - And finally add a <a href="http://melonjs.github.io/docs/me.ImageLayer.html#ratio"> <b>ratio</b></a> property to specify the scrolling speed of each layer : we will specify the <b>0.25</b> value for the first layer
      (<b>Parallax_layer1</b> on the picture) and the <b>0.35</b> value for the second (keep in mind that the smaller the ratio is, the slower the scrolling speed will be).
  <br/></p>
 
@@ -653,25 +627,25 @@ and make sure to adjust correctly the layer order (the display order being from 
 <pre class="brush: js">
 // game resources
 game.resources = [
-	/**
-	 * Graphics.
-	 */
-	// our level tileset
-	{name: "area01_level_tiles",  type:"image",	src: "data/img/map/area01_level_tiles.png"},
-	// the main player spritesheet
-	{name: "gripe_run_right",     type:"image",	src: "data/img/sprite/gripe_run_right.png"},
-	// the parallax background
-	{name: "area01_bkg0",         type:"image",	src: "data/img/area01_bkg0.png"},
-	{name: "area01_bkg1",         type:"image",	src: "data/img/area01_bkg1.png"},
-	// the spinning coin spritesheet
-	{name: "spinning_coin_gold",  type:"image",	src: "data/img/sprite/spinning_coin_gold.png"},
-	// our enemty entity
-	{name: "wheelie_right",       type:"image",	src: "data/img/sprite/wheelie_right.png"},
-	
-	/* 
-	 * Maps. 
- 	 */
-	{name: "area01",              type: "tmx",	src: "data/map/area01.tmx"}
+    /**
+     * Graphics.
+     */
+    // our level tileset
+    {name: "area01_level_tiles",  type:"image", src: "data/img/map/area01_level_tiles.png"},
+    // the main player spritesheet
+    {name: "gripe_run_right",     type:"image", src: "data/img/sprite/gripe_run_right.png"},
+    // the parallax background
+    {name: "area01_bkg0",         type:"image", src: "data/img/area01_bkg0.png"},
+    {name: "area01_bkg1",         type:"image", src: "data/img/area01_bkg1.png"},
+    // the spinning coin spritesheet
+    {name: "spinning_coin_gold",  type:"image", src: "data/img/sprite/spinning_coin_gold.png"},
+    // our enemty entity
+    {name: "wheelie_right",       type:"image", src: "data/img/sprite/wheelie_right.png"},
+    
+    /* 
+     * Maps. 
+     */
+    {name: "area01",              type: "tmx",  src: "data/map/area01.tmx"}
 ];
 </pre>
 <br/>
@@ -701,7 +675,7 @@ game.CoinEntity = me.CollectableEntity.extend({
         // make sure it cannot be collected "again"
         this.collidable = false;
         // remove it
-        me.game.remove(this);
+        me.game.world.removeChild(this);
     }
 
 });
@@ -725,27 +699,31 @@ game.EnemyEntity = me.ObjectEntity.extend({
     init: function(x, y, settings) {
         // define this here instead of tiled
         settings.image = "wheelie_right";
-        settings.spritewidth = 64;
+          
+        // save the area size defined in Tiled
+        var width = settings.width;
+        var height = settings.height;;
 
+        // adjust the size setting information to match the sprite size
+        // so that the entity object is created with the right size
+        settings.spritewidth = settings.width = 64;
+        settings.spritewidth = settings.height = 64;
+        
         // call the parent constructor
-        this.parent(x, y, settings);
-
+        this.parent(x, y , settings);
+        
+        // set start/end position based on the initial area size
+        x = this.pos.x;
         this.startX = x;
-        this.endX = x + settings.width - settings.spritewidth;
-        // size of sprite
+        this.endX   = x + width - settings.spritewidth
+        this.pos.x  = x + width - settings.spritewidth;
 
-        // make him start from the right
-        this.pos.x = x + settings.width - settings.spritewidth;
-        this.walkLeft = true;
-
-        // walking &amp; jumping speed
+        // walking &amp jumping speed
         this.setVelocity(4, 6);
-
+        
         // make it collidable
         this.collidable = true;
-        // make it a enemy object
         this.type = me.game.ENEMY_OBJECT;
-
     },
 
     // call by the engine when colliding with another object
@@ -755,12 +733,12 @@ game.EnemyEntity = me.ObjectEntity.extend({
         // res.y &gt;0 means touched by something on the bottom
         // which mean at top position for this one
         if (this.alive &amp;&amp; (res.y &gt; 0) &amp;&amp; obj.falling) {
-            this.renderable.flicker(45);
+            this.renderable.flicker(750);
         }
     },
 
     // manage the enemy movement
-    update: function() {
+    update: function(dt) {
         // do nothing if not in viewport
         if (!this.inViewport)
             return false;
@@ -772,20 +750,20 @@ game.EnemyEntity = me.ObjectEntity.extend({
                 this.walkLeft = true;
             }
             // make it walk
-			this.flipX(this.walkLeft);
-			this.vel.x += (this.walkLeft) ? -this.accel.x * me.timer.tick : this.accel.x * me.timer.tick;
-				
+            this.flipX(this.walkLeft);
+            this.vel.x += (this.walkLeft) ? -this.accel.x * me.timer.tick : this.accel.x * me.timer.tick;
+                
         } else {
             this.vel.x = 0;
         }
-		
+        
         // check and update movement
         this.updateMovement();
-		
+        
         // update animation if necessary
         if (this.vel.x!=0 || this.vel.y!=0) {
             // update object animation
-            this.parent();
+            this.parent(dt);
             return true;
         }
         return false;
@@ -801,16 +779,16 @@ game.EnemyEntity = me.ObjectEntity.extend({
     Also, I am using the <b>width</b> property given by Tiled to specify a path on which
     this enemy will run. Finally, in the onCollision method, I make the enemy flicker if
     something is jumping on top of it.</p>
-	
-	<p>Note that an Object Entity drawable component (either a single sprite of animation) is 
-	accessible through the Entity `renderable` property, which explains here why we do here the following : `this.renderable.flicker(45);`</p>
+    
+    <p>Note that an Object Entity drawable component (either a single sprite of animation) is 
+    accessible through the Entity `renderable` property, which explains here why we do here the following : `this.renderable.flicker(750);`</p>
 
-<p>Then again, we add these new objects in the entityPool</p>
+<p>Then again, we add these new objects in the Object Pool</p>
 <pre class="brush: js">
-// add our object entities in the entity pool
-me.entityPool.add("mainPlayer", game.PlayerEntity);
-me.entityPool.add("CoinEntity", game.CoinEntity);
-me.entityPool.add("EnemyEntity", game.EnemyEntity);
+// register our object entities in the object pool
+me.pool.register("mainPlayer", game.PlayerEntity);
+me.pool.register("CoinEntity", game.CoinEntity);
+me.pool.register("EnemyEntity", game.EnemyEntity);
 </pre>
 <br/>
 
@@ -818,50 +796,50 @@ me.entityPool.add("EnemyEntity", game.EnemyEntity);
                                                                   "media/tutorial_tiled_step5.png" alt="Step 5"/></p>
 
 <p>Before testing, we also need to modify our player to check for collision with other
-    entities. In order to do this, we add a call to the <a href="http://melonjs.github.io/docs/me.game.html#collide"> <b>me.game.collide(this)</b></a>
+    entities. In order to do this, we add a call to the <a href="http://melonjs.github.io/docs/me.ObjectContainer.html#collide"> <b>me.game.world.collide(this)</b></a>
     function in our mainPlayer code, see below :</p>
 <pre class="brush: js">
 /* -----
 update the player pos
 ------ */
-update: function() {
+update: function(dt) {
 
     if (me.input.isKeyPressed('left'))
-	{
-		// flip the sprite on horizontal axis
-		this.flipX(true);
-		// update the entity velocity
-		this.vel.x -= this.accel.x * me.timer.tick;
-	}
-	else if (me.input.isKeyPressed('right'))
-	{
-		// unflip the sprite
-		this.flipX(false);
-		// update the entity velocity
-		this.vel.x += this.accel.x * me.timer.tick;
-	}
-	else
-	{
-		this.vel.x = 0;
-	}
-	if (me.input.isKeyPressed('jump'))
-	{	
-		if (!this.jumping && !this.falling) 
-		{
-			// set current vel to the maximum defined value
-			// gravity will then do the rest
-			this.vel.y = -this.maxVel.y * me.timer.tick;
-			// set the jumping flag
-			this.jumping = true;
-		}
-	}
+    {
+        // flip the sprite on horizontal axis
+        this.flipX(true);
+        // update the entity velocity
+        this.vel.x -= this.accel.x * me.timer.tick;
+    }
+    else if (me.input.isKeyPressed('right'))
+    {
+        // unflip the sprite
+        this.flipX(false);
+        // update the entity velocity
+        this.vel.x += this.accel.x * me.timer.tick;
+    }
+    else
+    {
+        this.vel.x = 0;
+    }
+    if (me.input.isKeyPressed('jump'))
+    {   
+        if (!this.jumping && !this.falling) 
+        {
+            // set current vel to the maximum defined value
+            // gravity will then do the rest
+            this.vel.y = -this.maxVel.y * me.timer.tick;
+            // set the jumping flag
+            this.jumping = true;
+        }
+    }
 
 
     // check &amp; update player movement
     this.updateMovement();
 
     // check for collision
-    var res = me.game.collide(this);
+    var res = me.game.world.collide(this);
 
     if (res) {
         // if we collide with an enemy
@@ -869,14 +847,14 @@ update: function() {
             // check if we jumped on it
             if ((res.y &gt; 0) &amp;&amp; ! this.jumping) {
                 // bounce (force jump)
-				this.falling = false;
-				this.vel.y = -this.maxVel.y * me.timer.tick;
-				// set the jumping flag
-				this.jumping = true;
+                this.falling = false;
+                this.vel.y = -this.maxVel.y * me.timer.tick;
+                // set the jumping flag
+                this.jumping = true;
 
             } else {
                 // let's flicker in case we touched an enemy
-                this.renderable.flicker(45);
+                this.renderable.flicker(750);
             }
         }
     }
@@ -884,12 +862,12 @@ update: function() {
     // update animation if necessary
     if (this.vel.x!=0 || this.vel.y!=0) {
         // update object animation
-        this.parent();
+        this.parent(dt);
         return true;
     }
     // else inform the engine we did not perform
-	// any update (e.g. position, animation)
-	return false;		
+    // any update (e.g. position, animation)
+    return false;       
 
 }
 
@@ -914,27 +892,27 @@ update: function() {
 <pre class="brush: js">
 // game resources
 game.resources = [
-	/**
-	 * Graphics.
-	 */
-	// our level tileset
-	{name: "area01_level_tiles",  type:"image",	src: "data/img/map/area01_level_tiles.png"},
-	// the main player spritesheet
-	{name: "gripe_run_right",     type:"image",	src: "data/img/sprite/gripe_run_right.png"},
-	// the parallax background
-	{name: "area01_bkg0",         type:"image",	src: "data/img/area01_bkg0.png"},
-	{name: "area01_bkg1",         type:"image",	src: "data/img/area01_bkg1.png"},
-	// the spinning coin spritesheet
-	{name: "spinning_coin_gold",  type:"image",	src: "data/img/sprite/spinning_coin_gold.png"},
-	// our enemty entity
-	{name: "wheelie_right",       type:"image",	src: "data/img/sprite/wheelie_right.png"},
-	// game font
-	{name: "32x32_font",          type:"image",	src: "data/img/font/32x32_font.png"},
+    /**
+     * Graphics.
+     */
+    // our level tileset
+    {name: "area01_level_tiles",  type:"image", src: "data/img/map/area01_level_tiles.png"},
+    // the main player spritesheet
+    {name: "gripe_run_right",     type:"image", src: "data/img/sprite/gripe_run_right.png"},
+    // the parallax background
+    {name: "area01_bkg0",         type:"image", src: "data/img/area01_bkg0.png"},
+    {name: "area01_bkg1",         type:"image", src: "data/img/area01_bkg1.png"},
+    // the spinning coin spritesheet
+    {name: "spinning_coin_gold",  type:"image", src: "data/img/sprite/spinning_coin_gold.png"},
+    // our enemty entity
+    {name: "wheelie_right",       type:"image", src: "data/img/sprite/wheelie_right.png"},
+    // game font
+    {name: "32x32_font",          type:"image", src: "data/img/font/32x32_font.png"},
 
-	/*
-	 * Maps.
-	 */
-	{name: "area01",              type: "tmx",	src: "data/map/area01.tmx"}
+    /*
+     * Maps.
+     */
+    {name: "area01",              type: "tmx",  src: "data/map/area01.tmx"}
 ];
 </pre>
 <br/>
@@ -960,68 +938,68 @@ game.HUD = game.HUD || {};
  
 game.HUD.Container = me.ObjectContainer.extend({
 
-	init: function() {
-		// call the constructor
-		this.parent();
-		
-		// persistent across level change
-		this.isPersistent = true;
-		
-		// non collidable
-		this.collidable = false;
-		
-		// make sure our object is always draw first
-		this.z = Infinity;
+    init: function() {
+        // call the constructor
+        this.parent();
+        
+        // persistent across level change
+        this.isPersistent = true;
+        
+        // non collidable
+        this.collidable = false;
+        
+        // make sure our object is always draw first
+        this.z = Infinity;
 
-		// give a name
-		this.name = "HUD";
-		
-		// add our child score object at the right-bottom position
-		this.addChild(new game.HUD.ScoreItem(630, 440));
-	}
+        // give a name
+        this.name = "HUD";
+        
+        // add our child score object at the right-bottom position
+        this.addChild(new game.HUD.ScoreItem(630, 440));
+    }
 });
 
 
 /** 
  * a basic HUD item to display score
  */
-game.HUD.ScoreItem = me.Renderable.extend( {	
-	/** 
-	 * constructor
-	 */
-	init: function(x, y) {
-		
-		// call the parent constructor 
-		// (size does not matter here)
-		this.parent(new me.Vector2d(x, y), 10, 10); 
+game.HUD.ScoreItem = me.Renderable.extend( {    
+    /** 
+     * constructor
+     */
+    init: function(x, y) {
+        
+        // call the parent constructor 
+        // (size does not matter here)
+        this.parent(new me.Vector2d(x, y), 10, 10); 
 
-		
-		// local copy of the global score
-		this.score = -1;
+        
+        // local copy of the global score
+        this.score = -1;
 
-		// make sure we use screen coordinates
-		this.floating = true;
-	},
-	
-	/**
-	 * update function
-	 */
-	update : function () {
-		// we don't do anything fancy here, so just
-		// return true if the score has been updated
-		if (this.score !== game.data.score) {	
-			this.score = game.data.score;
-			return true;
-		}
-		return false;
-	},
+        // make sure we use screen coordinates
+        this.floating = true;
+    },
+    
+    /**
+     * update function
+     */
+    update : function (dt) {
+        // we don't do anything fancy here, so just
+        // return true if the score has been updated
+        if (this.score !== game.data.score) {   
+            this.score = game.data.score;
+            return true;
+        }
+        return false;
+    },
 
-	/**
-	 * draw the score
-	 */
-	draw : function (context) {
-		// draw it baby !
-	}
+    /**
+     * draw the score
+     */
+    draw : function (context) {
+        // draw it baby !
+    }
 
 });
 </pre>
@@ -1035,46 +1013,46 @@ by creating a local font property (using the previously bitmap font), and simply
 /** 
  * a basic HUD item to display score
  */
-game.HUD.ScoreItem = me.Renderable.extend( {	
-	/** 
-	 * constructor
-	 */
-	init: function(x, y) {
-		
-		// call the parent constructor 
-		// (size does not matter here)
-		this.parent(new me.Vector2d(x, y), 10, 10); 
-		
-		// create a font
-		this.font = new me.BitmapFont("32x32_font", 32);
-		this.font.set("right");
-		
-		// local copy of the global score
-		this.score = -1;
+game.HUD.ScoreItem = me.Renderable.extend( {    
+    /** 
+     * constructor
+     */
+    init: function(x, y) {
+        
+        // call the parent constructor 
+        // (size does not matter here)
+        this.parent(new me.Vector2d(x, y), 10, 10); 
+        
+        // create a font
+        this.font = new me.BitmapFont("32x32_font", 32);
+        this.font.set("right");
+        
+        // local copy of the global score
+        this.score = -1;
 
-		// make sure we use screen coordinates
-		this.floating = true;
-	},
-	
-	/**
-	 * update function
-	 */
-	update : function () {
-		// we don't draw anything fancy here, so just
-		// return true if the score has been updated
-		if (this.score !== game.data.score) {
-			this.score = game.data.score;
-			return true;
-		}
-		return false;
-	},
+        // make sure we use screen coordinates
+        this.floating = true;
+    },
+    
+    /**
+     * update function
+     */
+    update : function (dt) {
+        // we don't draw anything fancy here, so just
+        // return true if the score has been updated
+        if (this.score !== game.data.score) {
+            this.score = game.data.score;
+            return true;
+        }
+        return false;
+    },
 
-	/**
-	 * draw the score
-	 */
-	draw : function (context) {
-		this.font.draw (context, game.data.score, this.pos.x, this.pos.y);
-	}
+    /**
+     * draw the score
+     */
+    draw : function (context) {
+        this.font.draw (context, game.data.score, this.pos.x, this.pos.y);
+    }
 });
 </pre>
 <br/>
@@ -1082,31 +1060,31 @@ game.HUD.ScoreItem = me.Renderable.extend( {
 <p>The HUD is already added and removed when we start the game, so there is nothing to do here : </p>
 <pre class="brush: js">
 game.PlayScreen = me.ScreenObject.extend({
-	/**	
-	 *  action to perform on state change
-	 */
-	onResetEvent: function() {	
-	
-		// load a level
-		me.levelDirector.loadLevel("area01");
-		
-		// reset the score
-		game.data.score = 0;
-		
-		// add our HUD to the game world
-		this.HUD = new game.HUD.Container();
-		me.game.world.addChild(this.HUD);
-		
-	},
-	
-	
-	/**	
-	 *  action to perform when leaving this screen (state change)
-	 */
-	onDestroyEvent: function() {
-		// remove the HUD from the game world
-		me.game.world.removeChild(this.HUD);
-	}
+    /** 
+     *  action to perform on state change
+     */
+    onResetEvent: function() {  
+    
+        // load a level
+        me.levelDirector.loadLevel("area01");
+        
+        // reset the score
+        game.data.score = 0;
+        
+        // add our HUD to the game world
+        this.HUD = new game.HUD.Container();
+        me.game.world.addChild(this.HUD);
+        
+    },
+    
+    
+    /** 
+     *  action to perform when leaving this screen (state change)
+     */
+    onDestroyEvent: function() {
+        // remove the HUD from the game world
+        me.game.world.removeChild(this.HUD);
+    }
 });
 
 </pre>
@@ -1117,8 +1095,7 @@ game.PlayScreen = me.ScreenObject.extend({
 Last step is of course to actually change the score when a coin is collected ! Now let's modify our Coin Object :
 </p>
 <pre class="brush: js">
-onCollision : function ()
-{
+onCollision : function () {
     // do something when collected
 
     // give some score
@@ -1127,7 +1104,7 @@ onCollision : function ()
     // make sure it cannot be collected "again"
     this.collidable = false;
     // remove it
-    me.game.remove(this);
+    me.game.world.removeChild(this);
 }
 </pre>
 
@@ -1158,40 +1135,40 @@ onCollision : function ()
 <pre class="brush: js">
 //game resources
 game.resources = [
-	/**
-	 * Graphics.
-	 */
-	// our level tileset
-	{name: "area01_level_tiles",  type:"image",	src: "data/img/map/area01_level_tiles.png"},
-	// the main player spritesheet
-	{name: "gripe_run_right",     type:"image",	src: "data/img/sprite/gripe_run_right.png"},
-	// the parallax background
-	{name: "area01_bkg0",         type:"image",	src: "data/img/area01_bkg0.png"},
-	{name: "area01_bkg1",         type:"image",	src: "data/img/area01_bkg1.png"},
-	// the spinning coin spritesheet
-	{name: "spinning_coin_gold",  type:"image",	src: "data/img/sprite/spinning_coin_gold.png"},
-	// our enemty entity
-	{name: "wheelie_right",       type:"image",	src: "data/img/sprite/wheelie_right.png"},
-	// game font
-	{name: "32x32_font",          type:"image",	src: "data/img/font/32x32_font.png"},
-	
-	/* 
-	 * Maps. 
- 	 */
-	{name: "area01",              type: "tmx",	src: "data/map/area01.tmx"},
+    /**
+     * Graphics.
+     */
+    // our level tileset
+    {name: "area01_level_tiles",  type:"image", src: "data/img/map/area01_level_tiles.png"},
+    // the main player spritesheet
+    {name: "gripe_run_right",     type:"image", src: "data/img/sprite/gripe_run_right.png"},
+    // the parallax background
+    {name: "area01_bkg0",         type:"image", src: "data/img/area01_bkg0.png"},
+    {name: "area01_bkg1",         type:"image", src: "data/img/area01_bkg1.png"},
+    // the spinning coin spritesheet
+    {name: "spinning_coin_gold",  type:"image", src: "data/img/sprite/spinning_coin_gold.png"},
+    // our enemty entity
+    {name: "wheelie_right",       type:"image", src: "data/img/sprite/wheelie_right.png"},
+    // game font
+    {name: "32x32_font",          type:"image", src: "data/img/font/32x32_font.png"},
+    
+    /* 
+     * Maps. 
+     */
+    {name: "area01",              type: "tmx",  src: "data/map/area01.tmx"},
 
 
-	/* 
-	 * Background music. 
-	 */	
-	{name: "dst-inertexponent", type: "audio", src: "data/bgm/", channel : 1},
-	
-	/* 
-	 * Sound effects. 
-	 */
-	{name: "cling", type: "audio", src: "data/sfx/", channel : 2},
-	{name: "stomp", type: "audio", src: "data/sfx/", channel : 1},
-	{name: "jump",  type: "audio", src: "data/sfx/", channel : 1}
+    /* 
+     * Background music. 
+     */ 
+    {name: "dst-inertexponent", type: "audio", src: "data/bgm/"},
+    
+    /* 
+     * Sound effects. 
+     */
+    {name: "cling", type: "audio", src: "data/sfx/"},
+    {name: "stomp", type: "audio", src: "data/sfx/"},
+    {name: "jump",  type: "audio", src: "data/sfx/"}
 ];
 </pre>
 
@@ -1212,12 +1189,6 @@ game.resources = [
 me.audio.init("mp3,ogg");
 </pre>
 
-<p>Then finally, still in the resource list, an audio element takes an extra
-    parameter, the number of channel. This is useful if you need a sound to be played
-    simultaneously. Let's take the example of the coin, if two coins are very close,
-    there is a high "risk" ou player will hit them almost at the same time, and we must
-    be able to notify the user with two distinct "bling" sound.</p>
-
 <p>Still following? Let's modify our game :</p>
 
 <ul>
@@ -1228,8 +1199,7 @@ me.audio.init("mp3,ogg");
     need to add a new call to <a href="http://melonjs.github.io/docs/me.audio.html#play"><b>me.audio.play()</b></a> and use the <b>"cling"</b> audio
     resource. that's all !</p><br/>
 <pre class="brush: js">
-onCollision : function ()
-{
+onCollision : function () {
     // do something when collected
 
     // play a "coin collected" sound
@@ -1241,7 +1211,7 @@ onCollision : function ()
     // make sure it cannot be collected "again"
     this.collidable = false;
     // remove it
-    me.game.remove(this);
+    me.game.world.removeChild(this);
 }
 </pre>
 <br/>
@@ -1279,21 +1249,21 @@ if (me.input.isKeyPressed('jump')) {
     update function of the mainPlayer :</p><br/>
 <pre class="brush: js">
 // check for collision
-var res = me.game.collide(this);
+var res = me.game.world.collide(this);
 
 if (res) {
     if (res.obj.type == me.game.ENEMY_OBJECT) {
         if ((res.y &gt; 0) &amp;&amp; ! this.jumping) {
             // bounce (force jump)
-			this.falling = false;
-			this.vel.y = -this.maxVel.y * me.timer.tick;
-			// set the jumping flag
-			this.jumping = true;
-			// play some audio
-			me.audio.play("stomp");
+            this.falling = false;
+            this.vel.y = -this.maxVel.y * me.timer.tick;
+            // set the jumping flag
+            this.jumping = true;
+            // play some audio
+            me.audio.play("stomp");
         } else {
             // let's flicker in case we touched an enemy
-            this.renderable.flicker(45);
+            this.renderable.flicker(750);
         }
     }
 }
@@ -1311,7 +1281,7 @@ onResetEvent: function() {
     // play the audio track
     me.audio.playTrack("DST-InertExponent");
 
-	....
+    ....
 },
 </pre>
 
@@ -1320,9 +1290,9 @@ onResetEvent: function() {
 <pre class="brush: js">
 onDestroyEvent: function() {
     
-	....
+    ....
     
-	// stop the current audio track
+    // stop the current audio track
     me.audio.stopTrack();
 }
 </pre>
@@ -1358,150 +1328,116 @@ onDestroyEvent: function() {
 
 <p>First let's declare a new Object, extending <a href="http://melonjs.github.io/docs/me.ScreenObject.html">me.ScreenObject</a> :</p>
 <pre class="brush: js">
-/*----------------------
-
-    A title screen
-
-    ----------------------*/
-
+/**
+ * A title screen 
+ **/
 game.TitleScreen = me.ScreenObject.extend({
-    // constructor
-    init: function() {
-        this.parent(true);
-    },
-
     // reset function
     onResetEvent: function() {
-	},
-
-    // update function
-    update: function() {
-	},
-
-    // draw function
-    draw: function(context) {
-	},
+    },
 
     // destroy function
     onDestroyEvent: function() {
-	}
-
+    }
 });
 </pre>
 
-<p>Note that in this example, when I call the parent constructor, I'm passing the
-    "true" to the function, allowing me to extend the update and draw function of my
-    Object (else they are not called by the engine).</p>
 
 <p>So now we want to:<br/>
-    - display the above screen<br/>
+    - display the above background image<br/>
     - add some text to the center of the screen ("Press enter to play")<br/>
     - wait for user input (pressing enter)<br/>
     Additionally, I also want to add a small scrolling text about this tutorial.</p>
 <pre class="brush: js">
-/*----------------------
-
-    A title screen
-
-  ----------------------*/
-
+/**
+ * A title screen 
+ **/
 game.TitleScreen = me.ScreenObject.extend({
-    // constructor
-    init: function() {
-        this.parent(true);
 
-        // title screen image
-        this.title = null;
-
-        this.font = null;
-        this.scrollerfont = null;
-        this.scrollertween = null;
-
-        this.scroller = "A SMALL STEP BY STEP TUTORIAL FOR GAME CREATION WITH MELONJS       ";
-        this.scrollerpos = 600;
-    },
-
-    // reset function
-    onResetEvent: function() {
-        if (this.title == null) {
-            // init stuff if not yet done
-            this.title = me.loader.getImage("title_screen");
-            // font to display the menu items
-            this.font = new me.BitmapFont("32x32_font", 32);
-
-            // set the scroller
-            this.scrollerfont = new me.BitmapFont("32x32_font", 32);
-
-        }
-
-        // reset to default value
-        this.scrollerpos = 640;
-
-        // a tween to animate the arrow
-        this.scrollertween = new me.Tween(this).to({
-            scrollerpos: -2200
-        }, 10000).onComplete(this.scrollover.bind(this)).start();
-
-        // enable the keyboard
+    /**    
+     *  action to perform on state change
+     */
+    onResetEvent : function() {
+        
+        // title screen
+        me.game.world.addChild(
+            new me.SpriteObject (
+                0,0, 
+                me.loader.getImage('title_screen')
+            ),
+            1
+        );
+    
+        // add a new renderable component with the scrolling text
+        me.game.world.addChild(new (me.Renderable.extend ({
+            // constructor
+            init : function() {
+                this.parent(new me.Vector2d(0, 0), me.game.viewport.width, me.game.viewport.height);
+                // font for the scrolling text
+                this.font = new me.BitmapFont("32x32_font", 32);
+                
+                 // a tween to animate the arrow
+                this.scrollertween = new me.Tween(this).to({scrollerpos: -2200 }, 10000).onComplete(this.scrollover.bind(this)).start();
+        
+                this.scroller = "A SMALL STEP BY STEP TUTORIAL FOR GAME CREATION WITH MELONJS       ";
+                this.scrollerpos = 600;
+            },
+            
+            // some callback for the tween objects
+            scrollover : function() {
+                // reset to default value
+                this.scrollerpos = 640;
+                this.scrollertween.to({scrollerpos: -2200 }, 10000).onComplete(this.scrollover.bind(this)).start();
+            },
+        
+            update : function (dt) {
+                return true;
+            },
+            
+            draw : function (context) {
+                this.font.draw (context, "PRESS ENTER TO PLAY", 20, 240);
+                this.font.draw(context, this.scroller, this.scrollerpos, 440);
+            },
+            onDestroyEvent : function() {
+                //just in case
+                this.scrollertween.stop();
+            }
+        })), 2);
+        
+        // change to play state on press Enter or click/tap
         me.input.bindKey(me.input.KEY.ENTER, "enter", true);
-
-        // play something
-        me.audio.play("cling");
-
+        me.input.bindPointer(me.input.mouse.LEFT, me.input.KEY.ENTER);
+        this.handler = me.event.subscribe(me.event.KEYDOWN, function (action, keyCode, edge) {
+            if (action === "enter") {
+                // play something on tap / enter
+                // this will unlock audio on mobile devices
+                me.audio.play("cling");
+                me.state.change(me.state.PLAY);
+            }
+        });
     },
 
-    // some callback for the tween objects
-    scrollover: function() {
-        // reset to default value
-        this.scrollerpos = 640;
-        this.scrollertween.to({
-            scrollerpos: -2200
-        }, 10000).onComplete(this.scrollover.bind(this)).start();
-    },
-
-    // update function
-    update: function() {
-        // enter pressed ?
-        if (me.input.isKeyPressed('enter')) {
-            me.state.change(me.state.PLAY);
-        }
-        return true;
-    },
-
-    // draw function
-    draw: function(context) {
-        context.drawImage(this.title, 0, 0);
-
-        this.font.draw(context, "PRESS ENTER TO PLAY", 20, 240);
-        this.scrollerfont.draw(context, this.scroller, this.scrollerpos, 440);
-    },
-
-    // destroy function
-    onDestroyEvent: function() {
+    /**    
+     *  action to perform when leaving this screen (state change)
+     */
+    onDestroyEvent : function() {
         me.input.unbindKey(me.input.KEY.ENTER);
-
-        //just in case
-        this.scrollertween.stop();
-    }
-
+        me.input.unbindPointer(me.input.mouse.LEFT);
+        me.event.unsubscribe(this.handler);
+   }
 });
 </pre>
 
 <p>What do we have above?<br/>
-    1) In the constructor, we declare a few objects to handle the background tile, a font
-    for displaying our message, and our scroller.<br/>
-	Note : Concerning the font, if you check carefully the corresponding asset 
-	(32x32_font.png), you will notice that it only contains uppercase letters, so be sure 
-	as well to only use uppercase letter in your text.<br/>
-    2) In the reset function, we load the resources we need (image, font, etc..) and
-    reset our scrolling text position, add a tween object for it (with a callback to
-    reset the scrolling text), and bind the ENTER key. Additionally, I'm also playing the
-    "cling" sound, when the title menu is loaded, because it's nice :)<br/>
-    3) In the update function, we check for user input (to press enter) and switch to the
+    1) In the onResetEvent function, we create two renderables components and add them to our game world.
+    The first is a basic Sprite object that will display our title background image, and the
+    second handles the "press ENTER" message and a scroller based on a Tween object.<br/>
+    Note : Concerning the font, if you check carefully the corresponding asset 
+    (32x32_font.png), you will notice that it only contains uppercase letters, so be sure 
+    as well to only use uppercase letter in your text.<br/>
+    2) We also register to key event, or mouse/tap event to automatically switch to the
     PLAY state if pressed.<br/>
-    4) In the draw function, we draw our background (using the drawImage function), draw
-    both the static and scrolling text.<br/>
-    5) On destroy, we unbind the ENTER key, and stop the tween!<br/>
+    5) On destroy, we unbind the key and pointer events.<br/>
     Easy, no?</p>
 
 <p>And of course the very last thing is to indicate to the engine we created a new
@@ -1526,10 +1462,10 @@ game.TitleScreen = me.ScreenObject.extend({
     // set a global fading transition for the screen
     me.state.transition("fade", "#FFFFFF", 250);
 
-    // add our player entity in the entity pool
-    me.entityPool.add("mainPlayer", game.PlayerEntity);
-    me.entityPool.add("CoinEntity", game.CoinEntity);
-    me.entityPool.add("EnemyEntity", game.EnemyEntity);
+    // register our player entity in the object pool
+    me.pool.register("mainPlayer", game.PlayerEntity);
+    me.pool.register("CoinEntity", game.CoinEntity);
+    me.pool.register("EnemyEntity", game.EnemyEntity);
 
     // enable the keyboard
     me.input.bindKey(me.input.KEY.LEFT, "left");
@@ -1570,7 +1506,7 @@ game.TitleScreen = me.ScreenObject.extend({
 <div id="content_footer"></div>
 
 <div id="footer">
-    Copyright &copy; melonJS 2011 - 2013
+    Copyright &copy; melonJS 2011 - 2014
 </div>
 </div>
 </body>

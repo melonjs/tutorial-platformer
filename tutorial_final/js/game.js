@@ -28,7 +28,7 @@ var game = {
 		// add "#debug" to the URL to enable the debug Panel
 		if (document.location.hash === "#debug") {
 			window.onReady(function () {
-				me.plugin.register.defer(debugPanel, "debug");
+				me.plugin.register.defer(this, debugPanel, "debug");
 			});
 		}
 
@@ -59,9 +59,9 @@ var game = {
 		me.state.transition("fade", "#FFFFFF", 250);
       
 		// add our player entity in the entity pool
-		me.entityPool.add("mainPlayer", game.PlayerEntity);
-		me.entityPool.add("CoinEntity", game.CoinEntity);
-		me.entityPool.add("EnemyEntity", game.EnemyEntity);
+		me.pool.register("mainPlayer", game.PlayerEntity);
+		me.pool.register("CoinEntity", game.CoinEntity);
+		me.pool.register("EnemyEntity", game.EnemyEntity);
       
 			
 		// enable the keyboard

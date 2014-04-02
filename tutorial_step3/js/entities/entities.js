@@ -17,11 +17,8 @@ game.PlayerEntity = me.ObjectEntity.extend(
 		
 		// set the default horizontal & vertical speed (accel vector)
 		this.setVelocity(3, 15);
-	 
-		// adjust the bounding box
-		this.updateColRect(8,48, -1,0);
-		
-		// set the display to follow our position on both axis
+        
+ 		// set the display to follow our position on both axis
 		me.game.viewport.follow(this.pos, me.game.viewport.AXIS.BOTH);
 		
 	},
@@ -31,7 +28,7 @@ game.PlayerEntity = me.ObjectEntity.extend(
 		update the player pos
 		
 	  ------			*/
-	update : function ()
+	update : function (dt)
 	{
 			
 		if (me.input.isKeyPressed('left'))
@@ -71,7 +68,7 @@ game.PlayerEntity = me.ObjectEntity.extend(
 		if (this.vel.x!=0 || this.vel.y!=0)
 		{
 			// update object animation
-			this.parent();
+			this.parent(dt);
 			return true;
 		}
 		
