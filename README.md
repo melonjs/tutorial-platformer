@@ -14,5 +14,5 @@ For any other questions, feel free to send us an [email](mailto:contact@melonjs.
 
 
 -------------------------------------------------------------------------------
-Copyright (C) 2011 - 2013, Olivier Biot
+Copyright (C) 2011 - 2014, Olivier Biot, Jason Oster, Aaron McLeod
 melonJS is licensed under the [MIT License](http://www.opensource.org/licenses/mit-license.php)
