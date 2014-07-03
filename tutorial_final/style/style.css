@@ -6,7 +6,7 @@ html
   padding: 0;}
 
 body
-{ font: normal .80em 'trebuchet ms', arial, sans-serif;
+{ font: normal .80em 'Helvetica Neue', Helvetica, Arial, sans-serif;
   background: #F0EFE2;
   color: #777;}
 
@@ -18,23 +18,23 @@ img
 { border: 0;}
 
 h1, h2, h3, h4, h5, h6 
-{ font: normal 175% 'century gothic', arial, sans-serif;
+{ font: normal 175% 'Helvetica Neue', Helvetica, Arial, sans-serif;
   color: #43423F;
   margin: 0 0 15px 0;
   padding: 15px 0 5px 0;}
 
 h2
-{ font: normal 175% 'century gothic', arial, sans-serif;
+{ font: normal 175% 'Helvetica Neue', Helvetica, Arial, sans-serif;
   color: #1293EE;}
 
 h4, h5, h6
 { margin: 0;
   padding: 0 0 5px 0;
-  font: normal 120% arial, sans-serif;
+  font: normal 120% 'Helvetica Neue', Helvetica, Arial, sans-serif;
   color: #1293EE;}
 
 h5, h6
-{ font: italic 95% arial, sans-serif;
+{ font: italic 95% 'Helvetica Neue', Helvetica, Arial, sans-serif;
   padding: 0 0 15px 0;
   color: #000;}
 
@@ -90,13 +90,13 @@ ol li
 
 #header
 { background: #667F03;
-  height: 160px;}
+  height: 132px;}
 
 #logo
 { width: 825px;
   position: relative;
-  height: 128px;
-  background: #667F03 url(logo.png) no-repeat;}
+  height: 132px;
+  background: #667F03}
 
 #logo #logo_text 
 { position: absolute; 
@@ -104,7 +104,7 @@ ol li
   left: 0;}
 
 #logo h1, #logo h2
-{ font: normal 300% 'century gothic', arial, sans-serif;
+{ font: normal 300% 'Helvetica Neue', Helvetica, Arial, sans-serif;
   border-bottom: 0;
   text-transform: none;
   margin: 0;}
@@ -139,7 +139,7 @@ ul#menu li
 
 ul#menu li a
 { letter-spacing: 0.1em;
-  font: normal 100% 'lucida sans unicode', arial, sans-serif;
+  font: normal 100% 'Helvetica Neue', Helvetica, Arial, sans-serif;
   display: block; 
   float: left; 
   height: 37px;
@@ -201,13 +201,13 @@ ul#menu li a:hover, ul#menu li.selected a, ul#menu li.selected a:hover
 
 #footer
 { width: 878px;
-  font: normal 100% 'lucida sans unicode', arial, sans-serif;
-  height: 33px;
-  padding: 24px 0 5px 0;
+  font: normal 100% 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  height: 24px;
+  padding: 20px 0 5px 0;
   text-align: center; 
   background: #29425E url(footer.png) repeat-x;
   color: #FFF;
-  text-transform: uppercase;
+  
   letter-spacing: 0.1em;}
 
 #footer a
