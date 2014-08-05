@@ -3,7 +3,7 @@ a step by step tutorial for [melonJS](http://melonjs.org/)
 
 How to create a platformer using [melonJS](http://melonjs.org/)
 -------------------------------------------------------------------------------
-Click [here](http://http://melonjs.github.io/tutorial-platformer/) to get started !
+Click [here](http://melonjs.github.io/tutorial-platformer/) to get started !
 
 Note that due to the 'cross-origin request' policy implemented in most browsers (that prevents from accessing local files), you will need to either disable this security check (see the tutorial), or better use a "personal" local web server.
 
