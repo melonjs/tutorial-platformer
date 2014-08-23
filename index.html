@@ -169,34 +169,34 @@
 
                                                         <p>First let's have a look at our js/game.js skeleton :</p>
 
-                                                        <pre class="brush: js">
+                            <pre class="brush: js">
 
-                                                            /* game namespace */
-                                                            var game = {
+                                        /* game namespace */
+                                        var game = {
 
-                                                            /** 
-                                                            * an object where to store game global data
-                                                            */
-                                                            data : {
-                                                            // score
-                                                            score : 0
-                                                        },
-                                                        
-                                                        // Run on page load.
-                                                        "onload" : function () {
+                                            /** 
+                                            * an object where to store game global data
+                                            */
+                                            data : {
+                                            // score
+                                            score : 0
+                                        },
+                                        
+                                        // Run on page load.
+                                        "onload" : function () {
 
-                                                        // Initialize the video.
-                                                        if (!me.video.init("screen", 640, 480, true, 'auto')) {
-                                                        alert("Your browser does not support HTML5 canvas.");
-                                                        return;
-                                                    }
-                                                    
-                                                    // add "#debug" to the URL to enable the debug Panel
-                                                    if (document.location.hash === "#debug") {
-                                                    window.onReady(function () {
+                                            // Initialize the video.
+                                            if (!me.video.init("screen", me.video.CANVAS, 640, 480, true, 'auto')) {
+                                                alert("Your browser does not support HTML5 canvas.");
+                                                return;
+                                            }
+                                    
+                                            // add "#debug" to the URL to enable the debug Panel
+                                            if (document.location.hash === "#debug") {
+                                                window.onReady(function () {
                                                     me.plugin.register.defer(this, debugPanel, "debug");
                                                 });
-                                            }
+                                            }       
 
                                             // Initialize the audio.
                                             me.audio.init("mp3,ogg");
@@ -210,8 +210,6 @@
                                             // Initialize melonJS and display a loading screen.
                                             me.state.change(me.state.LOADING);
                                         },
-
-
 
                                         // Run on game resources loaded.
                                         "loaded" : function () {
@@ -248,19 +246,18 @@
                                     <pre class="brush: js">
                                         //game resources
                                         game.resources = [
-                                        /**
-                                        * Graphics.
-                                        */
-                                        // our level tileset
-                                        {name: "area01_level_tiles",  type:"image", src: "data/img/map/area01_level_tiles.png"},
-                                        // our metatiles
-                                        {name: "metatiles32x32",  type:"image", src: "data/img/map/metatiles32x32.png"},
-                                        
-                                        /* 
-                                        * Maps. 
-                                        */
-                                        {name: "area01", type: "tmx", src: "data/map/area01.tmx"}
-
+                                            /**
+                                            * Graphics.
+                                            */
+                                            // our level tileset
+                                            {name: "area01_level_tiles",  type:"image", src: "data/img/map/area01_level_tiles.png"},
+                                            // our metatiles
+                                            {name: "metatiles32x32",  type:"image", src: "data/img/map/metatiles32x32.png"},
+                                            
+                                            /* 
+                                            * Maps. 
+                                            */
+                                            {name: "area01", type: "tmx", src: "data/map/area01.tmx"}
                                         ];
 
                                     </pre>
@@ -271,33 +268,32 @@
                                         <p>Finally, let's open the js/screens/play.js file and in the <a href="http://melonjs.github.io/docs/me.ScreenObject.html#onResetEvent">onResetEvent()</a> function (which is called on a state
                                             change), we ask the <a href="http://melonjs.github.io/docs/me.levelDirector.html">level director</a> to display our previously preloaded level, by adding a call to the <b>loadLevel</b> function and our default level name :</p>
                                             <pre class="brush: js">
-                                                game.PlayScreen = me.ScreenObject.extend({
+                                            game.PlayScreen = me.ScreenObject.extend({
                                                 /** 
                                                 *  action to perform on state change
                                                 */
                                                 onResetEvent: function() {  
                                                 
-                                                // load a level
-                                                me.levelDirector.loadLevel("area01");
+                                                    // load a level
+                                                    me.levelDirector.loadLevel("area01");
+                                                    
+                                                    // reset the score
+                                                    game.data.score = 0;
+                                                    
+                                                    // add our HUD to the game world
+                                                    this.HUD = new game.HUD.Container();
+                                                    me.game.world.addChild(this.HUD);
                                                 
-                                                // reset the score
-                                                game.data.score = 0;
-                                                
-                                                // add our HUD to the game world
-                                                this.HUD = new game.HUD.Container();
-                                                me.game.world.addChild(this.HUD);
-                                                
-                                            },
+                                                },
                                             
-                                            
-                                            /** 
-                                            *  action to perform when leaving this screen (state change)
-                                            */
-                                            onDestroyEvent: function() {
-                                            // remove the HUD from the game world
-                                            me.game.world.removeChild(this.HUD);
-                                        }
-                                    });
+                                                /** 
+                                                 *  action to perform when leaving this screen (state change)
+                                                 */
+                                                onDestroyEvent: function() {
+                                                    // remove the HUD from the game world
+                                                    me.game.world.removeChild(this.HUD);
+                                                }
+                                        });
 
                                 </pre>
 
@@ -323,7 +319,7 @@
 
                                         <h2><a id="part3">Part 3: Add a main player</a></h2>
 
-                                        <p>Here we will create a new object by extending the default <a href="http://melonjs.github.io/docs/me.ObjectEntity.html"> me.ObjectEntity</a>, to create
+                                        <p>Here we will create a new object by extending the default <a href="http://melonjs.github.io/docs/me.Entity.html"> me.Entity</a>, to create
                                             our player. We will use the provided simple spritesheet <b>(gripe_run_right.png)</b>
                                             to animate our character. It's of course possible to define different animation for
                                             the same entity, but let's keep things simple first.</p><img src=
@@ -335,29 +331,29 @@
                                                 <pre class="brush: js">
                                                     //game resources
                                                     game.resources = [{
-                                                    /**
-                                                    * Graphics.
-                                                    */
-                                                    // our level tileset
-                                                    {name: "area01_level_tiles", type:"image", src: "data/img/map/area01_level_tiles.png"},
-                                                    // our metatiles
-                                                    {name: "metatiles32x32",  type:"image", src: "data/img/map/metatiles32x32.png"},
-                                                    // the main player spritesheet
-                                                    {name: "gripe_run_right", type:"image", src: "data/img/sprite/gripe_run_right.png"},
-                                                    /* 
-                                                    * Maps. 
-                                                    */
-                                                    {name: "area01", type: "tmx", src: "data/map/area01.tmx"}
-                                                }];
+                                                        /**
+                                                        * Graphics.
+                                                        */
+                                                        // our level tileset
+                                                        {name: "area01_level_tiles", type:"image", src: "data/img/map/area01_level_tiles.png"},
+                                                        // our metatiles
+                                                        {name: "metatiles32x32",  type:"image", src: "data/img/map/metatiles32x32.png"},
+                                                        // the main player spritesheet
+                                                        {name: "gripe_run_right", type:"image", src: "data/img/sprite/gripe_run_right.png"},
+                                                        /* 
+                                                        * Maps. 
+                                                        */
+                                                        {name: "area01", type: "tmx", src: "data/map/area01.tmx"}
+                                                    }];
                                             </pre>
 
                                             <p>Then it's time to create our entity:<br>
                                               (Feel free to put this object either in our main.js or in a new file, in my example I use entities.js)</p>
                                               <pre class="brush: js">
-                                                /*------------------- 
-                                                a player entity
-                                                -------------------------------- */
-                                                game.PlayerEntity = me.ObjectEntity.extend({
+                                            /*------------------- 
+                                            a player entity
+                                            -------------------------------- */
+                                            game.PlayerEntity = me.Entity.extend({
 
                                                 /* -----
 
@@ -366,71 +362,70 @@
                                                 ------ */
 
                                                 init: function(x, y, settings) {
-                                                // call the constructor
-                                                this.parent(x, y, settings);
+                                                    // call the constructor
+                                                    this._super(me.Entity, 'init', [x, y, settings]);
 
-                                                // set the default horizontal &amp; vertical speed (accel vector)
-                                                this.setVelocity(3, 15);
+                                                    // set the default horizontal &amp; vertical speed (accel vector)
+                                                    this.body.setVelocity(3, 15);
 
-                                                // set the display to follow our position on both axis
-                                                me.game.viewport.follow(this.pos, me.game.viewport.AXIS.BOTH);
+                                                    // set the display to follow our position on both axis
+                                                    me.game.viewport.follow(this.pos, me.game.viewport.AXIS.BOTH);
+                                                },
 
-                                            },
+                                                /* -----
 
-                                            /* -----
+                                                update the player pos
 
-                                            update the player pos
+                                                ------ */
+                                                update: function(dt) {
 
-                                            ------ */
-                                            update: function(dt) {
+                                                    if (me.input.isKeyPressed('left')) {
+                                                        // flip the sprite on horizontal axis
+                                                        this.flipX(true);
+                                                        // update the entity velocity
+                                                        this.body.vel.x -= this.body.accel.x * me.timer.tick;
+                                                    } else if (me.input.isKeyPressed('right')) {
+                                                        // unflip the sprite
+                                                        this.flipX(false);
+                                                        // update the entity velocity
+                                                        this.body.vel.x += this.body.accel.x * me.timer.tick;
+                                                    } else {
+                                                     this.body.vel.x = 0;
+                                                    }
+                                                
+                                                    if (me.input.isKeyPressed('jump')) {
+                                                        // make sure we are not already jumping or falling
+                                                        if (!this.jumping &amp;&amp; !this.falling) {
+                                                            // set current vel to the maximum defined value
+                                                            // gravity will then do the rest
+                                                            this.body.vel.y = -this.body.maxVel.y * me.timer.tick;
+                                                            // set the jumping flag
+                                                            this.jumping = true;
+                                                        }
 
-                                            if (me.input.isKeyPressed('left')) {
-                                            // flip the sprite on horizontal axis
-                                            this.flipX(true);
-                                            // update the entity velocity
-                                            this.vel.x -= this.accel.x * me.timer.tick;
-                                        } else if (me.input.isKeyPressed('right')) {
-                                        // unflip the sprite
-                                        this.flipX(false);
-                                        // update the entity velocity
-                                        this.vel.x += this.accel.x * me.timer.tick;
-                                    } else {
-                                    this.vel.x = 0;
-                                }
-                                if (me.input.isKeyPressed('jump')) {
-                                // make sure we are not already jumping or falling
-                                if (!this.jumping &amp;&amp; !this.falling) {
-                                // set current vel to the maximum defined value
-                                // gravity will then do the rest
-                                this.vel.y = -this.maxVel.y * me.timer.tick;
-                                // set the jumping flag
-                                this.jumping = true;
-                            }
+                                                    }
 
-                        }
+                                                    // check &amp; update player movement
+                                                    this.body.update();
 
-                        // check &amp; update player movement
-                        this.updateMovement();
-
-                        // update animation if necessary
-                        if (this.vel.x!=0 || this.vel.y!=0) {
-                        // update object animation
-                        this.parent(dt);
-                        return true;
-                    }
-                    
-                    // else inform the engine we did not perform
-                    // any update (e.g. position, animation)
-                    return false;
-                }
-
-            });
+                                                    // update animation if necessary
+                                                    if (this.vel.x!=0 || this.vel.y!=0) {
+                                                        // update object animation
+                                                        this._super(me.Entity, 'update', [dt]);
+                                                        return true;
+                                                    }
+                                                
+                                                    // else inform the engine we did not perform
+                                                    // any update (e.g. position, animation)
+                                                    return false;
+                                                }
+                                            });
         </pre>
 
         <p>I think the above code is quite easy to understand. Basically, we extend the
-            <a href="http://melonjs.github.io/docs/me.ObjectEntity.html"> ObjectEntity</a>, configure the default player speed, tweak the camera, 
-            test if some keys are pressed and manage our player movement (by setting player speed, and then calling the <a href="http://melonjs.github.io/docs/me.ObjectEntity.html#updateMovement"> updateMovement</a> function). Also, you may notice that I'm
-            testing the final velocity (this.vel.x and this.vel.y) of my object, which allows me to
+            <a href="http://melonjs.github.io/docs/me.Entity.html"> Entity</a>, configure the default player speed, tweak the camera, 
+            test if some keys are pressed and manage our player movement (by setting player speed, and then calling the entity Body <a href="http://melonjs.github.io/docs/me.Body.html#update"> update</a> function). Also, you may notice that I'm
+            testing the final velocity (this.body.vel.x and thisbody..vel.y) of my object, which allows me to
             know if my object actually moved, and control if I want the sprite animation to run or not.</p>
 
             <p>Then, we have to modify our "main" to actually declare our new Object in the object
@@ -439,14 +434,14 @@
                 :</p>
                 <pre class="brush: js">
 
-                    /* ---
+                /* ---
 
-                    callback when everything is loaded
-                    
-                    ---  */
-                    
-                    "loaded" : function ()
-                    {
+                callback when everything is loaded
+                
+                ---  */
+                
+                "loaded" : function ()
+                {
                     // set the "Play/Ingame" Screen Object
                     me.state.set(me.state.PLAY, new game.PlayScreen());
                     
@@ -542,7 +537,7 @@
                                                     </p>
 
                                                     <p>The collision box can be adjusted from Tiled by changing the size of the object and match the above example. 
-                                                     (Collision Shape can also manually adjusted by accessing the object entity <a href="http://melonjs.github.io/docs/me.ObjectEntity.html#shapes">shapes</a> property).
+                                                     (Collision Shape can also manually adjusted by accessing the entity body <a href="http://melonjs.github.io/docs/me.Body.html#shapes">shapes</a> property).
                                                  </p>
 
 
@@ -697,78 +692,75 @@
 
                                                                             <p>For our enemy, it's a bit longer :</p>
                                                                             <pre class="brush: js">
-                                                                                /* --------------------------
-                                                                                an enemy Entity
-                                                                                ------------------------ */
-                                                                                game.EnemyEntity = me.ObjectEntity.extend({
-                                                                                init: function(x, y, settings) {
-                                                                                // define this here instead of tiled
-                                                                                settings.image = "wheelie_right";
-                                                                                
-                                                                                // save the area size defined in Tiled
-                                                                                var width = settings.width;
-                                                                                var height = settings.height;;
+                                        /* --------------------------
+                                        an enemy Entity
+                                        ------------------------ */
+                                        game.EnemyEntity = me.Entity.extend({
+                                            init: function(x, y, settings) {
+                                                // define this here instead of tiled
+                                                settings.image = "wheelie_right";
+                                                
+                                                // save the area size defined in Tiled
+                                                var width = settings.width;
+                                                var height = settings.height;
 
-                                                                                // adjust the size setting information to match the sprite size
-                                                                                // so that the entity object is created with the right size
-                                                                                settings.spritewidth = settings.width = 64;
-                                                                                settings.spritewidth = settings.height = 64;
-                                                                                
-                                                                                // call the parent constructor
-                                                                                this.parent(x, y , settings);
-                                                                                
-                                                                                // set start/end position based on the initial area size
-                                                                                x = this.pos.x;
-                                                                                this.startX = x;
-                                                                                this.endX   = x + width - settings.spritewidth
-                                                                                this.pos.x  = x + width - settings.spritewidth;
+                                                // adjust the size setting information to match the sprite size
+                                                // so that the entity object is created with the right size
+                                                settings.spritewidth = settings.width = 64;
+                                                settings.spritewidth = settings.height = 64;
+                                                
+                                                // call the parent constructor
+                                                this._super(me.Entity, 'init', [x, y , settings]);
+                                                
+                                                // set start/end position based on the initial area size
+                                                x = this.pos.x;
+                                                this.startX = x;
+                                                this.endX   = x + width - settings.spritewidth
+                                                this.pos.x  = x + width - settings.spritewidth;
 
-                                                                                // walking &amp jumping speed
-                                                                                this.setVelocity(4, 6);
-                                                                                
-                                                                                // make it collidable
-                                                                                this.collidable = true;
-                                                                                this.type = me.game.ENEMY_OBJECT;
-                                                                            },
+                                                // walking &amp jumping speed
+                                                this.body.setVelocity(4, 6);
+                                                
+                                            },
 
-                                                                            // call by the engine when colliding with another object
-                                                                            // obj parameter corresponds to the other object (typically the player) touching this one
-                                                                            onCollision: function(res, obj) {
+                                            // call by the engine when colliding with another object
+                                            // obj parameter corresponds to the other object (typically the player) touching this one
+                                            onCollision: function(res, obj) {
 
-                                                                            // res.y &gt;0 means touched by something on the bottom
-                                                                            // which mean at top position for this one
-                                                                            if (this.alive &amp;&amp; (res.y &gt; 0) &amp;&amp; obj.falling) {
-                                                                            this.renderable.flicker(750);
-                                                                        }
-                                                                    },
+                                                // res.y &gt;0 means touched by something on the bottom
+                                                // which mean at top position for this one
+                                                if (this.alive &amp;&amp; (res.y &gt; 0) &amp;&amp; obj.falling) {
+                                                    this.renderable.flicker(750);
+                                                }
+                                            },
 
-                                                                    // manage the enemy movement
-                                                                    update: function(dt) {
-                                                                    // do nothing if not in viewport
-                                                                    if (!this.inViewport)
-                                                                    return false;
+                                            // manage the enemy movement
+                                            update: function(dt) {
+                                                // do nothing if not in viewport
+                                                if (!this.inViewport)
+                                                return false;
 
-                                                                    if (this.alive) {
-                                                                    if (this.walkLeft &amp;&amp; this.pos.x &lt;= this.startX) {
-                                                                    this.walkLeft = false;
-                                                                } else if (!this.walkLeft &amp;&amp; this.pos.x &gt;= this.endX) {
-                                                                this.walkLeft = true;
-                                                            }
-                                                            // make it walk
-                                                            this.flipX(this.walkLeft);
-                                                            this.vel.x += (this.walkLeft) ? -this.accel.x * me.timer.tick : this.accel.x * me.timer.tick;
+                                                if (this.alive) {
+                                                    if (this.walkLeft &amp;&amp; this.pos.x &lt;= this.startX) {
+                                                    this.walkLeft = false;
+                                                } else if (!this.walkLeft &amp;&amp; this.pos.x &gt;= this.endX) {
+                                                    this.walkLeft = true;
+                                                }
+                                                // make it walk
+                                                this.flipX(this.walkLeft);
+                                                this.vel.x += (this.walkLeft) ? -this.accel.x * me.timer.tick : this.accel.x * me.timer.tick;
+                                                
+                                                } else {
+                                                    this.vel.x = 0;
+                                                }
                                                             
-                                                        } else {
-                                                        this.vel.x = 0;
-                                                    }
-                                                    
-                                                    // check and update movement
-                                                    this.updateMovement();
-                                                    
-                                                    // update animation if necessary
-                                                    if (this.vel.x!=0 || this.vel.y!=0) {
+                                                // check and update movement
+                                                this.updateMovement();
+                                                
+                                                // update animation if necessary
+                                                if (this.vel.x!=0 || this.vel.y!=0) {
                                                     // update object animation
-                                                    this.parent(dt);
+                                                    this._super(me.Entity, 'parent', [dt]);
                                                     return true;
                                                 }
                                                 return false;
@@ -801,7 +793,7 @@
                                               "media/tutorial_tiled_step5.png" alt="Step 5"/></p>
 
                                               <p>Before testing, we also need to modify our player to check for collision with other
-                                                entities. In order to do this, we add a call to the <a href="http://melonjs.github.io/docs/me.ObjectContainer.html#collide"> <b>me.game.world.collide(this)</b></a>
+                                                entities. In order to do this, we add a call to the <a href="http://melonjs.github.io/docs/me.Collision.html#check"> <b>me.collision.check(this)</b></a>
                                                 function in our mainPlayer code, see below :</p>
                                                 <pre class="brush: js">
                                                     /* -----
@@ -927,7 +919,7 @@
             <p>The boilerplate we used earlier already contains a HUD Skeleton that we will use as a base for our game. The skeleton is
                 quite simple and consist of :
                 <ul>
-                    <li>an object called <b>game.HUD.Container</b>, that inherits from <a href="http://melonjs.github.io/docs/me.ObjectContainer.html">me.ObjectContainer</a></li>
+                    <li>an object called <b>game.HUD.Container</b>, that inherits from <a href="http://melonjs.github.io/docs/me.Container.html">me.Container</a></li>
                     <li>a basic score object called <b>game.HUD.ScoreItem</b>, that inherits from <a href="http://melonjs.github.io/docs/me.Renderable.html">me.Renderable</a></li>
                 </ul>
                 The HUD container is just basically an object container, that is defined as <b>persistent</b> (so that it can survive level changes), displayed on top of all others object (z propery set to Infinity),
@@ -943,72 +935,73 @@
                     game.HUD = game.HUD || {};
 
                     
-                    game.HUD.Container = me.ObjectContainer.extend({
+                    game.HUD.Container = me.Container.extend({
 
-                    init: function() {
-                    // call the constructor
-                    this.parent();
+                        init: function() {
+                            // call the constructor
+                            this._super(me.Container, 'init');
+                            
+                            // persistent across level change
+                            this.isPersistent = true;
+                            
+                            // non collidable
+                            this.collidable = false;
+                            
+                            // make sure our object is always draw first
+                            this.z = Infinity;
+
+                            // give a name
+                            this.name = "HUD";
+                            
+                            // add our child score object at the right-bottom position
+                            this.addChild(new game.HUD.ScoreItem(630, 440));
+                        }
+                    });
+
+                    /** 
+                    * a basic HUD item to display score
+                    */
                     
-                    // persistent across level change
-                    this.isPersistent = true;
+                    game.HUD.ScoreItem = me.Renderable.extend( {    
                     
-                    // non collidable
-                    this.collidable = false;
-                    
-                    // make sure our object is always draw first
-                    this.z = Infinity;
+                        /** 
+                         * constructor
+                         */
+                        init: function(x, y) {
+                        
+                            // call the parent constructor 
+                            // (size does not matter here)
+                            this._super(me.Renderable, 'init', [x, y, 10, 10]); 
 
-                    // give a name
-                    this.name = "HUD";
-                    
-                    // add our child score object at the right-bottom position
-                    this.addChild(new game.HUD.ScoreItem(630, 440));
-                }
-            });
+                            
+                            // local copy of the global score
+                            this.score = -1;
 
+                            // make sure we use screen coordinates
+                            this.floating = true;
+                        },
+                
+                        /**
+                         * update function
+                         */
+                        update : function (dt) {
+                            // we don't do anything fancy here, so just
+                            // return true if the score has been updated
+                            if (this.score !== game.data.score) {   
+                                this.score = game.data.score;
+                                return true;
+                            }
+                            return false;
+                        },
 
-            /** 
-            * a basic HUD item to display score
-            */
-            game.HUD.ScoreItem = me.Renderable.extend( {    
-            /** 
-            * constructor
-            */
-            init: function(x, y) {
-            
-            // call the parent constructor 
-            // (size does not matter here)
-            this.parent(new me.Vector2d(x, y), 10, 10); 
+                        /**
+                        * draw the score
+                        */
+                        draw : function (context) {
+                            // draw it baby !
+                        }
 
-            
-            // local copy of the global score
-            this.score = -1;
-
-            // make sure we use screen coordinates
-            this.floating = true;
-        },
-        
-        /**
-        * update function
-        */
-        update : function (dt) {
-        // we don't do anything fancy here, so just
-        // return true if the score has been updated
-        if (this.score !== game.data.score) {   
-        this.score = game.data.score;
-        return true;
-    }
-    return false;
-},
-
-/**
-* draw the score
-*/
-draw : function (context) {
-// draw it baby !
-}
-
-});
+                });
 </pre>
 <br/>
 

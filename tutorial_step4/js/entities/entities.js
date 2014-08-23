@@ -1,7 +1,7 @@
 /**
  * Player Entity
  */
-game.PlayerEntity = me.ObjectEntity.extend(
+game.PlayerEntity = me.Entity.extend(
 {	
   
   /* -----
@@ -13,10 +13,10 @@ game.PlayerEntity = me.ObjectEntity.extend(
 	init:function (x, y, settings)
 	{
 		// call the constructor
-		this.parent(x, y , settings);
+		this._super(me.Entity, 'init', [x, y , settings]);
 		
 		// set the default horizontal & vertical speed (accel vector)
-		this.setVelocity(3, 15);
+		this.body.setVelocity(3, 15);
 	 		
 		// set the display to follow our position on both axis
 		me.game.viewport.follow(this.pos, me.game.viewport.AXIS.BOTH);
@@ -36,39 +36,39 @@ game.PlayerEntity = me.ObjectEntity.extend(
 			// flip the sprite on horizontal axis
 			this.flipX(true);
 			// update the entity velocity
-			this.vel.x -= this.accel.x * me.timer.tick;
+			this.body.vel.x -= this.body.accel.x * me.timer.tick;
 		}
 		else if (me.input.isKeyPressed('right'))
 		{
 			// unflip the sprite
 			this.flipX(false);
 			// update the entity velocity
-			this.vel.x += this.accel.x * me.timer.tick;
+			this.body.vel.x += this.body.accel.x * me.timer.tick;
 		}
 		else
 		{
-			this.vel.x = 0;
+			this.body.vel.x = 0;
 		}
 		if (me.input.isKeyPressed('jump'))
 		{	
-			if (!this.jumping && !this.falling) 
+			if (!this.body.jumping && !this.body.falling) 
 			{
 				// set current vel to the maximum defined value
 				// gravity will then do the rest
-				this.vel.y = -this.maxVel.y * me.timer.tick;
+				this.body.vel.y = -this.body.maxVel.y * me.timer.tick;
 				// set the jumping flag
-				this.jumping = true;
+				this.body.jumping = true;
 			}
 		}
 		
 		// check & update player movement
-		updated = this.updateMovement();
+		this.body.update(dt);
 			 
 		// update animation
-		if (this.vel.x!=0 || this.vel.y!=0)
+		if (this.body.vel.x!=0 || this.body.vel.y!=0)
 		{
 			// update object animation
-			this.parent(dt);
+			this._super(me.Entity, 'update', [dt]);
 			return true;
 		}
 		
