@@ -20,6 +20,9 @@ game.PlayerEntity = me.Entity.extend(
 		
 		// set the display to follow our position on both axis
 		me.game.viewport.follow(this.pos, me.game.viewport.AXIS.BOTH);
+
+		// ensure the player is updated even when outside of the viewport
+		this.alwaysUpdate = true;
 		
 	},
 
@@ -113,6 +116,9 @@ game.CoinEntity = me.CollectableEntity.extend(
 	{
 		// call the parent constructor
 		this._super(me.CollectableEntity, 'init', [x, y , settings]);
+
+        // set our collision callback function
+        this.body.onCollision = this.onCollision.bind(this);
 	},
 	
 	onCollision : function ()
@@ -120,7 +126,7 @@ game.CoinEntity = me.CollectableEntity.extend(
 		// give some score
 		game.data.score += 250;
 		// make sure it cannot be collected "again"
-		this.collidable = false;
+		this.body.setCollisionMask(me.collision.types.NO_OBJECT);
 		// remove it
 		me.game.world.removeChild(this);
 	}
@@ -156,6 +162,7 @@ game.EnemyEntity = me.Entity.extend(
 		this.endX   = x + width - settings.spritewidth
 		this.pos.x  = x + width - settings.spritewidth;
 
+		// manually update the entity bounds as we manually change the position
 		this.updateBounds();
 
 		this.walkLeft = false;

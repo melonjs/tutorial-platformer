@@ -20,6 +20,9 @@ game.PlayerEntity = me.Entity.extend(
 	 		
 		// set the display to follow our position on both axis
 		me.game.viewport.follow(this.pos, me.game.viewport.AXIS.BOTH);
+
+		// ensure the player is updated even when outside of the viewport
+		this.alwaysUpdate = true;
 		
 	},
 

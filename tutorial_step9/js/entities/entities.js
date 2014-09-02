@@ -19,7 +19,10 @@ game.PlayerEntity = me.Entity.extend(
 		this.body.setVelocity(3, 15);
 	 		
 		// set the display to follow our position on both axis
-		me.game.viewport.follow(this.pos, me.game.viewport.AXIS.HORIZONTAL);
+		me.game.viewport.follow(this.pos, me.game.viewport.AXIS.BOTH);
+
+		// ensure the player is updated even when outside of the viewport
+		this.alwaysUpdate = true;
 		
 	},
 
@@ -66,34 +69,11 @@ game.PlayerEntity = me.Entity.extend(
 		// check & update player movement
 		this.body.update(dt);
 	 
-		// check for collision
-		var res =  me.game.world.collide(this)
-		 
-		if (res)
-		{
-			if (res.obj.type == me.game.ENEMY_OBJECT)
-			{
-			   if ((res.y>0) && !this.jumping)
-			   {
-				  // bounce (force jump)
-				  this.falling = false;
-				  this.vel.y = -this.maxVel.y * me.timer.tick;
-				  // set the jumping flag
-				  this.jumping = true;
-				  // play some audio
-				  me.audio.play("stomp");
-			   }
-			   else
-			   {
-				  // let's flicker in case we touched an enemy
-				  this.renderable.flicker(750);
-			   }
-			}
-		}
-	 
-				
+		// check for collision with sthg
+        me.collision.check(this, true, this.collideHandler.bind(this), true);
+		 		
 		// update animation
-		if (this.vel.x!=0 || this.vel.y!=0)
+		if (this.body.vel.x!=0 || this.body.vel.y!=0)
 		{
 			// update object animation
 			this._super(me.Entity, 'update', [dt]);
@@ -102,10 +82,33 @@ game.PlayerEntity = me.Entity.extend(
 		
 		// else inform the engine we did not perform
 		// any update (e.g. position, animation)
-		return false;
-	}
+		return false;		
+	},
+    
+    
+    /**
+     * colision handler
+     */
+    collideHandler : function (response) {
+ 		if (response.b.body.collisionType === me.collision.types.ENEMY_OBJECT) {
+			if ((response.overlapV.y>0) && !this.body.jumping) {
+				// bounce (force jump)
+				this.body.falling = false;
+				this.body.vel.y = -this.body.maxVel.y * me.timer.tick;
+				// set the jumping flag
+				this.body.jumping = true;
+				// play some audio
+				me.audio.play("stomp");
+			}
+			else {
+				// let's flicker in case we touched an enemy
+				this.renderable.flicker(750);
+			}
+		}
+    }
 
 });
+
 
 /**
  * Coin Entity
@@ -116,9 +119,12 @@ game.CoinEntity = me.CollectableEntity.extend(
 	init: function (x, y, settings)
 	{
 		// call the parent constructor
-		this.parent(x, y , settings);
-	},		
-		
+		this._super(me.CollectableEntity, 'init', [x, y , settings]);
+
+        // set our collision callback function
+        this.body.onCollision = this.onCollision.bind(this);
+	},
+
 	onCollision : function ()
 	{
 		// do something when collide
@@ -126,18 +132,16 @@ game.CoinEntity = me.CollectableEntity.extend(
 		// give some score
 		game.data.score += 250;
 		// make sure it cannot be collected "again"
-		this.collidable = false;
+		this.body.setCollisionMask(me.collision.types.NO_OBJECT);
 		// remove it
 		me.game.world.removeChild(this);
 	}
-
-	
 });
 
 /**
  * Enemy Entity
  */
-game.EnemyEntity = me.ObjectEntity.extend(
+game.EnemyEntity = me.Entity.extend(
 {	
 	init: function (x, y, settings)
 	{
@@ -154,7 +158,7 @@ game.EnemyEntity = me.ObjectEntity.extend(
 		settings.spritewidth = settings.height = 64;
 		
 		// call the parent constructor
-		this.parent(x, y , settings);
+		this._super(me.Entity, 'init', [x, y , settings]);
 		
 		// set start/end position based on the initial area size
 		x = this.pos.x;
@@ -162,12 +166,13 @@ game.EnemyEntity = me.ObjectEntity.extend(
 		this.endX   = x + width - settings.spritewidth
 		this.pos.x  = x + width - settings.spritewidth;
 
+		// manually update the entity bounds as we manually change the position
+		this.updateBounds();
+
+		this.walkLeft = false;
+
 		// walking & jumping speed
-		this.setVelocity(4, 6);
-		
-		// make it collidable
-		this.collidable = true;
-		this.type = me.game.ENEMY_OBJECT;
+		this.body.setVelocity(4, 6);
 	},
 	
 		
@@ -178,7 +183,6 @@ game.EnemyEntity = me.ObjectEntity.extend(
 		// which mean at top position for this one
 		if (this.alive && (res.y > 0) && obj.falling)
 		{
-			// make it flicker
 			this.renderable.flicker(750);
 		}
 	},
@@ -186,11 +190,7 @@ game.EnemyEntity = me.ObjectEntity.extend(
 	
 	// manage the enemy movement
 	update : function (dt)
-	{
-		// do nothing if not in viewport
-		if (!this.inViewport)
-			return false;
-			
+	{			
 		if (this.alive)
 		{
 			if (this.walkLeft && this.pos.x <= this.startX)
@@ -203,19 +203,20 @@ game.EnemyEntity = me.ObjectEntity.extend(
 			}
 			
 			this.flipX(this.walkLeft);
-			this.vel.x += (this.walkLeft) ? -this.accel.x * me.timer.tick : this.accel.x * me.timer.tick;
+			this.body.vel.x += (this.walkLeft) ? -this.body.accel.x * me.timer.tick : this.body.accel.x * me.timer.tick;
+
 		}
 		else
 		{
-			this.vel.x = 0;
+			this.body.vel.x = 0;
 		}
 		// check & update movement
-		this.updateMovement();
-		
-		if (this.vel.x!=0 ||this.vel.y!=0)
+		this.body.update(dt);
+			
+		if (this.body.vel.x!=0 ||this.body.vel.y!=0)
 		{
 			// update the object animation
-			this.parent(dt);
+			this._super(me.Entity, 'update', [dt]);
 			return true;
 		}
 		return false;

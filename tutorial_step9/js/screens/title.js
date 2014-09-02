@@ -7,18 +7,19 @@ game.TitleScreen = me.ScreenObject.extend({
         
         // title screen
         me.game.world.addChild(
-            new me.SpriteObject (
+            new me.Sprite(
                 0,0, 
                 me.loader.getImage('title_screen')
             ),
             1
         );
+
     
         // add a new renderable component with the scrolling text
         me.game.world.addChild(new (me.Renderable.extend ({
             // constructor
             init : function() {
-                this.parent(new me.Vector2d(0, 0), me.game.viewport.width, me.game.viewport.height);
+                this._super(me.Renderable, 'init', [0, 0, me.game.viewport.width, me.game.viewport.height]);
                 // font for the scrolling text
                 this.font = new me.BitmapFont("32x32_font", 32);
                 
