@@ -375,6 +375,9 @@
 
                                                     // set the display to follow our position on both axis
                                                     me.game.viewport.follow(this.pos, me.game.viewport.AXIS.BOTH);
+
+                                                    // ensure the player is updated even when outside of the viewport
+                                                    this.alwaysUpdate = true;
                                                 },
 
                                                 /* -----
@@ -445,8 +448,7 @@
                 
                 ---  */
                 
-                "loaded" : function ()
-                {
+                "loaded" : function () {
                     // set the "Play/Ingame" Screen Object
                     me.state.set(me.state.PLAY, new game.PlayScreen());
                     
@@ -568,23 +570,23 @@
                                                             <pre class="brush: js">
                                                                 // game resources
                                                                 game.resources = [
-                                                                /**
-                                                                * Graphics.
-                                                                */
-                                                                // our level tileset
-                                                                {name: "area01_level_tiles",  type:"image", src: "data/img/map/area01_level_tiles.png"},
-                                                                // our metatiles
-                                                                {name: "metatiles32x32",  type:"image", src: "data/img/map/metatiles32x32.png"},
-                                                                // the main player spritesheet
-                                                                {name: "gripe_run_right",     type:"image", src: "data/img/sprite/gripe_run_right.png"},
-                                                                // the parallax background
-                                                                {name: "area01_bkg0",         type:"image", src: "data/img/area01_bkg0.png"},
-                                                                {name: "area01_bkg1",         type:"image", src: "data/img/area01_bkg1.png"},
-                                                                
-                                                                /* 
-                                                                * Maps. 
-                                                                */
-                                                                {name: "area01",  type: "tmx",  src: "data/map/area01.tmx"}
+                                                                    /**
+                                                                    * Graphics.
+                                                                    */
+                                                                    // our level tileset
+                                                                    {name: "area01_level_tiles",  type:"image", src: "data/img/map/area01_level_tiles.png"},
+                                                                    // our metatiles
+                                                                    {name: "metatiles32x32",  type:"image", src: "data/img/map/metatiles32x32.png"},
+                                                                    // the main player spritesheet
+                                                                    {name: "gripe_run_right",     type:"image", src: "data/img/sprite/gripe_run_right.png"},
+                                                                    // the parallax background
+                                                                    {name: "area01_bkg0",         type:"image", src: "data/img/area01_bkg0.png"},
+                                                                    {name: "area01_bkg1",         type:"image", src: "data/img/area01_bkg1.png"},
+                                                                    
+                                                                    /* 
+                                                                    * Maps. 
+                                                                    */
+                                                                    {name: "area01",  type: "tmx",  src: "data/map/area01.tmx"}
                                                                 ];
                                                             </pre>
 
@@ -630,27 +632,27 @@
                                                                                     <pre class="brush: js">
                                                                                         // game resources
                                                                                         game.resources = [
-                                                                                        /**
-                                                                                        * Graphics.
-                                                                                        */
-                                                                                        // our level tileset
-                                                                                        {name: "area01_level_tiles",  type:"image", src: "data/img/map/area01_level_tiles.png"},
-                                                                                        // our metatiles
-                                                                                        {name: "metatiles32x32",  type:"image", src: "data/img/map/metatiles32x32.png"},
-                                                                                        // the main player spritesheet
-                                                                                        {name: "gripe_run_right",     type:"image", src: "data/img/sprite/gripe_run_right.png"},
-                                                                                        // the parallax background
-                                                                                        {name: "area01_bkg0",         type:"image", src: "data/img/area01_bkg0.png"},
-                                                                                        {name: "area01_bkg1",         type:"image", src: "data/img/area01_bkg1.png"},
-                                                                                        // the spinning coin spritesheet
-                                                                                        {name: "spinning_coin_gold",  type:"image", src: "data/img/sprite/spinning_coin_gold.png"},
-                                                                                        // our enemty entity
-                                                                                        {name: "wheelie_right",       type:"image", src: "data/img/sprite/wheelie_right.png"},
-                                                                                        
-                                                                                        /* 
-                                                                                        * Maps. 
-                                                                                        */
-                                                                                        {name: "area01",              type: "tmx",  src: "data/map/area01.tmx"}
+                                                                                            /**
+                                                                                            * Graphics.
+                                                                                            */
+                                                                                            // our level tileset
+                                                                                            {name: "area01_level_tiles",  type:"image", src: "data/img/map/area01_level_tiles.png"},
+                                                                                            // our metatiles
+                                                                                            {name: "metatiles32x32",  type:"image", src: "data/img/map/metatiles32x32.png"},
+                                                                                            // the main player spritesheet
+                                                                                            {name: "gripe_run_right",     type:"image", src: "data/img/sprite/gripe_run_right.png"},
+                                                                                            // the parallax background
+                                                                                            {name: "area01_bkg0",         type:"image", src: "data/img/area01_bkg0.png"},
+                                                                                            {name: "area01_bkg1",         type:"image", src: "data/img/area01_bkg1.png"},
+                                                                                            // the spinning coin spritesheet
+                                                                                            {name: "spinning_coin_gold",  type:"image", src: "data/img/sprite/spinning_coin_gold.png"},
+                                                                                            // our enemty entity
+                                                                                            {name: "wheelie_right",       type:"image", src: "data/img/sprite/wheelie_right.png"},
+                                                                                            
+                                                                                            /* 
+                                                                                            * Maps. 
+                                                                                            */
+                                                                                            {name: "area01",              type: "tmx",  src: "data/map/area01.tmx"}
                                                                                         ];
                                                                                     </pre>
                                                                                     <br/>
@@ -749,9 +751,6 @@
 
                                             // manage the enemy movement
                                             update: function(dt) {
-                                                // do nothing if not in viewport
-                                                if (!this.inViewport)
-                                                return false;
 
                                                 if (this.alive) {
                                                     if (this.walkLeft &amp;&amp; this.pos.x &lt;= this.startX) {
@@ -814,28 +813,22 @@
     ------ */
     update: function(dt) {
 
-        if (me.input.isKeyPressed('left'))
-        {
+        if (me.input.isKeyPressed('left')) {
             // flip the sprite on horizontal axis
             this.flipX(true);
             // update the entity velocity
             this.body.vel.x -= this.body.accel.x * me.timer.tick;
-        } 
-        else if (me.input.isKeyPressed('right'))
-        {
+        }  else if (me.input.isKeyPressed('right')) {
             // unflip the sprite
             this.flipX(false);
             // update the entity velocity
             this.body.vel.x += this.body.accel.x * me.timer.tick;
-        }
-        else
-        {
+        } else {
             this.body.vel.x = 0;
         }
-        if (me.input.isKeyPressed('jump'))
-        {   
-            if (!this.body.jumping && !this.body.falling) 
-            {
+        
+        if (me.input.isKeyPressed('jump')) {   
+            if (!this.body.jumping && !this.body.falling) {
                 // set current vel to the maximum defined value
                 // gravity will then do the rest
                 this.body.vel.y = -this.body.maxVel.y * me.timer.tick;
@@ -843,6 +836,7 @@
                 this.body.jumping = true;
             }
         }
+
         // check & update player movement
         this.body.update(dt);
      
@@ -850,8 +844,7 @@
         me.collision.check(this, true, this.collideHandler.bind(this), true);
                 
         // update animation
-        if (this.body.vel.x!=0 || this.body.vel.y!=0)
-        {
+        if (this.body.vel.x!=0 || this.body.vel.y!=0) {
             // update object animation
             this._super(me.Entity, 'update', [dt]);
             return true;
@@ -903,29 +896,29 @@
             <pre class="brush: js">
                 // game resources
                 game.resources = [
-                /**
-                * Graphics.
-                */
-                // our level tileset
-                {name: "area01_level_tiles",  type:"image", src: "data/img/map/area01_level_tiles.png"},
-                // our metatiles
-                {name: "metatiles32x32",  type:"image", src: "data/img/map/metatiles32x32.png"},
-                // the main player spritesheet
-                {name: "gripe_run_right",     type:"image", src: "data/img/sprite/gripe_run_right.png"},
-                // the parallax background
-                {name: "area01_bkg0",         type:"image", src: "data/img/area01_bkg0.png"},
-                {name: "area01_bkg1",         type:"image", src: "data/img/area01_bkg1.png"},
-                // the spinning coin spritesheet
-                {name: "spinning_coin_gold",  type:"image", src: "data/img/sprite/spinning_coin_gold.png"},
-                // our enemty entity
-                {name: "wheelie_right",       type:"image", src: "data/img/sprite/wheelie_right.png"},
-                // game font
-                {name: "32x32_font",          type:"image", src: "data/img/font/32x32_font.png"},
+                    /**
+                    * Graphics.
+                    */
+                    // our level tileset
+                    {name: "area01_level_tiles",  type:"image", src: "data/img/map/area01_level_tiles.png"},
+                    // our metatiles
+                    {name: "metatiles32x32",  type:"image", src: "data/img/map/metatiles32x32.png"},
+                    // the main player spritesheet
+                    {name: "gripe_run_right",     type:"image", src: "data/img/sprite/gripe_run_right.png"},
+                    // the parallax background
+                    {name: "area01_bkg0",         type:"image", src: "data/img/area01_bkg0.png"},
+                    {name: "area01_bkg1",         type:"image", src: "data/img/area01_bkg1.png"},
+                    // the spinning coin spritesheet
+                    {name: "spinning_coin_gold",  type:"image", src: "data/img/sprite/spinning_coin_gold.png"},
+                    // our enemty entity
+                    {name: "wheelie_right",       type:"image", src: "data/img/sprite/wheelie_right.png"},
+                    // game font
+                    {name: "32x32_font",          type:"image", src: "data/img/font/32x32_font.png"},
 
-                /*
-                * Maps.
-                */
-                {name: "area01",              type: "tmx",  src: "data/map/area01.tmx"}
+                    /*
+                    * Maps.
+                    */
+                    {name: "area01",              type: "tmx",  src: "data/map/area01.tmx"}
                 ];
             </pre>
             <br/>
@@ -973,7 +966,7 @@
                     * a basic HUD item to display score
                     */
                     
-                    game.HUD.ScoreItem = me.Renderable.extend( {    
+                    game.HUD.ScoreItem = me.Renderable.extend({    
                     
                         /** 
                          * constructor
@@ -1032,7 +1025,7 @@
             
             // call the parent constructor 
             // (size does not matter here)
-            this.parent(new me.Vector2d(x, y), 10, 10); 
+            this._super(me.Renderable, 'init', [x, y, 10, 10]);
             
             // create a font
             this.font = new me.BitmapFont("32x32_font", 32);
@@ -1147,42 +1140,42 @@
         <pre class="brush: js">
             //game resources
             game.resources = [
-            /**
-            * Graphics.
-            */
-            // our level tileset
-            {name: "area01_level_tiles",  type:"image", src: "data/img/map/area01_level_tiles.png"},
-            // our metatiles
-            {name: "metatiles32x32",  type:"image", src: "data/img/map/metatiles32x32.png"},
-            // the main player spritesheet
-            {name: "gripe_run_right",     type:"image", src: "data/img/sprite/gripe_run_right.png"},
-            // the parallax background
-            {name: "area01_bkg0",         type:"image", src: "data/img/area01_bkg0.png"},
-            {name: "area01_bkg1",         type:"image", src: "data/img/area01_bkg1.png"},
-            // the spinning coin spritesheet
-            {name: "spinning_coin_gold",  type:"image", src: "data/img/sprite/spinning_coin_gold.png"},
-            // our enemty entity
-            {name: "wheelie_right",       type:"image", src: "data/img/sprite/wheelie_right.png"},
-            // game font
-            {name: "32x32_font",          type:"image", src: "data/img/font/32x32_font.png"},
-            
-            /* 
-            * Maps. 
-            */
-            {name: "area01",              type: "tmx",  src: "data/map/area01.tmx"},
+                /**
+                * Graphics.
+                */
+                // our level tileset
+                {name: "area01_level_tiles",  type:"image", src: "data/img/map/area01_level_tiles.png"},
+                // our metatiles
+                {name: "metatiles32x32",  type:"image", src: "data/img/map/metatiles32x32.png"},
+                // the main player spritesheet
+                {name: "gripe_run_right",     type:"image", src: "data/img/sprite/gripe_run_right.png"},
+                // the parallax background
+                {name: "area01_bkg0",         type:"image", src: "data/img/area01_bkg0.png"},
+                {name: "area01_bkg1",         type:"image", src: "data/img/area01_bkg1.png"},
+                // the spinning coin spritesheet
+                {name: "spinning_coin_gold",  type:"image", src: "data/img/sprite/spinning_coin_gold.png"},
+                // our enemty entity
+                {name: "wheelie_right",       type:"image", src: "data/img/sprite/wheelie_right.png"},
+                // game font
+                {name: "32x32_font",          type:"image", src: "data/img/font/32x32_font.png"},
+                
+                /* 
+                * Maps. 
+                */
+                {name: "area01",              type: "tmx",  src: "data/map/area01.tmx"},
 
 
-            /* 
-            * Background music. 
-            */ 
-            {name: "dst-inertexponent", type: "audio", src: "data/bgm/"},
-            
-            /* 
-            * Sound effects. 
-            */
-            {name: "cling", type: "audio", src: "data/sfx/"},
-            {name: "stomp", type: "audio", src: "data/sfx/"},
-            {name: "jump",  type: "audio", src: "data/sfx/"}
+                /* 
+                * Background music. 
+                */ 
+                {name: "dst-inertexponent", type: "audio", src: "data/bgm/"},
+                
+                /* 
+                * Sound effects. 
+                */
+                {name: "cling", type: "audio", src: "data/sfx/"},
+                {name: "stomp", type: "audio", src: "data/sfx/"},
+                {name: "jump",  type: "audio", src: "data/sfx/"}
             ];
         </pre>
 
@@ -1193,11 +1186,8 @@
             accordingly.</p>
 
             <p>If we take a look back on how we first initialized the audio, you can see that I
-                passed the <b>"mp3,ogg"</b> parameter to the <a href="http://melonjs.github.io/docs/me.audio.html#init">initialization function</a>, asking to try
-                to use first the mp3 format, and then ogg as a fallback if mp3 is not supported. This
-                also means, in this case, I must provide two versions of my audio files, one as mp3,
-                and one as ogg. The engine will then use the right based on your browser
-                capabilities</p>
+                passed the <b>"mp3,ogg"</b> parameter to the <a href="http://melonjs.github.io/docs/me.audio.html#init">initialization function</a>, to indicate that I will provide two audio files format, one as mp3,
+                and one as ogg, melonJS will then use the right based on your browser capabilities</p>
                 <pre class="brush: js">
                     // initialize the "audio"
                     me.audio.init("mp3,ogg");
@@ -1213,20 +1203,20 @@
                     need to add a new call to <a href="http://melonjs.github.io/docs/me.audio.html#play"><b>me.audio.play()</b></a> and use the <b>"cling"</b> audio
                     resource. that's all !</p><br/>
                     <pre class="brush: js">
-                        onCollision : function () {
+                    onCollision : function () {
                         // do something when collected
 
-                            // play a "coin collected" sound
-                            me.audio.play("cling");
+                        // play a "coin collected" sound
+                        me.audio.play("cling");
 
-                            // give some score
-                            game.data.score += 250;
+                        // give some score
+                        game.data.score += 250;
 
-                            // make sure it cannot be collected "again"
-                            this.body.setCollisionMask(me.collision.types.NO_OBJECT);
-                            
-                            // remove it
-                            me.game.world.removeChild(this);
+                        // make sure it cannot be collected "again"
+                        this.body.setCollisionMask(me.collision.types.NO_OBJECT);
+                        
+                        // remove it
+                        me.game.world.removeChild(this);
                     }
                 </pre>
                 <br/>
@@ -1241,10 +1231,8 @@
                     you are not allowed to jump (already jumping, etc..) and in that case there is no
                     need to play the sound sfx.</p><br/>
                     <pre class="brush: js">
-                    if (me.input.isKeyPressed('jump'))
-                    {   
-                        if (!this.body.jumping && !this.body.falling) 
-                        {
+                    if (me.input.isKeyPressed('jump')) {   
+                        if (!this.body.jumping && !this.body.falling) {
                             // set current vel to the maximum defined value
                             // gravity will then do the rest
                             this.body.vel.y = -this.body.maxVel.y * me.timer.tick;
@@ -1351,12 +1339,14 @@
                     game.TitleScreen = me.ScreenObject.extend({
                         // reset function
                         onResetEvent: function() {
-                    },
+                        
+                        },
 
-                    // destroy function
-                    onDestroyEvent: function() {
-                }
-            });
+                        // destroy function
+                        onDestroyEvent: function() {
+                        
+                        }
+                    });
         </pre>
 
 
@@ -1461,12 +1451,12 @@ game.TitleScreen = me.ScreenObject.extend({
         Finally, instead of switching to the <b>PLAY</b> state at the end of the loaded
         function, I'm switching now to the <b>MENU</b> state:<br/></p>
         <pre class="brush: js">
-            /* ---
+        /* ---
 
-            callback when everything is loaded
+        callback when everything is loaded
 
-            --- */
-            "loaded": function() {
+        --- */
+        "loaded": function() {
             // set the "Play/Ingame" Screen Object
             me.state.set(me.state.MENU, new game.TitleScreen());
 
