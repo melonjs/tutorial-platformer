@@ -165,6 +165,7 @@ game.EnemyEntity = me.Entity.extend(
 		// manually update the entity bounds as we manually change the position
 		this.updateBounds();
 
+		// to remember which side we were walking
 		this.walkLeft = false;
 
 		// walking & jumping speed

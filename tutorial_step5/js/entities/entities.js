@@ -122,8 +122,6 @@ game.CoinEntity = me.CollectableEntity.extend(
 
 	onCollision : function ()
 	{
-		// give some score
-		game.data.score += 250;
 		// make sure it cannot be collected "again"
 		this.body.setCollisionMask(me.collision.types.NO_OBJECT);
 		// remove it
@@ -162,6 +160,7 @@ game.EnemyEntity = me.Entity.extend(
 		// manually update the entity bounds as we manually change the position
 		this.updateBounds();
 
+		// to remember which side we were walking
         this.walkLeft = false;
 
 		// walking & jumping speed
