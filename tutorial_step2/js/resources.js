@@ -4,8 +4,6 @@ game.resources = [
 	 */
 	// our level tileset
 	{name: "area01_level_tiles",  type:"image",	src: "data/img/map/area01_level_tiles.png"},
-	// our metatiles
-	{name: "metatiles32x32",  type:"image", src: "data/img/map/metatiles32x32.png"},
 	
 	/* 
 	 * Maps. 
