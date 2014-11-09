@@ -15,6 +15,9 @@ game.HUD.Container = me.Container.extend({
 		
 		// persistent across level change
 		this.isPersistent = true;
+
+		// make sure we use screen coordinates
+		this.floating = true;
 		
 		// make sure our object is always draw first
 		this.z = Infinity;
@@ -47,9 +50,6 @@ game.HUD.ScoreItem = me.Renderable.extend( {
 		
 		// local copy of the global score
 		this.score = -1;
-
-		// make sure we use screen coordinates
-		this.floating = true;
 	},
 	
 	/**
