@@ -64,10 +64,10 @@ game.PlayerEntity = me.Entity.extend(
 			}
 		}
 		
-		// update player movement
+		// apply physics to the body (this moves the entity)
 		this.body.update(dt);
 
-		// check for collision with sthg
+        // handle collisions against other shapes
         me.collision.check(this);
 			 
 		// update animation
@@ -81,6 +81,15 @@ game.PlayerEntity = me.Entity.extend(
 		// else inform the engine we did not perform
 		// any update (e.g. position, animation)
 		return false;
-	}
+	},
+    
+   /**
+     * colision handler
+     */
+    onCollision : function (response, other) {
+        // Make all other objects solid
+        return true;
+    }
+    
 
 });
