@@ -409,8 +409,11 @@
 
                                                     }
 
-                                                    // check &amp; update player movement
+                                                    // apply physics to the body (this moves the entity)
                                                     this.body.update(dt);
+
+                                                    // handle collisions against other shapes
+                                                    me.collision.check(this);
 
                                                     // update animation if necessary
                                                     if (this.body.vel.x!=0 || this.body.vel.y!=0) {
@@ -422,6 +425,15 @@
                                                     // else inform the engine we did not perform
                                                     // any update (e.g. position, animation)
                                                     return false;
+                                                },
+                                                
+                                                /**
+                                                 * colision handler
+                                                 * (called when colliding with other objects)
+                                                 */
+                                                onCollision : function (response, other) {
+                                                    // Make all other objects solid
+                                                    return true;
                                                 }
                                             });
         </pre>
@@ -493,55 +505,49 @@
                         <h3><a id="define_collision_layer">Define the collision layer</a></h3>
 
                         <p>We are almost done! The last step is to define the collision layer, for this we
-                            will use the other tileset we previously added into Tiled, and specify for each tile
-                            a property corresponding to the tile type.</p><img src="media/step3_metatileset.png"
-                            alt="Using the meta tileset"/>
+                            simply need to create a new object layer name "collision", add some basic shapes to it a
+                            and that will be all !
 
-                            <p>First, right click on the "Solid" tile (1st one), and add a <b>"type"</b> property
-                                with <b>"solid"</b> as a value.</p><img src="media/step3_tile_solid.png" alt=
-                                "Configuring the solid tile"/>
 
-                                <p>Then, right click on the "Platform" tile (2nd one), and add a <b>"type"</b>
-                                    property with <b>"platform"</b> as a value.</p><img src=
-                                    "media/step3_tile_platform.png"
-                                    alt="Configuring the platform tile"/>
+                            <p>So now add a new Object Group Layer. This layer <b>MUST contains the keyword "collision"</b>
+                                for the engine to recognize it as a collision object layer.</p>
 
-                                    <p>That's it! Though we won't be using them for this tutorial, it is nice to know
-                                        that the others possible values are <b>"lslope"</b> for the left slope,
-                                        <b>"rslope"</b> for the right slope, <b>"ladder"</b> for ladder tiles and
-                                        <b>"breakable"</b> (you'll never guess) for breakable tiles. Also be careful when
-                                        defining these two fields, as the engine is exactly looking for these
-                                        labels, so if they are incorrect, it won't work.</p>
+                                <p>Once the layer added, select it, and just "draw" you level collision map by adding 
+                                   any form using from the object toolbar <img src="media/step3_toolbar.png" alt="object tool bar"/> </p>
+                                   
+                                <p> Please do note with melonJS implementing a simple Axis-Aligned Boxes collision algorithm, 
+                                    all polygons used for collision require to be convex with all vertices defined with clockwise winding.
+                                    A polygon is convex when all line segments connecting two points in the interior do not cross 
+                                    any edge of the polygon (which means that all angles are less than 180 degrees), as shown here below : <br>
+                                    <center><img src="media/convex_polygon.png"/></center><br>
+                                    A polygon's `winding` is clockwise if its vertices (points) are declared turning to the right 
+                                    (The image above shows COUNTERCLOCKWISE winding.</p>
+                                                                
+                                   <p> At the  end it should look like this (notice the dotted red square delimiting the collision area) :<br>
+                                    <img src="media/step3_collision_object_draw.png" alt="Drawing the collision layer"/></p>
 
-                                        <p>Now add a new Tilelayer. This layer <b>MUST contains the keyword "collision"</b>
-                                            for the engine to recognize it as a collision layer.</p>
+                                    <h3><a id="part3_try">Try it out</a></h3>
 
-                                            <p>Once the layer added, select it, and just "draw" you level collision map. At the
-                                                end it should look like this:</p>
-                                                <p><img src="media/step3_collision_draw.png" alt="Drawing the collision layer"/></p>
+                                    <p>Save everything, and if you now re-open your index.html, you should see something like
+                                        this :<br/>
+                                        (click on the image to see it running in your browser) 
+                                        <a href="./tutorial_step3/index.html"><img src="media/tutorial_step3.png" alt="Step 3 Results"/></a>
+                                        <br/>
+                                    </p>
 
-                                                <h3><a id="part3_try">Try it out</a></h3>
+                                    <p>You will also notice that display is automatically following our player.</p>
 
-                                                <p>Save everything, and if you now re-open your index.html, you should see something like
-                                                    this :<br/>
-                                                    (click on the image to see it running in your browser) 
-                                                    <a href="./tutorial_step3/index.html"><img src="media/tutorial_step3.png" alt="Step 3 Results"/></a>
-                                                    <br/>
-                                                </p>
+                                    <p>One last thing - when creating an object, a default collision shape is automatically
+                                        created to manage collision between objects, based on the object size you defined in Tiled.
+                                        For debugging purposes, you can enable the debug panel by adding <b>#debug</b> to URL in the browser URL bar.</p>
 
-                                                <p>You will also notice that display is automatically following our player.</p>
+                                        <p>If you reload the game, and enable "hitbox" you will see this:
+                                            <img src="media/step3_debugpanel.png" alt="Enabling the debug panel"/>
+                                        </p>
 
-                                                <p>One last thing - when creating an object, a default collision shape is automatically
-                                                    created to manage collision between objects, based on the object size you defined in Tiled.
-                                                    For debugging purposes, you can enable the debug panel by adding <b>#debug</b> to URL in the browser URL bar.</p>
-
-                                                    <p>If you reload the game, and enable "hitbox" you will see this:
-                                                        <img src="media/step3_debugpanel.png" alt="Enabling the debug panel"/>
-                                                    </p>
-
-                                                    <p>The collision box can be adjusted from Tiled by changing the size of the object and match the above example. 
-                                                     (Collision Shape can also manually adjusted by accessing the entity body <a href="http://melonjs.github.io/docs/me.Body.html#shapes">shapes</a> property).
-                                                 </p>
+                                        <p>The collision box can be adjusted from Tiled by changing the size of the object and match the above example. 
+                                         (Collision Shape can also manually adjusted by accessing the entity body <a href="http://melonjs.github.io/docs/me.Body.html#shapes">shapes</a> property).
+                                     </p>
 
 
                                                  <h2><a id="part4">Part 4: Add a scrolling background</a></h2>
@@ -830,7 +836,7 @@
         }
 
         // apply physics to the body (this moves the entity)
-		this.body.update(dt);
+        this.body.update(dt);
 
         // handle collisions against other shapes
         me.collision.check(this);
