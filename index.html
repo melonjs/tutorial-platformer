@@ -665,13 +665,11 @@
                                                                                         // call the parent constructor
                                                                                         this._super(me.CollectableEntity, 'init', [x, y , settings]);
 
-                                                                                        // set our collision callback function
-                                                                                        this.body.onCollision = this.onCollision.bind(this);
                                                                                     },
 
                                                                                     // this function is called by the engine, when
                                                                                     // an object is touched by something (here collected)
-                                                                                    onCollision: function() {
+                                                                                    onCollision : function (response, other) {
                                                                                         // do something when collected
 
                                                                                         // make sure it cannot be collected "again"
@@ -679,6 +677,8 @@
 
                                                                                         // remove it
                                                                                         me.game.world.removeChild(this);
+                                                                                        
+                                                                                        return false
                                                                                     }
                                                                                 });
                                                                             </pre>
@@ -829,11 +829,11 @@
             }
         }
 
-        // check & update player movement
-        this.body.update(dt);
-     
-        // check for collision with sthg
-        me.collision.check(this, true, this.collideHandler.bind(this), true);
+        // apply physics to the body (this moves the entity)
+		this.body.update(dt);
+
+        // handle collisions against other shapes
+        me.collision.check(this);
                 
         // update animation
         if (this.body.vel.x!=0 || this.body.vel.y!=0) {
@@ -851,7 +851,7 @@
     /**
      * colision handler
      */
-    collideHandler : function (response) {
+    onCollision : function (response, other) {
         if (response.b.body.collisionType === me.collision.types.ENEMY_OBJECT) {
             if ((response.overlapV.y>0) && !this.body.jumping) {
                 // bounce (force jump)
@@ -864,7 +864,9 @@
                 // let's flicker in case we touched an enemy
                 this.renderable.flicker(750);
             }
+            return false;
         }
+        return true;
     }
 
     });
@@ -1243,7 +1245,7 @@
                 /**
                  * colision handler
                  */
-                collideHandler : function (response) {
+                onCollision : function (response, other) {
                     if (response.b.body.collisionType === me.collision.types.ENEMY_OBJECT) {
                         if ((response.overlapV.y>0) && !this.body.jumping) {
                             // bounce (force jump)
@@ -1258,7 +1260,9 @@
                             // let's flicker in case we touched an enemy
                             this.renderable.flicker(750);
                         }
+                        return false;
                     }
+                    return true;
                 }
 </pre>
 <br/>

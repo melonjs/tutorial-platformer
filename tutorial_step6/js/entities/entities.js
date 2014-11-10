@@ -1,15 +1,10 @@
 /**
  * Player Entity
  */
-game.PlayerEntity = me.Entity.extend(
-{    
-  
-  /* -----
-
-        constructor
-        
-      ------            */
-    
+game.PlayerEntity = me.Entity.extend({
+    /**
+     * constructor
+     */
     init:function (x, y, settings)
     {
         // call the constructor
@@ -26,13 +21,10 @@ game.PlayerEntity = me.Entity.extend(
         
     },
 
-    /* -----
-
-        update the player pos
-        
-      ------            */
-    update : function (dt)
-    {
+    /**
+     * update the entity
+     */
+    update : function (dt) {
             
         if (me.input.isKeyPressed('left'))
         {
@@ -111,24 +103,22 @@ game.PlayerEntity = me.Entity.extend(
  */
 game.CoinEntity = me.CollectableEntity.extend(
 {    
-
     init: function (x, y, settings)
     {
         // call the parent constructor
         this._super(me.CollectableEntity, 'init', [x, y , settings]);
-
-        // set our collision callback function
-        this.body.onCollision = this.onCollision.bind(this);
     },
     
-    onCollision : function ()
-    {
-        // give some score
-        game.data.score += 250;
-        // make sure it cannot be collected "again"
+    /**
+     * colision handler
+     */
+    onCollision : function (response, other) {
+        //avoid further collision and delete it
         this.body.setCollisionMask(me.collision.types.NO_OBJECT);
-        // remove it
+
         me.game.world.removeChild(this);
+
+        return false;
     }
 
     

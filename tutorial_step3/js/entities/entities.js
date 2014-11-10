@@ -1,15 +1,11 @@
 /**
  * Player Entity
  */
-game.PlayerEntity = me.Entity.extend(
-{	
+game.PlayerEntity = me.Entity.extend({	
   
-  /* -----
-
-		constructor
-		
-	  ------			*/
-	
+    /**
+     * constructor
+     */
 	init:function (x, y, settings)
 	{
 		// call the constructor
@@ -26,13 +22,10 @@ game.PlayerEntity = me.Entity.extend(
 		
 	},
 
-	/* -----
-
-		update the player pos
-		
-	  ------			*/
-	update : function (dt)
-	{
+    /**
+     * update the entity
+     */
+	update : function (dt){
 			
 		if (me.input.isKeyPressed('left'))
 		{
