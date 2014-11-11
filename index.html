@@ -164,8 +164,8 @@
                                                     color you prefer.</p><img src="media/step1_background_color.png" alt=
                                                     "Setting a background color in Tiled"/>
 
-                                                    <p>To finish, let's save our new map as "area01" under the "data" folder. We are done
-                                                        the first step!</p>
+                                                    <p>To finish, let's save our new map as "area01" under the "data" folder. 
+                                                       We are done with the first step!</p>
 
                                                         <h2><a id="part2">Part 2: Loading our level</a></h2>
 
@@ -217,7 +217,10 @@
                                         "loaded" : function () {
                                             me.state.set(me.state.MENU, new game.TitleScreen());
                                             me.state.set(me.state.PLAY, new game.PlayScreen());
-
+                                            
+                                            // add our player entity in the entity pool
+                                            me.pool.register("mainPlayer", game.PlayerEntity);
+        
                                             // Start the game.
                                             me.state.change(me.state.PLAY);
                                     }
@@ -265,7 +268,7 @@
                                         filename, or else the level loader will not be able to find the tileset and will fail.</p>
 
                                         <p>Also note that although we use here directly the tmx file, for production we do recommend
-                                            using the json format (that can also be exported directly from Tiled), as it gives a smaller fiie, allows for much faster level loading and prevents from any server issue with the .tmx extension. </p>
+                                            using the json format (that can also be exported directly from Tiled), as it gives a smaller file size, allows for much faster level loading and prevents from any server issue with the .tmx extension. </p>
 
 
                                         <p>Finally, let's open the js/screens/play.js file and in the <a href="http://melonjs.github.io/docs/me.ScreenObject.html#onResetEvent">onResetEvent()</a> function (which is called on a state
@@ -348,8 +351,8 @@
                                                     }];
                                             </pre>
 
-                                            <p>Then it's time to create our entity:<br>
-                                              (Feel free to put this object either in our main.js or in a new file, in my example I use entities.js)</p>
+                                            <p>Then it's time to create our entity, open the `js/entities/entities.js` example file, 
+                                            and let's complete it to match with the followin : </p>
                                               <pre class="brush: js">
                                             /*------------------- 
                                             a player entity
@@ -444,7 +447,7 @@
             testing the final velocity (this.body.vel.x and this.body.vel.y) of my object, which allows me to
             know if my object actually moved, and control if I want the sprite animation to run or not.</p>
 
-            <p>Then, we have to modify our "main" to actually declare our new Object in the object
+            <p>Then, although the default game.PlayerEntity is already declare in the boilerplate, we have to modify our "main" to actually declare our new entity in the object
                 <a href="http://melonjs.github.io/docs/me.pool.html"> pool</a> (that is used by the engine to instantiate object), and finally to map the
                 keys we will use for the player movement. So our <b>loaded()</b> function will become
                 :</p>
@@ -520,8 +523,13 @@
                                     A polygon is convex when all line segments connecting two points in the interior do not cross 
                                     any edge of the polygon (which means that all angles are less than 180 degrees), as shown here below : <br>
                                     <center><img src="media/convex_polygon.png"/></center><br>
-                                    A polygon's `winding` is clockwise if its vertices (points) are declared turning to the right 
-                                    (The image above shows COUNTERCLOCKWISE winding.</p>
+                                    A polygon's `winding` is clockwise iff its vertices (points) are declared turning to the right 
+                                    (The image above shows COUNTERCLOCKWISE winding.
+                                </p>
+                                
+                                <p> Also if you need to define complex shape to delimitate the environement bounds, it is then recommended to 
+                                    use separate line segments. Lines can also be used for example when defining platform or wall element, 
+                                    where you only need a specific side of the object to be collidable</p>
                                                                 
                                    <p> At the  end it should look like this (notice the dotted red square delimiting the collision area) :<br>
                                     <img src="media/step3_collision_object_draw.png" alt="Drawing the collision layer"/></p>
@@ -547,7 +555,11 @@
 
                                         <p>The collision box can be adjusted from Tiled by changing the size of the object and match the above example. 
                                          (Collision Shape can also manually adjusted by accessing the entity body <a href="http://melonjs.github.io/docs/me.Body.html#shapes">shapes</a> property).
-                                     </p>
+                                        </p>
+                                        
+                                        <p>Note : When using the debug Panel, the sprite border is drawn in green, the defined collision shape(s) is/are drawn in red, 
+                                           and if you use something else/more than a rectangular collision shape, you should also see an orange box that is corresponding
+                                            to the smallest rectangle containing all the defined collision shapes (and also called the entity body bounding box).</p>
 
 
                                                  <h2><a id="part4">Part 4: Add a scrolling background</a></h2>
@@ -617,7 +629,7 @@
 
                                                                             <p>Play around with your player, and enjoy the view :)</p>
 
-                                                                            <h2><a id="part5">Part 5: Adding some basic objects and enemies</a></h2>
+                                                <h2><a id="part5">Part 5: Adding some basic objects and enemies</a></h2>
 
                                                                             <p>In this part we will add a collectible coin (that we will use later to add to our
                                                                                 score), using the <b>spinning_coin_gold.png</b> spritesheet : <img src=
@@ -736,17 +748,6 @@
                                                 
                                             },
 
-                                            // call by the engine when colliding with another object
-                                            // obj parameter corresponds to the other object (typically the player) touching this one
-                                            onCollision: function(res, obj) {
-
-                                                // res.y &gt;0 means touched by something on the bottom
-                                                // which mean at top position for this one
-                                                if (this.alive &amp;&amp; (res.y &gt; 0) &amp;&amp; obj.falling) {
-                                                    this.renderable.flicker(750);
-                                                }
-                                            },
-
                                             // manage the enemy movement
                                             update: function(dt) {
 
@@ -767,13 +768,29 @@
                                                 // update the body movement
                                                 this.body.update(dt);
                                                 
-                                                // update animation if necessary
-                                                if (this.body.vel.x!=0 || this.body.vel.y!=0) {
-                                                    // update object animation
-                                                    this._super(me.Entity, 'parent', [dt]);
+                                                // handle collisions against other shapes
+                                                me.collision.check(this);
+                                                    
+                                                if (this.body.vel.x !== 0 || this.body.vel.y !== 0) {
+                                                    // update the object animation
+                                                    this._super(me.Entity, 'update', [dt]);
                                                     return true;
                                                 }
                                                 return false;
+                                            },
+                                            
+                                            /**
+                                             * colision handler
+                                             * (called when colliding with other objects)
+                                             */
+                                            onCollision : function (response, other) {
+                                                // overlapV.y > 0 means touched by something on the bottom
+                                                // which mean at top position for this one
+                                                if (this.alive && (response.overlapV.y > 0) && response.a.body.falling) {
+                                                    this.renderable.flicker(750);
+                                                }
+                                                // Make all other objects solid
+                                                return true;
                                             }
                                         });
                                         
@@ -803,7 +820,7 @@
                                               "media/tutorial_tiled_step5.png" alt="Step 5"/></p>
 
                                               <p>Before testing, we also need to modify our player to check for collision with other
-                                                entities. In order to do this, we add a call to the <a href="http://melonjs.github.io/docs/me.Collision.html#check"> <b>me.collision.check(this)</b></a>
+                                                entities. In order to do this, if not yet done we need to add a call to the <a href="http://melonjs.github.io/docs/me.Collision.html#check"> <b>me.collision.check(this)</b></a>
                                                 function in our mainPlayer code, see below :</p>
                                                 <pre class="brush: js">
     /* -----
@@ -852,30 +869,70 @@
         // any update (e.g. position, animation)
         return false;
     },
-    
-    
+
+</pre>
+
+<p>
+Last but not least, as we added some platform in our level, 
+let's modify the onCollision handler to add a custom bevahior for the "WORLD_SHAPE" type and simulate a "platform" element, as shown below.
+<br>
+Do note that the particular collision shapes that we do want to act as "platforms" are here identified
+by setting their type property to "platform" in Tiled (Feel free to use whatever yuo need, as far as you use the
+same value on both ends).
+<p>
+
+
+  <pre class="brush: js">
+   
     /**
      * colision handler
      */
     onCollision : function (response, other) {
-        if (response.b.body.collisionType === me.collision.types.ENEMY_OBJECT) {
-            if ((response.overlapV.y>0) && !this.body.jumping) {
-                // bounce (force jump)
-                this.body.falling = false;
-                this.body.vel.y = -this.body.maxVel.y * me.timer.tick;
-                // set the jumping flag
-                this.body.jumping = true;
-            }
-            else {
-                // let's flicker in case we touched an enemy
-                this.renderable.flicker(750);
-            }
-            return false;
+        switch (response.b.body.collisionType) {
+            case me.collision.types.WORLD_SHAPE:
+                // Simulate a platform object
+                if (other.type === "platform") {
+                    if (this.body.falling &&
+                        !me.input.isKeyPressed('down') &&
+                        // Shortest overlap would move the player upward
+                        (response.overlapV.y > 0) &&
+                        // The velocity is reasonably fast enough to have penetrated to the overlap depth
+                        (~~this.body.vel.y >= ~~response.overlapV.y)
+                    ) {
+                        // Disable collision on the x axis
+                        response.overlapV.x = 0;
+                        // Repond to the platform (it is solid)
+                        return true;
+                    }
+                    // Do not respond to the platform (pass through)
+                    return false;
+                }
+                break;
+
+            case me.collision.types.ENEMY_OBJECT:
+                if ((response.overlapV.y>0) && !this.body.jumping) {
+                    // bounce (force jump)
+                    this.body.falling = false;
+                    this.body.vel.y = -this.body.maxVel.y * me.timer.tick;
+                    // set the jumping flag
+                    this.body.jumping = true;
+                }
+                else {
+                    // let's flicker in case we touched an enemy
+                    this.renderable.flicker(750);
+                }
+                return false;
+                break;
+
+            default:
+                // Do not respond to other objects (e.g. coins)
+                return false;
         }
+
+        // Make the object solid
         return true;
     }
-
-    });
+    
 </pre>
 
 <h3><a id="part5_try">Try it out</a></h3>
@@ -1252,25 +1309,35 @@
                  * colision handler
                  */
                 onCollision : function (response, other) {
-                    if (response.b.body.collisionType === me.collision.types.ENEMY_OBJECT) {
-                        if ((response.overlapV.y>0) && !this.body.jumping) {
-                            // bounce (force jump)
-                            this.body.falling = false;
-                            this.body.vel.y = -this.body.maxVel.y * me.timer.tick;
-                            // set the jumping flag
-                            this.body.jumping = true;
-                            // play some audio
-                            me.audio.play("stomp");
+                
+                   ...
+                    
+                   case me.collision.types.ENEMY_OBJECT:
+                                if ((response.overlapV.y>0) && !this.body.jumping) {
+                                    // bounce (force jump)
+                                    this.body.falling = false;
+                                    this.body.vel.y = -this.body.maxVel.y * me.timer.tick;
+                                    // set the jumping flag
+                                    this.body.jumping = true;
+                                    // play some audio
+                                    me.audio.play("stomp");
+                                }
+                                else {
+                                    // let's flicker in case we touched an enemy
+                                    this.renderable.flicker(750);
+                                }
+                                return false;
+                                break;
+
+                            default:
+                                // Do not respond to other objects (e.g. coins)
+                                return false;
                         }
-                        else {
-                            // let's flicker in case we touched an enemy
-                            this.renderable.flicker(750);
-                        }
-                        return false;
-                    }
+                    
+                    // Make the object solid
                     return true;
                 }
-</pre>
+            </pre>
 <br/>
 
 <ul>

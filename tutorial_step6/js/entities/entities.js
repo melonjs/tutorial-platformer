@@ -29,14 +29,14 @@ game.PlayerEntity = me.Entity.extend({
         if (me.input.isKeyPressed('left'))
         {
             // flip the sprite on horizontal axis
-            this.flipX(true);
+            this.renderable.flipX(true);
             // update the entity velocity
             this.body.vel.x -= this.body.accel.x * me.timer.tick;
         }
         else if (me.input.isKeyPressed('right'))
         {
             // unflip the sprite
-            this.flipX(false);
+            this.renderable.flipX(false);
             // update the entity velocity
             this.body.vel.x += this.body.accel.x * me.timer.tick;
         }
@@ -77,23 +77,50 @@ game.PlayerEntity = me.Entity.extend({
     
     /**
      * colision handler
-     * (called when colliding with other objects)
      */
     onCollision : function (response, other) {
-         if (response.b.body.collisionType === me.collision.types.ENEMY_OBJECT) {
-            if ((response.overlapV.y>0) && !this.body.jumping) {
-                // bounce (force jump)
-                this.body.falling = false;
-                this.body.vel.y = -this.body.maxVel.y * me.timer.tick;
-                // set the jumping flag
-                this.body.jumping = true;
-            }
-            else {
-                // let's flicker in case we touched an enemy
-                this.renderable.flicker(750);
-            }
-            return false;
+        switch (response.b.body.collisionType) {
+            case me.collision.types.WORLD_SHAPE:
+                // Simulate a platform object
+                if (other.type === "platform") {
+                    if (this.body.falling &&
+                        !me.input.isKeyPressed('down') &&
+                        // Shortest overlap would move the player upward
+                        (response.overlapV.y > 0) &&
+                        // The velocity is reasonably fast enough to have penetrated to the overlap depth
+                        (~~this.body.vel.y >= ~~response.overlapV.y)
+                    ) {
+                        // Disable collision on the x axis
+                        response.overlapV.x = 0;
+                        // Repond to the platform (it is solid)
+                        return true;
+                    }
+                    // Do not respond to the platform (pass through)
+                    return false;
+                }
+                break;
+
+            case me.collision.types.ENEMY_OBJECT:
+                if ((response.overlapV.y>0) && !this.body.jumping) {
+                    // bounce (force jump)
+                    this.body.falling = false;
+                    this.body.vel.y = -this.body.maxVel.y * me.timer.tick;
+                    // set the jumping flag
+                    this.body.jumping = true;
+                }
+                else {
+                    // let's flicker in case we touched an enemy
+                    this.renderable.flicker(750);
+                }
+                return false;
+                break;
+
+            default:
+                // Do not respond to other objects (e.g. coins)
+                return false;
         }
+
+        // Make the object solid
         return true;
     }
 });
@@ -113,6 +140,10 @@ game.CoinEntity = me.CollectableEntity.extend(
      * colision handler
      */
     onCollision : function (response, other) {
+    
+        // give some score
+        game.data.score += 250;
+        
         //avoid further collision and delete it
         this.body.setCollisionMask(me.collision.types.NO_OBJECT);
 
@@ -162,19 +193,6 @@ game.EnemyEntity = me.Entity.extend(
         this.body.setVelocity(4, 6);
     },
     
-        
-    onCollision : function (res, obj)
-    {
-            
-        // res.y >0 means touched by something on the bottom
-        // which mean at top position for this one
-        if (this.alive && (res.y > 0) && obj.falling)
-        {
-            this.renderable.flicker(750);
-        }
-    },
-
-    
     // manage the enemy movement
     update : function (dt)
     {
@@ -193,7 +211,7 @@ game.EnemyEntity = me.Entity.extend(
                 this.walkLeft = true;
             }
             
-            this.flipX(this.walkLeft);
+            this.renderable.flipX(this.walkLeft);
             this.body.vel.x += (this.walkLeft) ? -this.body.accel.x * me.timer.tick : this.body.accel.x * me.timer.tick;
 
         }
@@ -204,12 +222,28 @@ game.EnemyEntity = me.Entity.extend(
         // check & update movement
         this.body.update(dt);
             
-        if (this.body.vel.x!=0 ||this.body.vel.y!=0)
-        {
+        // handle collisions against other shapes
+        me.collision.check(this);
+            
+        if (this.body.vel.x !== 0 || this.body.vel.y !== 0) {
             // update the object animation
             this._super(me.Entity, 'update', [dt]);
             return true;
         }
         return false;
+    },
+    
+    /**
+     * colision handler
+     * (called when colliding with other objects)
+     */
+    onCollision : function (response, other) {
+        // res.y >0 means touched by something on the bottom
+        // which mean at top position for this one
+        if (this.alive && (response.overlapV.y > 0) && response.a.body.falling) {
+            this.renderable.flicker(750);
+        }
+        // Make all other objects solid
+        return true;
     }
 });
