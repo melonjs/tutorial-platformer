@@ -156,7 +156,8 @@ game.CoinEntity = me.CollectableEntity.extend(
         // remove it
         me.game.world.removeChild(this);
 
-        return fals
+        return false;
+    }
 });
 
 /**
