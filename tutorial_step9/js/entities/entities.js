@@ -19,7 +19,13 @@ game.PlayerEntity = me.Entity.extend({
 
         // ensure the player is updated even when outside of the viewport
         this.alwaysUpdate = true;
-        
+
+        // define a basic walking animation (using all frames)
+        this.renderable.addAnimation("walk",  [0, 1, 2, 3, 4, 5, 6, 7]);
+        // define a standing animation (using the first frame)
+        this.renderable.addAnimation("stand",  [0]);
+        // set the standing animation as default
+        this.renderable.setCurrentAnimation("stand");        
     },
 
     /**
@@ -33,6 +39,10 @@ game.PlayerEntity = me.Entity.extend({
             this.renderable.flipX(true);
             // update the entity velocity
             this.body.vel.x -= this.body.accel.x * me.timer.tick;
+            // change to the walking animation
+            if (!this.renderable.isCurrentAnimation("walk")) {
+                this.renderable.setCurrentAnimation("walk");
+            }
         }
         else if (me.input.isKeyPressed('right'))
         {
@@ -40,10 +50,16 @@ game.PlayerEntity = me.Entity.extend({
             this.renderable.flipX(false);
             // update the entity velocity
             this.body.vel.x += this.body.accel.x * me.timer.tick;
+            // change to the walking animation
+            if (!this.renderable.isCurrentAnimation("walk")) {
+                this.renderable.setCurrentAnimation("walk");
+            }
         }
         else
         {
             this.body.vel.x = 0;
+            // change to the standing animation
+            this.renderable.setCurrentAnimation("stand");
         }
         if (me.input.isKeyPressed('jump'))
         {    
@@ -65,17 +81,8 @@ game.PlayerEntity = me.Entity.extend({
         // handle collisions against other shapes
         me.collision.check(this);
                  
-        // update animation
-        if (this.body.vel.x!=0 || this.body.vel.y!=0)
-        {
-            // update object animation
-            this._super(me.Entity, 'update', [dt]);
-            return true;
-        }
-        
-        // else inform the engine we did not perform
-        // any update (e.g. position, animation)
-        return false;        
+        // return true if we moved or if the renderable was updated
+        return (this._super(me.Entity, 'update', [dt]) || this.body.vel.x !== 0 || this.body.vel.y !== 0);     
     },
     
   /**
@@ -226,12 +233,8 @@ game.EnemyEntity = me.Entity.extend(
         // handle collisions against other shapes
         me.collision.check(this);
             
-        if (this.body.vel.x !== 0 || this.body.vel.y !== 0) {
-            // update the object animation
-            this._super(me.Entity, 'update', [dt]);
-            return true;
-        }
-        return false;
+        // return true if we moved or if the renderable was updated
+        return (this._super(me.Entity, 'update', [dt]) || this.body.vel.x !== 0 || this.body.vel.y !== 0);
     },
     
     /**
@@ -239,10 +242,13 @@ game.EnemyEntity = me.Entity.extend(
      * (called when colliding with other objects)
      */
     onCollision : function (response, other) {
-        // res.y >0 means touched by something on the bottom
-        // which mean at top position for this one
-        if (this.alive && (response.overlapV.y > 0) && response.a.body.falling) {
-            this.renderable.flicker(750);
+        if (response.b.body.collisionType !== me.collision.types.WORLD_SHAPE) {
+            // res.y >0 means touched by something on the bottom
+            // which mean at top position for this one
+            if (this.alive && (response.overlapV.y > 0) && response.a.body.falling) {
+                this.renderable.flicker(750);
+            }
+            return false;
         }
         // Make all other objects solid
         return true;
