@@ -1060,7 +1060,7 @@ same value on both ends).
                         /**
                         * draw the score
                         */
-                        draw : function (context) {
+                        draw : function (renderer) {
                             // draw it baby !
                         }
 
@@ -1113,8 +1113,8 @@ same value on both ends).
         /**
         * draw the score
         */
-        draw : function (context) {
-            this.font.draw (context, game.data.score, this.pos.x, this.pos.y);
+        draw : function (renderer) {
+            this.font.draw (renderer.getContext(), game.data.score, this.pos.x, this.pos.y);
         }
     });
 </pre>
@@ -1467,8 +1467,9 @@ game.TitleScreen = me.ScreenObject.extend({
                 return true;
             },
             
-            draw : function (context) {
-                this.font.draw (context, "PRESS ENTER TO PLAY", 20, 240);
+            draw : function (renderer) {
+                var context = renderer.getContext();
+                this.font.draw(context, "PRESS ENTER TO PLAY", 20, 240);
                 this.font.draw(context, this.scroller, this.scrollerpos, 440);
             },
             onDestroyEvent : function() {

@@ -41,8 +41,9 @@ game.TitleScreen = me.ScreenObject.extend({
                 return true;
             },
             
-            draw : function (context) {
-                this.font.draw (context, "PRESS ENTER TO PLAY", 20, 240);
+            draw : function (renderer) {
+                var context = renderer.getContext();
+                this.font.draw(context, "PRESS ENTER TO PLAY", 20, 240);
                 this.font.draw(context, this.scroller, this.scrollerpos, 440);
             },
             onDestroyEvent : function() {
