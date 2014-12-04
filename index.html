@@ -77,69 +77,236 @@
 
         <div class="col-md-2 sidebar">
           <ul class="nav nav-sidebar">
-            <li>Introduction</li>
-            <li>Part 1: Creating a level using Tiled</li>
-            <li>Part 2: Loading the level</li>
-            <li>Part 3: Adding a main player</li>
-            <li>Part 4: Adding a scrolling background</li>
-            <li>Part 5: Adding some basic objects and enemies</li>
-            <li>Part 6: Adding some basic HUD information</li>
-            <li>Part 7: Adding some audio</li>
-            <li>Part 8: Adding a second level</li>
-            <li>Part 9: Adding a title screen</li>
-            <li>Part 10: Conclusion</li>
+            <li><a href="#intro">Introduction</a></li>
+            <li><a href="#part1">Part 1: Creating a level using Tiled</a></li>
+            <li><a href="#part2">Part 2: Loading the level</a></li>
+            <li><a href="#part3">Part 3: Adding a main player</a></li>
+            <li><a href="#part4">Part 4: Adding a scrolling background</a></li>
+            <li><a href="#part5">Part 5: Adding some basic objects and enemies</a></li>
+            <li><a href="#part6">Part 6: Adding some basic HUD information</a></li>
+            <li><a href="#part7">Part 7: Adding some audio</a></li>
+            <li><a href="#part8">Part 8: Adding a second level</a></li>
+            <li><a href="#part9">Part 9: Adding a title screen</a></li>
+            <li><a href="#part10">Part 10: Conclusion</a></li>
           </ul>
         </div>
 
         <div class="col-md-10">
           <h1>A platformer step by step creation tutorial</h1>
 
-          <h2><a href="#intro">Introduction</a></h2>
-          <p>To work through this tutorial, you need the following:</p>
+          <!-- INTRO ================================================================== -->
+          <div id="intro">
+            <h2>Introduction</h2>
+            <p>To work through this tutorial, you need the following:</p>
+
+            <ul>
+              <li>The <a href="http://www.mapeditor.org/">Tiled Map Editor</a>, installed and running (0.9.0 or later)
+              </li>
+              <li>
+                The melonJS <a href="https://github.com/melonjs/boilerplate/archive/master.zip">boilerplate</a>, that we will use as default template project for our tutorial.
+              </li>
+              <li>
+                The tutorial <a href="tutorial_data.zip">data files</a>, to be uncompressed into the (here above) template data directory, and which contains the following :
+                <ul>
+                  <li>a level tileset</li>
+                  <li>two backgrounds for parallax layers</li>
+                  <li>some basic spritesheets </li>
+                  <li>some audio sfx and music</li>
+                  <li>a title screen background</li>
+                </ul>
+              </li>
+
+              <li>The melonJS <a href="http://www.melonjs.org/download.html"> library</a>, to be copied under the /lib directory (be sure to download both the minified and plain version, as the latter might potentially be required for debugging purpose)
+              </li>
+
+              <li>The melonJS <a href="http://www.melonjs.org/docs/index.html">documentation</a> for more details </li>
+            </ul>
+
+            <p>
+              <b>Testing/debugging :</b><br/>
+              When using Chrome, and due to the "cross-origin request" security mechanism implemented, you need to use the "--disable-web-security" parameter or better "--allow-file-access-from-files"when launching the browser in order to test any local content, else the browser will complain when trying to load a level map. <br/>
+            </p>
+
+            <p> A second and easier option is to use a local web server, as for example detailed in the melonJS <a href="https://github.com/melonjs/boilerplate">boilerplate</a> README, by using the `grunt connect` tool, and that will allow you to test your game in your browser using the <a href="http://localhost:8000">http://localhost:8000</a> url.</p>
+
+            <p class="c1">Additional Credits :</p>
+
+            <ul>
+              <li><a href="http://www.spicypixel.net/2008/01/10/gfxlib-fuzed-a-free-developer-graphic-library/">SpicyPixel.NET</a> for the GfxLib-Fuzed assets</li>
+              <li><a href="http://www.nosoapradio.us/">noSoapRadio</a> for the in game music</li>
+            </ul>
+
+            <p>
+              Feel free to modify whatever you want. We also assume here, that you are already familiar with Tiled; if you need more help with the tool, you can check the Tiled homepage and <a href="https://github.com/bjorn/tiled/wiki">wiki</a> for further help.
+            </p>
+          </div>
+
+          <!-- PART 1 ======================================================================= -->
+          <div id="part1">
+            <h2>Part 1: Creating a level using Tiled</h2>
+            <p>First let's open Tiled and create a new map : for this tutorial we will we use a 640x480 canvas, and since we have 32x32 tiles, we must specify at least 20 and 15 for the map size. In my example I'll define a <b>40x15</b> level, so we can play with scrolling background later.</p>
+
+            <img src="media/step1_newmap.png" alt= "Step 1 of creating a new map"/>
+
+            <p>Also, as melonJS supports only <i><b>uncompressed</b></i> tilemaps, please be sure that your settings are correct. We do recommend the Base64 encoding, since it produces a smaller file, but it's really up to you.</p>
+                  
+
+            <p>Then let's add both our tileset (using Map/New Tileset), and the "meta" tileset that we will use for collision. Both have no spacing or margin, so be sure to let the corresponding values to zero in tiled (note: melonJS support tilesets with margin and space)</p>
+
+            <img src="media/step1_newtileset.png" alt="Adding a tileset"/>
+
+            <p>For the beauty of it, we will create two layers - one background layer, and one foreground layer. Feel free to use your imagination and do whatever you want. I named them logically "background" and "foreground", but you can put whatever you want.</p>
+
+            <p>Here's what my level looked like when I finished it : <img src="media/step1_tiled_level_design.png" alt="Tiled level design"/></p>
+
+            <p>Finally, let's define a background color for our level, by using the color picker tool (Map/Map Properties), and just specify any color you prefer.</p>
+
+            <img src="media/step1_background_color.png" alt= "Setting a background color in Tiled"/>
+
+            <p>To finish, let's save our new map as "area01" under the "data" folder. We are done with the first step!</p>
+          </div>
+
+        <!-- PART 2 ======================================================================== -->
+        <div id="part2">
+          <h2>Part 2: Loading our level</h2>
+          <p>First let's have a look at our js/game.js skeleton:</p>
+
+          <pre class="brush: js">
+            /* game namespace */
+            var game = {
+
+              /** 
+              * an object where to store game global data
+              */
+
+              data : {
+                score : 0
+              },
+            
+              // Run on page load.
+              "onload" : function () {
+
+                // Initialize the video.
+                if (!me.video.init("screen", me.video.CANVAS, 640, 480, true, 'auto')) {
+                  alert("Your browser does not support HTML5 canvas.");
+                  return;
+                }
+            
+                // add "#debug" to the URL to enable the debug Panel
+                if (document.location.hash === "#debug") {
+                  window.onReady(function () {
+                    me.plugin.register.defer(this, me.debug.Panel, "debug", me.input.KEY.V);
+                  });
+                }   
+
+                // Initialize the audio.
+                me.audio.init("mp3,ogg");
+
+                // Set a callback to run when loading is complete.
+                me.loader.onload = this.loaded.bind(this);
+                
+                // Load the resources.
+                me.loader.preload(game.resources);
+
+                // Initialize melonJS and display a loading screen.
+                me.state.change(me.state.LOADING);
+              },
+
+              // Run on game resources loaded.
+              "loaded" : function () {
+                me.state.set(me.state.MENU, new game.TitleScreen());
+                me.state.set(me.state.PLAY, new game.PlayScreen());
+                
+                // add our player entity in the entity pool
+                me.pool.register("mainPlayer", game.PlayerEntity);
+
+                // Start the game.
+                me.state.change(me.state.PLAY);
+              }
+            };
+          </pre>
+          <p>This is very simple. Once the page is loaded, the <b>onload()</b> function is called, the display and audio is initialized, and all game resources begin loading. We also define a callback to be called when everything is ready to be used. Within the callback, we define a new state that will be used for the in game stuff, together with a <a href="http://melonjs.github.io/docs/me.ScreenObject.html"> <b>PlayScreen</b> object</a> that we will use to manage the game event (reset, etc...).</p>
+                
+          <p>The only change we will do in the default project template is the given video resolution for the `me.video.init()` function, as for the tutorial we will create a 640x480 canvas.</p>
+
+          <p>So in order to load our level, the next thing is to add the resources to be loaded by adding the following information into <b>game.resources</b> (js/resources.js) object :</p>
 
           <ul>
-            <li>The <a href="http://www.mapeditor.org/">Tiled Map Editor</a>, installed and running (0.9.0 or later)
-            </li>
-            <li>
-              The melonJS <a href="https://github.com/melonjs/boilerplate/archive/master.zip">boilerplate</a>, that we will use as default template project for our tutorial.
-            </li>
-            <li>
-              The tutorial <a href="tutorial_data.zip">data files</a>, to be uncompressed into the (here above) template data directory, and which contains the following :
-              <ul>
-                <li>a level tileset</li>
-                <li>two backgrounds for parallax layers</li>
-                <li>some basic spritesheets </li>
-                <li>some audio sfx and music</li>
-                <li>a title screen background</li>
-              </ul>
-            </li>
-
-            <li>The melonJS <a href="http://www.melonjs.org/download.html"> library</a>, to be copied under the /lib directory (be sure to download both the minified and plain version, as the latter might potentially be required for debugging purpose)
-            </li>
-
-            <li>The melonJS <a href="http://www.melonjs.org/docs/index.html">documentation</a> for more details </li>
+            <li>the tileset itself, an image</li>
+            <li>our map "area01", a <a href="https://github.com/bjorn/tiled/wiki/TMX-Map-Format">TMX</a> object</li>
           </ul>
+          <pre class="brush: js">
+            //game resources
+            game.resources = [
+              /**
+               * Graphics.
+               */
+              // our level tileset
+              {name: "area01_level_tiles",  type:"image", src: "data/img/map/area01_level_tiles.png"},
+          
+              /* 
+               * Maps. 
+               */
+              {name: "area01", type: "tmx", src: "data/map/area01.tmx"}
+            ];
 
-          <p>
-            <b>Testing/debugging :</b><br/>
-            When using Chrome, and due to the "cross-origin request" security mechanism implemented, you need to use the "--disable-web-security" parameter or better "--allow-file-access-from-files"when launching the browser in order to test any local content, else the browser will complain when trying to load a level map. <br/>
-          </p>
+          </pre>
 
-          <p> A second and easier option is to use a local web server, as for example detailed in the melonJS <a href="https://github.com/melonjs/boilerplate">boilerplate</a> README, by using the `grunt connect` tool, and that will allow you to test your game in your browser using the <a href="http://localhost:8000">http://localhost:8000</a> url.</p>
+          <p>Be sure to name the tileset resource name according to the filename, or else the level loader will not be able to find the tileset and will fail.</p>
 
-          <p class="c1">Additional Credits :</p>
+          <p>Also note that although we use here directly the tmx file, for production we do recommend using the json format (that can also be exported directly from Tiled), as it gives a smaller file size, allows for much faster level loading and prevents from any server issue with the .tmx extension. </p>
 
-          <ul>
-            <li><a href="http://www.spicypixel.net/2008/01/10/gfxlib-fuzed-a-free-developer-graphic-library/">SpicyPixel.NET</a> for the GfxLib-Fuzed assets</li>
-            <li><a href="http://www.nosoapradio.us/">noSoapRadio</a> for the in game music</li>
-          </ul>
+          <p>Finally, let's open the js/screens/play.js file and in the <a href="http://melonjs.github.io/docs/me.ScreenObject.html#onResetEvent">onResetEvent()</a> function (which is called on a state change), we ask the <a href="http://melonjs.github.io/docs/me.levelDirector.html">level director</a> to display our previously preloaded level, by adding a call to the <b>loadLevel</b> function and our default level name :</p>
+          
+          <pre class="brush: js">
+            game.PlayScreen = me.ScreenObject.extend({
+              /** 
+              *  action to perform on state change
+              */
+              onResetEvent: function() {  
+              
+                // load a level
+                me.levelDirector.loadLevel("area01");
+                
+                // reset the score
+                game.data.score = 0;
+                
+                // add our HUD to the game world
+                this.HUD = new game.HUD.Container();
+                me.game.world.addChild(this.HUD);
+              
+              },
+            
+              /** 
+               *  action to perform when leaving this screen (state change)
+               */
+              onDestroyEvent: function() {
+                // remove the HUD from the game world
+                me.game.world.removeChild(this.HUD);
+              }
+            });
+          </pre>
 
-          <p>
-            Feel free to modify whatever you want. We also assume here, that you are already familiar with Tiled; if you need more help with the tool, you can check the Tiled homepage and <a href="https://github.com/bjorn/tiled/wiki">wiki</a> for further help.
-          </p>
+          <p>That's all! If you did everything correctly, and open your index.html (Remember that if you don’t use a web server, you will need to allow your browser to access local files, please refer to the “Testing/debugging” at the beginning of the tutorial if required).</p>
 
-        </div>
-      </div> 
-    </div>
+          <h3>Try it out</h3>
+
+          <p>(click on the image to see it running in your browser), you should see something like this</p>
+          <a href="./tutorial_step2/index.html"><img src="media/tutorial_step2.png" alt="Step 2 results"/></a>
+          <p>Yes, nothing fancy yet, but that's only the beginning!</p>
+
+          <p>Also in case you didn't notice, since we defined a 640x480 display in our application, we only see a part of the map (the half of it to be exact), which is normal. <b>melonJS</b> automatically creates a corresponding viewport, and we will be able to navigate through the map in the next step, when we will add a "main player"</p>
+          </div>
+
+        </div> <!-- end part 2 -->
+
+
+
+      </div> <!-- end row -->
+    </div> <!-- end container -->
+    
+    <script type="text/javascript">
+      SyntaxHighlighter.all();
+    </script>
   </body>
 </html>

@@ -5,9 +5,11 @@
   padding: 0 150px;
 }
 
-
 nav
 { height: 132px;}
 
 .navbar-default
 { background: #667F03;}
+
+.sidebar {
+}
