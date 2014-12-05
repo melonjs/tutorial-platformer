@@ -54,14 +54,6 @@
   </head>
 
   <body>
-      <!-- <div id="header">
-        <div id="logo">
-          <div id="logo_text">
-            <h1><a href="http://www.melonjs.org">melon<span class="logo_colour">JS</span></a></h1>
-            <h2>A lightweight HTML5 game engine</h2>
-          </div>
-        </div>
-      </div> -->
 
     <nav class="navbar navbar-default" role="navigation">
       <div class="container">
@@ -72,7 +64,7 @@
     <!-- the "Fork me!" sticker -->
     <a href="https://github.com/melonjs/melonjs"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_white_ffffff.png" alt="Fork me on GitHub"></a>
 
-    <div class="container-fluid">
+    <div id="content" class="container-fluid">
       <div class="row">
 
         <div class="col-md-2 sidebar">
@@ -1074,6 +1066,365 @@
           <p>We can now check the result, and we should now have our score displayed in the bottom-right corner of the screen:</p>
           <a href="./tutorial_step6/index.html"><img src="media/tutorial_step6.png" alt="Step 6 results"/></a>
         </div><!-- end part 6 -->
+
+        <!-- PART 7 ======================================================================================== -->
+        <div id="part7">
+          <h2>Part 7: Adding some audio</h2>
+
+          <p>In this section we will add some audio to our game:</p>
+
+          <ul>
+            <li>a sound when collecting a coin</li>
+            <li>a sound when jumping</li>
+            <li>a sound when stomping on enemy</li>
+            <li>a background (or in game music)</li>
+          </ul>
+
+          <p>Then we will first add them to our resource list:</p>
+          <pre class="brush: js">
+            //game resources
+            game.resources = [
+              /**
+              * Graphics.
+              */
+              // our level tileset
+              {name: "area01_level_tiles",  type:"image", src: "data/img/map/area01_level_tiles.png"},
+              // the main player spritesheet
+              {name: "gripe_run_right",     type:"image", src: "data/img/sprite/gripe_run_right.png"},
+              // the parallax background
+              {name: "area01_bkg0",         type:"image", src: "data/img/area01_bkg0.png"},
+              {name: "area01_bkg1",         type:"image", src: "data/img/area01_bkg1.png"},
+              // the spinning coin spritesheet
+              {name: "spinning_coin_gold",  type:"image", src: "data/img/sprite/spinning_coin_gold.png"},
+              // our enemty entity
+              {name: "wheelie_right",       type:"image", src: "data/img/sprite/wheelie_right.png"},
+              // game font
+              {name: "32x32_font",          type:"image", src: "data/img/font/32x32_font.png"},
+              
+              /* 
+              * Maps. 
+              */
+              {name: "area01",              type: "tmx",  src: "data/map/area01.tmx"},
+
+
+              /* 
+              * Background music. 
+              */ 
+              {name: "dst-inertexponent", type: "audio", src: "data/bgm/"},
+              
+              /* 
+              * Sound effects. 
+              */
+              {name: "cling", type: "audio", src: "data/sfx/"},
+              {name: "stomp", type: "audio", src: "data/sfx/"},
+              {name: "jump",  type: "audio", src: "data/sfx/"}
+            ];
+          </pre>
+
+          <p>In case you did not notice yet, we didn't specify any extension when adding the audio element to the resource list, but instead, the path where the audio can be found. Why? Simply because we cannot know which format is supported by the browser. Instead, we let melonJS find the right format, and then load the right audio file accordingly.</p>
+
+          <p>If we take a look back on how we first initialized the audio, you can see that we passed the <b>"mp3,ogg"</b> parameter to the <a href="http://melonjs.github.io/docs/me.audio.html#init">initialization function</a>, to indicate that we will provide two audio files format, one as mp3, and one as ogg melonJS will then use the right based on your browser capabilities.</p>
+
+          <pre class="brush: js">
+            // initialize the "audio"
+            me.audio.init("mp3,ogg");
+          </pre>
+
+          <p>Now let's modify our game :</p>
+
+          <h3>Collecting a coin</h3>
+
+          <p>In the CoinEntity code, where we previously managed our earned points, we just need to add a new call to <a href="http://melonjs.github.io/docs/me.audio.html#play"><b>me.audio.play()</b></a> and use the <b>"cling"</b> audio resource. that's all!</p>
+          
+          <pre class="brush: js">
+            onCollision : function () {
+              // do something when collected
+
+              // play a "coin collected" sound
+              me.audio.play("cling");
+
+              // give some score
+              game.data.score += 250;
+
+              // make sure it cannot be collected "again"
+              this.body.setCollisionMask(me.collision.types.NO_OBJECT);
+              
+              // remove it
+              me.game.world.removeChild(this);
+            }
+          </pre>
+
+          <h3>Jumping</h3>
+
+          <p>In the <b>update()</b> function of the mainPlayer, we also add a call to <a href="http://melonjs.github.io/docs/me.audio.html#play"><b>me.audio.play()</b></a> and use the <b>"jump"</b> audio resource. You can also note that I added a test on the return value of doJump(). doJump can return false in case you are not allowed to jump (already jumping, etc..) and in that case there is no need to play the sound sfx.</p>
+
+          <pre class="brush: js">
+            if (me.input.isKeyPressed('jump')) {   
+              if (!this.body.jumping && !this.body.falling) {
+                // set current vel to the maximum defined value
+                // gravity will then do the rest
+                this.body.vel.y = -this.body.maxVel.y * me.timer.tick;
+                // set the jumping flag
+                this.body.jumping = true;
+                // play some audio 
+                me.audio.play("jump");
+              }
+            }
+          </pre>
+
+          <h3>Stomping</h3>
+
+          <p>And still the same for this one, but using the "stomp" resource, this time in the collision handler function of the mainPlayer:</p>
+          <pre class="brush: js">
+            /**
+             * colision handler
+             */
+            onCollision : function (response, other) {
+            
+               ...
+              
+               case me.collision.types.ENEMY_OBJECT:
+                    if ((response.overlapV.y>0) && !this.body.jumping) {
+                      // bounce (force jump)
+                      this.body.falling = false;
+                      this.body.vel.y = -this.body.maxVel.y * me.timer.tick;
+                      // set the jumping flag
+                      this.body.jumping = true;
+                      // play some audio
+                      me.audio.play("stomp");
+                    }
+                    else {
+                      // let's flicker in case we touched an enemy
+                      this.renderable.flicker(750);
+                    }
+                    return false;
+                    break;
+
+                  default:
+                    // Do not respond to other objects (e.g. coins)
+                    return false;
+                }
+              
+              // Make the object solid
+              return true;
+            }
+          </pre>
+
+          <h3>In-game music</h3>
+
+          <p>In our main, in the <b>onResetEvent()</b> function, we just add a call to the <a href="http://melonjs.github.io/docs/me.audio.html#playTrack"><b>me.audio.playTrack()</b></a> function, specifying the audio track to be used:</p>
+
+          <pre class="brush: js">
+            onResetEvent: function() {
+              // play the audio track
+              me.audio.playTrack("DST-InertExponent");
+
+              ....
+            },
+          </pre>
+
+          <p>And we also need to modify the <b>onDestroyEvent()</b> function to stop the current track when exiting the game:</p>
+          <pre class="brush: js">
+            onDestroyEvent: function() {
+              
+              ....
+              
+              // stop the current audio track
+              me.audio.stopTrack();
+            }
+          </pre>
+
+          <p>That's all! click <a href="./tutorial_step7/index.html">here</a> to see the final result.</p>
+        </div> <!-- end part 7 -->
+
+        <!-- PART 8 ======================================================================================================== -->
+        <div id="part8">
+          
+          <h2>Part 8: Adding a second level</h2>
+
+          <p>You should know how to create a level now. However, here I will show you how to go to another level.</p>
+
+          <p>To do this, melonJS has an Object call <a href="http://melonjs.github.io/docs/me.LevelEntity.html">me.LevelEntity</a>, that we will add in Tiled and specify what to do when our main player hit it :</p>
+
+          <img src= "media/step8_next_level.png" alt="Creating an object to go to next level"/>
+
+          <p>Assuming that our new level is called "area02", we just need to add a <b>"to"</b> property with <b>"area02"</b> for the value. So that when our player will hit the Object, the engine will automatically load the "area02" level.<br/> Optionally we can also ask the engine to add a fadeOut/fadeIn effect when changing level by adding the <b>"fade" color</b> and <b>"duration" (in ms)</b> properties (as in the image)</p>
+
+          <p>click <a href="./tutorial_step8/index.html">here</a> to see the final result.</p>
+
+        </div> <!-- end part 8 -->
+
+
+        <!-- PART 9 ======================================================================================================= -->
+        <div id="part9">
+          <h2><a id="part9">Part 9: Adding a title screen</a></h2>
+
+          <p>To finish, let's add a title screen to our game, using the <b>title_screen.png</b> files in the <b>"/data/img/gui/"</b> folder (and of course to be added in the ressource list, as we done it previously for other images):</p>
+
+          <img src="media/title_screen.jpg" alt="Title screen"/>
+
+          <p>and on top of it we will add some message, and wait for the user input to start the game!</p>
+
+          <p>First let's declare a new Object, extending <a href="http://melonjs.github.io/docs/me.ScreenObject.html">me.ScreenObject</a>:</p>
+          <pre class="brush: js">
+            /**
+            * A title screen 
+            **/
+            game.TitleScreen = me.ScreenObject.extend({
+              // reset function
+              onResetEvent: function() {
+              
+              },
+
+              // destroy function
+              onDestroyEvent: function() {
+              
+              }
+            });
+          </pre>
+
+          <p>So now we want to:</p>
+          <ul>
+            <li>display the above background image</li>
+            <li>add some text to the center of the screen ("Press enter to play")</li>
+            <li>wait for user input (pressing enter)</li>
+          </ul>
+
+          <p>Additionally, I also want to add a small scrolling text about this tutorial.</p>
+          <pre class="brush: js">
+            game.TitleScreen = me.ScreenObject.extend({
+
+              /**    
+               *  action to perform on state change
+               */
+              onResetEvent : function() {
+                
+                // title screen
+                me.game.world.addChild(
+                  new me.Sprite (
+                    0,0, 
+                    me.loader.getImage('title_screen')
+                  ),
+                  1
+                );
+              
+                // add a new renderable component with the scrolling text
+                me.game.world.addChild(new (me.Renderable.extend ({
+                  // constructor
+                  init : function() {
+                    this._super(me.Renderable, 'init', [0, 0, me.game.viewport.width, me.game.viewport.height]);
+                    // font for the scrolling text
+                    this.font = new me.BitmapFont("32x32_font", 32);
+                    
+                     // a tween to animate the arrow
+                    this.scrollertween = new me.Tween(this).to({scrollerpos: -2200 }, 10000).onComplete(this.scrollover.bind(this)).start();
+                
+                    this.scroller = "A SMALL STEP BY STEP TUTORIAL FOR GAME CREATION WITH MELONJS       ";
+                    this.scrollerpos = 600;
+                  },
+                  
+                  // some callback for the tween objects
+                  scrollover : function() {
+                    // reset to default value
+                    this.scrollerpos = 640;
+                    this.scrollertween.to({scrollerpos: -2200 }, 10000).onComplete(this.scrollover.bind(this)).start();
+                  },
+                
+                  update : function (dt) {
+                    return true;
+                  },
+                  
+                  draw : function (renderer) {
+                    this.font.draw(renderer, "PRESS ENTER TO PLAY", 20, 240);
+                    this.font.draw(renderer, this.scroller, this.scrollerpos, 440);
+                  },
+                  onDestroyEvent : function() {
+                    //just in case
+                    this.scrollertween.stop();
+                  }
+                })), 2);
+                
+                // change to play state on press Enter or click/tap
+                me.input.bindKey(me.input.KEY.ENTER, "enter", true);
+                me.input.bindPointer(me.input.mouse.LEFT, me.input.KEY.ENTER);
+                this.handler = me.event.subscribe(me.event.KEYDOWN, function (action, keyCode, edge) {
+                  if (action === "enter") {
+                    // play something on tap / enter
+                    // this will unlock audio on mobile devices
+                    me.audio.play("cling");
+                    me.state.change(me.state.PLAY);
+                  }
+                });
+              },
+
+              /**    
+               *  action to perform when leaving this screen (state change)
+               */
+              onDestroyEvent : function() {
+                me.input.unbindKey(me.input.KEY.ENTER);
+                me.input.unbindPointer(me.input.mouse.LEFT);
+                me.event.unsubscribe(this.handler);
+               }
+            });
+          </pre>
+
+          <p>What do we have above?</p>
+          <ol>
+            <li>1) In the onResetEvent function, we create two renderables components and add them to our game world. The first is a basic Sprite object that will display our title background image, and the second handles the "press ENTER" message and a scroller based on a Tween object. Note: Concerning the font, if you check carefully the corresponding asset (32x32_font.png), you will notice that it only contains uppercase letters, so be sure as well to only use uppercase letter in your text. </li>
+
+            <li>2) We also register to key event, or mouse/tap event to automatically switch to the PLAY state if pressed.</li>
+            <li>3) On destroy, we unbind the key and pointer events.</li>
+          </ol>
+
+          <p>And of course the very last thing is to indicate to the engine we created a new object and associate it to the corresponding state (here, <b>MENU</b>). Also, using the transition function of <a href="http://melonjs.github.io/docs/me.state.html">me.state</a>, I'm telling the engine to add a fading effect between state changes.</p>
+
+          <p>Finally, instead of switching to the <b>PLAY</b> state at the end of the loaded function, I'm switching now to the <b>MENU</b> state:<br/></p>
+          <pre class="brush: js">
+            /* ---
+
+            callback when everything is loaded
+
+            --- */
+            "loaded": function() {
+              // set the "Play/Ingame" Screen Object
+              me.state.set(me.state.MENU, new game.TitleScreen());
+
+              // set the "Play/Ingame" Screen Object
+              me.state.set(me.state.PLAY, new game.PlayScreen());
+
+              // set a global fading transition for the screen
+              me.state.transition("fade", "#FFFFFF", 250);
+
+              // register our player entity in the object pool
+              me.pool.register("mainPlayer", game.PlayerEntity);
+              me.pool.register("CoinEntity", game.CoinEntity);
+              me.pool.register("EnemyEntity", game.EnemyEntity);
+
+              // enable the keyboard
+              me.input.bindKey(me.input.KEY.LEFT, "left");
+              me.input.bindKey(me.input.KEY.RIGHT, "right");
+              me.input.bindKey(me.input.KEY.X, "jump", true);
+
+              // display the menu title
+              me.state.change(me.state.MENU);
+            }
+          </pre>
+
+          <h3>Try it out</h3>
+
+          <p>Congratulations! You reached the end of this tutorial, time to test it, and you should have something like this:</p>
+
+          <a href="./tutorial_step9/index.html"><img src="media/tutorial_step9.png" alt="Your completed game"/></a>
+        </div> <!-- end part 9 -->
+
+        <!-- PART 10 ============================================================================================= -->
+        <div id="part10">
+          <h2>Part 10: Conclusion</h2>
+
+          <p>Well, I hope that you enjoyed our time spent together with this little introduction of melonJS. I hope you like it and are willing to give it a try! Please keep in mind that melonJS is still in development, so it won't be perfect but remember that it's free! Also, don't hesitate to contact me if you have any feedback, suggestions, or found some bugs in the engine (and for sure you'll find some). I will be very happy to help you!</p>
+
+          <p>Never forget that this is all for fun, so have fun!</p>
+        </div> <!-- end part 10 -->
 
       </div> <!-- end row -->
     </div> <!-- end container -->

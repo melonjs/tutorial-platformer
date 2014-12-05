@@ -1,3 +1,10 @@
+body {
+  background-color: #F0EFE2;
+}
+
+
+
+/* overriding bootstrap */
 .container { 
   width: 825px;
 }
@@ -5,8 +12,9 @@
   padding: 0 150px;
 }
 
-nav
-{ height: 132px;}
+nav { 
+  height: 132px;
+}
 
 .navbar-default
 { background: #667F03;}
