@@ -1,7 +1,44 @@
+html {
+  height: 100%;
+}
 body {
   background-color: #F0EFE2;
 }
 
+nav .navbar-header {
+  margin-top: 16px;
+}
+nav .navbar-header h1, nav .navbar-header p {
+  color: white;
+}
+nav .navbar-header .colourer {
+  color: #CDF63E;
+}
+
+#sidebar {
+  background-color: #F5FEFF;
+  padding-top: 32px;
+  padding-bottom: 32px;
+  min-height: 100%;
+}
+#sidebar h3 {
+  margin: 0;
+}
+
+#content {
+  background-color: #fff;
+  padding: 16px 32px 0 32px;
+}
+#content h1 {
+  margin-top: 8px;
+}
+#content img {
+  margin: 12px 0;
+}
+
+#footer {
+  background-color: #5A7002;
+}
 
 
 /* overriding bootstrap */
@@ -15,9 +52,7 @@ body {
 nav { 
   height: 132px;
 }
-
-.navbar-default
-{ background: #667F03;}
-
-.sidebar {
+.navbar-default { 
+  background: #667F03;
+  margin-bottom: 0;
 }
