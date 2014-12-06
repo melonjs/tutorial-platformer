@@ -3,20 +3,7 @@ html {
 }
 body {
   background-color: #F0EFE2;
-}
-
-nav .navbar-header h1 {
-  margin: 10px 0;
-}
-nav .navbar-header h1, nav .navbar-header p {
-  color: white;
-}
-nav .navbar-header .colourer {
-  color: #CDF63E;
-}
-
-#main {
-  margin-top: 96px;
+  padding-top: 50px;
 }
 
 #sidebar h3 {
@@ -25,17 +12,16 @@ nav .navbar-header .colourer {
 
 #content {
   background-color: #fff;
-  padding: 16px 32px 0 32px;
+  padding: 16px 15px 0 15px;
 }
-#content h1 {
+.subcontent {
+  padding: 15px;
+}
+.subcontent h1 {
   margin-top: 8px;
 }
-#content img {
+.subcontent img {
   margin: 12px 0;
-}
-
-#footer {
-  background-color: #5A7002;
 }
 
 .offset-anchor {
@@ -45,8 +31,31 @@ nav .navbar-header .colourer {
   top: -104px;
 }
 
+@-webkit-keyframes highlight {
+  0% { background-color: #C8F7C5; }
+  100% { background-color: #fff; }
+}
+@-moz-keyframes highlight {
+  0% { background-color: #C8F7C5; }
+  100% { background-color: #fff; }
+}
+@-o-keyframes highlight {
+  0% { background-color: #C8F7C5; }
+  100% { background-color: #fff; }
+}
+@keyframes highlight {
+  0% { background-color: #C8F7C5; }
+  100% { background-color: #fff; }
+}
+:target + .subcontent {
+  -webkit-animation: highlight 1s ease;
+  -moz-animation: highlight 1s ease;
+  -o-animation: highlight 1s ease;
+  animation: highlight 1s ease;
+}
 
-/* overriding bootstrap */
+
+/* OVERRIDING BOOTSTRAP ===================================== */
 .container { 
   width: 825px;
 }
@@ -54,23 +63,30 @@ nav .navbar-header .colourer {
   margin: 0;
 }
 
-nav { 
-  height: 96px;
-}
+/* navbar */ 
 .navbar-default { 
-  background: #667F03;
+  background: #55aa00;
   margin-bottom: 0;
   border: 0;
 }
+.navbar-default .navbar-nav li a {
+  color: white;
+  font-weight: bold;
+}
+.navbar > .container .navbar-brand,
+.navbar > .container-fluid .navbar-brand {
+  padding: 9px 20px 8px 20px;
+  margin-left: -20px;
+}
 
-/* bootstrap sidebar */
+/* sidebar */
 .sidebar {
   display: none;
 }
 @media (min-width: 768px) {
   .sidebar {
     position: fixed;
-    top: 96px;
+    top: 50px;
     bottom: 0;
     z-index: 1000;
     display: block;
