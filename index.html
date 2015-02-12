@@ -103,7 +103,8 @@
 
         <div id="content" class="col-md-8 col-md-offset-3 main">
           <h1>Platformer Tutorial</h1>
-          <p>In this tutorial, we will create a simple platformer.</p>
+            <p>In this tutorial, we will create a simple platformer. This tutorial will primarily be focused on creating the basic element of a working game using Tiled as the level editor.</p>
+
 
           <!-- INTRO ================================================================== -->
           <div>
@@ -137,10 +138,11 @@
               
               <p>
                 <b>Testing/debugging :</b><br/>
-                When using Chrome, and due to the "cross-origin request" security mechanism implemented, you need to use the "--disable-web-security" parameter or better "--allow-file-access-from-files"when launching the browser in order to test any local content, else the browser will complain when trying to load a level map. <br/>
+                Your best bet is to use a local web server, as for example detailed in the melonJS <a href="https://github.com/melonjs/boilerplate">boilerplate</a> README, by using the `grunt connect` tool, and that will allow you to test your game in your browser using the <a href="http://localhost:8000">http://localhost:8000</a> url.
               </p>
-              
-              <p> A second and easier option is to use a local web server, as for example detailed in the melonJS <a href="https://github.com/melonjs/boilerplate">boilerplate</a> README, by using the `grunt connect` tool, and that will allow you to test your game in your browser using the <a href="http://localhost:8000">http://localhost:8000</a> url.</p>
+              <p>
+                If you just want to use the filesystem, the problem is you'll run into "cross-origin request" security errors. With Chrome, you need to use the "--disable-web-security" parameter or better "--allow-file-access-from-files" when launching the browser. This must be done in order to test any local content, else the browser will complain when trying to load assets through XHR. <strong>Though this method is not recommended.</strong> As long as you have the option enabled, you're adding security vulnerabilities to your session.<br/>
+              </p>
               
               <p class="c1">Additional Credits :</p>
               
@@ -184,7 +186,49 @@
             <a id="part2" class="offset-anchor"></a>
             <div class="subcontent">
               <h2>Part 2: Loading our level</h2>
-              <p>First let's have a look at our js/game.js skeleton:</p>
+                <p>First of all, and after unzipping the tutorial assets into the boilerplate directory structure, you should have something like this:</p>
+
+<pre>
+data/
+  bgm/
+    dst-inertexponent.mp3
+    dst-inertexponent.ogg
+  img/
+    font/
+     32x32_font.png
+    gui/
+     title_screen.png
+    map/
+     area01_level_tiles.png
+     license.txt
+    sprite/
+     gripe_run_right.png
+     spinning_coin_gold.png
+     wheelie_right.png
+    area01_bkg0.png
+    area01_bkg1.png
+   map/
+   sfx/
+    cling.mp3
+    cling.ogg
+    jump.mp3
+    jump.ogg
+    stomp.mp3
+    stomp.ogg    
+js/
+  game.js
+  resources.js
+  entities/
+    HUD.js
+    entities.JS
+  screens/
+    play.js
+    title.js
+index.html
+index.css
+</pre>
+
+            <p>The boilerplate also provides a bunch of default code, buit first let's have a look at our js/game.js skeleton:</p>
               
               <pre class="brush: js">
                 /* game namespace */
