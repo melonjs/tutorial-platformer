@@ -170,8 +170,8 @@ game.EnemyEntity = me.Entity.extend(
 
         // adjust the size setting information to match the sprite size
         // so that the entity object is created with the right size
-        settings.spritewidth = settings.width = 64;
-        settings.spritewidth = settings.height = 64;
+        settings.framewidth = settings.width = 64;
+        settings.frameheight = settings.height = 64;
         
         // call the parent constructor
         this._super(me.Entity, 'init', [x, y , settings]);
@@ -179,8 +179,8 @@ game.EnemyEntity = me.Entity.extend(
         // set start/end position based on the initial area size
         x = this.pos.x;
         this.startX = x;
-        this.endX   = x + width - settings.spritewidth;
-        this.pos.x  = x + width - settings.spritewidth;
+        this.endX   = x + width - settings.framewidth;
+        this.pos.x  = x + width - settings.framewidth;
 
         // manually update the entity bounds as we manually change the position
         this.updateBounds();

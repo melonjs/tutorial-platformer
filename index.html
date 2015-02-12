@@ -246,7 +246,7 @@ index.css
                   "onload" : function () {
               
                     // Initialize the video.
-                    if (!me.video.init("screen", me.video.CANVAS, 640, 480, true, 'auto')) {
+                    if (!me.video.init(640, 480, {wrapper : "screen", scale : "auto"})) {
                       alert("Your browser does not support HTML5 canvas.");
                       return;
                     }
@@ -518,8 +518,8 @@ index.css
               <p>Name it (case does not matter) <b>mainPlayer</b> (or using the same name you used when registering our Object into the Object Pool), and add two properties to the Object:</p>
               <ul>
                 <li><b>image</b> : with the <b>gripe_run_right</b> value (name of our resource</li>
-                <li><b>spritewidth</b> : with the value <b>64</b> which is the size of a single sprite in the spritesheet</li>
-                <li><b>spriteheight</b> : we don't define this value here since we use a single line spritesheet, and since in this case the engine will take the actual image height as a value for it.</li>
+                <li><b>framewidth</b> : with the value <b>64</b> which is the size of a single sprite in the spritesheet</li>
+                <li><b>frameheight</b> : we don't define this value here since we use a single line spritesheet, and since in this case the engine will take the actual image height as a value for it.</li>
               </ul>
               <p>These two parameters will be passed as parameters (<a href="http://melonjs.github.io/docs/me.ObjectSettings.html"><b>settings</b> object</a> here above used by the constructor) when the object will be created. Now you can either specify these fields here in Tiled, or directly in your code (when dealing with multiple objects, it can be easier to just specify the name in Tiled, and manage the rest in the constructor directly).</p>
               
@@ -722,8 +722,8 @@ index.css
               
                     // adjust the size setting information to match the sprite size
                     // so that the entity object is created with the right size
-                    settings.spritewidth = settings.width = 64;
-                    settings.spritewidth = settings.height = 64;
+                    settings.framewidth = settings.width = 64;
+                    settings.frameheight = settings.height = 64;
                     
                     // call the parent constructor
                     this._super(me.Entity, 'init', [x, y , settings]);
@@ -731,8 +731,8 @@ index.css
                     // set start/end position based on the initial area size
                     x = this.pos.x;
                     this.startX = x;
-                    this.endX   = x + width - settings.spritewidth
-                    this.pos.x  = x + width - settings.spritewidth;
+                    this.endX   = x + width - settings.framewidth
+                    this.pos.x  = x + width - settings.framewidth;
               
                     // manually update the entity bounds as we manually change the position
                     this.updateBounds();
@@ -791,7 +791,7 @@ index.css
                 });
               </pre>
               
-              <p>As you can see here, I specified the <b>settings.image</b> and <b>settings.spritewidth</b> properties in the constructor directly, meaning that in Tiled, I won't have to add these properties to my Object (Once again, it's up to you to decide how to use it).</p>
+              <p>As you can see here, I specified the <b>settings.image</b> and <b>settings.framewidth</b> properties in the constructor directly, meaning that in Tiled, I won't have to add these properties to my Object (Once again, it's up to you to decide how to use it).</p>
               <p>Also, I am using the <b>width</b> property given by Tiled to specify a path on which this enemy will run. Finally, in the onCollision method, I make the enemy flicker if something is jumping on top of it.</p>
               
               <p>Note that an Object Entity drawable component (either a single sprite of animation) is accessible through the Entity `renderable` property, which explains here why we do here the following : `this.renderable.flicker(750);`</p>

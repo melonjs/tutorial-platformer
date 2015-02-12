@@ -8,8 +8,9 @@ game.TitleScreen = me.ScreenObject.extend({
         // title screen
         me.game.world.addChild(
             new me.Sprite(
-                0,0, 
-                me.loader.getImage('title_screen')
+                0,0, {
+                   image: me.loader.getImage('title_screen')
+                }
             ),
             1
         );
