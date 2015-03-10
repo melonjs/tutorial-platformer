@@ -140,7 +140,7 @@
                 When using Chrome, and due to the "cross-origin request" security mechanism implemented, you need to use the "--disable-web-security" parameter or better "--allow-file-access-from-files"when launching the browser in order to test any local content, else the browser will complain when trying to load a level map. <br/>
               </p>
 
-              <p> A second and easier option is to use a local web server, as for example detailed in the melonJS <a href="https://github.com/melonjs/boilerplate">boilerplate</a> README, by using the `grunt connect` tool, and that will allow you to test your game in your browser using the <a href="http://localhost:8000">http://localhost:8000</a> url.</p>
+              <p> A second and easier option is to use a local web server, as for example detailed in the melonJS <a href="https://github.com/melonjs/boilerplate">boilerplate</a> README, by using the <b>grunt serve</b> tool, and that will allow you to test your game in your browser using the <a href="http://localhost:8000">http://localhost:8000</a> url.</p>
 
               <p class="c1">Additional Credits :</p>
 
@@ -244,28 +244,9 @@
 
               <p>The only change we will do in the default project template is the given video resolution for the `me.video.init()` function, as for the tutorial we will create a 640x480 canvas.</p>
 
-              <p>So in order to load our level, the next thing is to add the resources to be loaded by adding the following information into <b>game.resources</b> (js/resources.js) object :</p>
+              <p>The boilerplate automatically builds the resources list and exposes it to your app as <b>game.resources</b> (build/js/resources.js) when using the <b>grunt serve</b> task.</p>
 
-              <ul>
-                <li>the tileset itself, an image</li>
-                <li>our map "area01", a <a href="https://github.com/bjorn/tiled/wiki/TMX-Map-Format">TMX</a> object</li>
-              </ul>
-              <pre class="brush: js">
-                //game resources
-                game.resources = [
-                  /**
-                   * Graphics.
-                   */
-                  // our level tileset
-                  {name: "area01_level_tiles",  type:"image", src: "data/img/map/area01_level_tiles.png"},
-
-                  /*
-                   * Maps.
-                   */
-                  {name: "area01", type: "tmx", src: "data/map/area01.tmx"}
-                ];
-
-              </pre>
+              <p><b>WARNING:</b> If you are not using the boilerplate, you will have to manage the resources.js manually (it is time-consuming, and error-prone). If managing resources.js manually, you can see an <a href="https://github.com/melonjs/tutorial-platformer/blob/gh-pages/tutorial_step9/js/resources.js">example on the git repo</a>.</p>
 
               <p>Be sure to name the tileset resource name according to the filename, or else the level loader will not be able to find the tileset and will fail.</p>
 
@@ -323,25 +304,6 @@
               <p>Here we will create a new object by extending the default <a href="http://melonjs.github.io/docs/me.Entity.html"> me.Entity</a>, to create our player. We will use the provided simple spritesheet <b>(gripe_run_right.png)</b> to animate our character, and define a basic walking and standing animation. It's of course possible to define more complex animations for the same entity (jumping, crouching, when hurt, etc...), but let's keep things simple for now.</p>
 
               <img src= "media/gripe_run_right.png" alt="Gripe run right"/>
-
-              <p>First, let's add our spritesheet in the list of the resources to be loaded, just after our map :</p>
-              <pre class="brush: js">
-                //game resources
-                game.resources = [{
-                  /**
-                  * Graphics.
-                  */
-                  // our level tileset
-                  {name: "area01_level_tiles", type:"image", src: "data/img/map/area01_level_tiles.png"},
-                  // the main player spritesheet
-                  {name: "gripe_run_right", type:"image", src: "data/img/sprite/gripe_run_right.png"},
-
-                  /*
-                  * Maps.
-                  */
-                  {name: "area01", type: "tmx", src: "data/map/area01.tmx"}
-                }];
-              </pre>
 
               <p>Then it's time to create our entity, open the `js/entities/entities.js` example file, and let's complete it to match with the following : </p>
               <pre class="brush: js">
@@ -543,29 +505,6 @@
               <p><b>/data/img/area01_bkg1.png</b> for the second background layer</p>
               <img src="media/area01_bkg1.png" alt="Parallax background 2"/>
 
-              <p>Let's add them in the resource list:</p>
-
-              <pre class="brush: js">
-                // game resources
-                game.resources = [
-                  /**
-                  * Graphics.
-                  */
-                  // our level tileset
-                  {name: "area01_level_tiles",  type:"image", src: "data/img/map/area01_level_tiles.png"},
-                  // the main player spritesheet
-                  {name: "gripe_run_right",     type:"image", src: "data/img/sprite/gripe_run_right.png"},
-                  // the parallax background
-                  {name: "area01_bkg0",         type:"image", src: "data/img/area01_bkg0.png"},
-                  {name: "area01_bkg1",         type:"image", src: "data/img/area01_bkg1.png"},
-
-                  /*
-                  * Maps.
-                  */
-                  {name: "area01",  type: "tmx",  src: "data/map/area01.tmx"}
-                ];
-              </pre>
-
               <p>Open Tiled, and add two new <a href="http://melonjs.github.io/docs/me.ImageLayer.html"> <b>Image Layers</b></a>, name them to whatever you like and make sure to adjust correctly the layer order (the display order being from bottom to top) </p>
               <img src="media/step4_layer.png" alt="Layering parallax layers"/>
 
@@ -602,32 +541,6 @@
 
               <p>And a basic enemy, using the <b>wheelie_right.png</b> spritesheet:</p>
               <img src= "media/wheelie_right.png"alt="Wheelie right sprite"/>
-
-              <p>As always, add them to the resource list:</p>
-              <pre class="brush: js">
-                // game resources
-                game.resources = [
-                  /**
-                  * Graphics.
-                  */
-                  // our level tileset
-                  {name: "area01_level_tiles",  type:"image", src: "data/img/map/area01_level_tiles.png"},
-                  // the main player spritesheet
-                  {name: "gripe_run_right",     type:"image", src: "data/img/sprite/gripe_run_right.png"},
-                  // the parallax background
-                  {name: "area01_bkg0",         type:"image", src: "data/img/area01_bkg0.png"},
-                  {name: "area01_bkg1",         type:"image", src: "data/img/area01_bkg1.png"},
-                  // the spinning coin spritesheet
-                  {name: "spinning_coin_gold",  type:"image", src: "data/img/sprite/spinning_coin_gold.png"},
-                  // our enemty entity
-                  {name: "wheelie_right",       type:"image", src: "data/img/sprite/wheelie_right.png"},
-
-                  /*
-                  * Maps.
-                  */
-                  {name: "area01",              type: "tmx",  src: "data/map/area01.tmx"}
-                ];
-              </pre>
 
               <p>The coin itself is pretty easy; we just extend the <a href="http://melonjs.github.io/docs/me.CollectableEntity.html"> me.CollectableEntity</a>. Actually, we could directly use it in Tiled (without needing to create CoinEntity here), but since we will add some score and some audio sfx later when the coin is collected, let's do it directly this way.</p>
 
@@ -882,33 +795,7 @@
 
               <p>It's time to display some score when we collect those coins.</p>
 
-              <p>We will use a bitmap font <b>(data/img/font/32x32_font.png)</b> to display our score, as always we need to add it in our list of resources to be loaded :</p>
-              <pre class="brush: js">
-                // game resources
-                game.resources = [
-                  /**
-                  * Graphics.
-                  */
-                  // our level tileset
-                  {name: "area01_level_tiles",  type:"image", src: "data/img/map/area01_level_tiles.png"},
-                  // the main player spritesheet
-                  {name: "gripe_run_right",     type:"image", src: "data/img/sprite/gripe_run_right.png"},
-                  // the parallax background
-                  {name: "area01_bkg0",         type:"image", src: "data/img/area01_bkg0.png"},
-                  {name: "area01_bkg1",         type:"image", src: "data/img/area01_bkg1.png"},
-                  // the spinning coin spritesheet
-                  {name: "spinning_coin_gold",  type:"image", src: "data/img/sprite/spinning_coin_gold.png"},
-                  // our enemty entity
-                  {name: "wheelie_right",       type:"image", src: "data/img/sprite/wheelie_right.png"},
-                  // game font
-                  {name: "32x32_font",          type:"image", src: "data/img/font/32x32_font.png"},
-
-                  /*
-                  * Maps.
-                  */
-                  {name: "area01",              type: "tmx",  src: "data/map/area01.tmx"}
-                ];
-              </pre>
+              <p>We will use a bitmap font <b>(data/img/font/32x32_font.png)</b> to display our score</p>
 
               <p>The boilerplate we used earlier already contains a HUD Skeleton that we will use as a base for our game. The skeleton is quite simple and consist of:</p>
               <ul>
@@ -1108,47 +995,6 @@
                 <li>a sound when stomping on enemy</li>
                 <li>a background (or in game music)</li>
               </ul>
-
-              <p>Then we will first add them to our resource list:</p>
-              <pre class="brush: js">
-                //game resources
-                game.resources = [
-                  /**
-                  * Graphics.
-                  */
-                  // our level tileset
-                  {name: "area01_level_tiles",  type:"image", src: "data/img/map/area01_level_tiles.png"},
-                  // the main player spritesheet
-                  {name: "gripe_run_right",     type:"image", src: "data/img/sprite/gripe_run_right.png"},
-                  // the parallax background
-                  {name: "area01_bkg0",         type:"image", src: "data/img/area01_bkg0.png"},
-                  {name: "area01_bkg1",         type:"image", src: "data/img/area01_bkg1.png"},
-                  // the spinning coin spritesheet
-                  {name: "spinning_coin_gold",  type:"image", src: "data/img/sprite/spinning_coin_gold.png"},
-                  // our enemty entity
-                  {name: "wheelie_right",       type:"image", src: "data/img/sprite/wheelie_right.png"},
-                  // game font
-                  {name: "32x32_font",          type:"image", src: "data/img/font/32x32_font.png"},
-
-                  /*
-                  * Maps.
-                  */
-                  {name: "area01",              type: "tmx",  src: "data/map/area01.tmx"},
-
-
-                  /*
-                  * Background music.
-                  */
-                  {name: "dst-inertexponent", type: "audio", src: "data/bgm/"},
-
-                  /*
-                  * Sound effects.
-                  */
-                  {name: "cling", type: "audio", src: "data/sfx/"},
-                  {name: "stomp", type: "audio", src: "data/sfx/"},
-                  {name: "jump",  type: "audio", src: "data/sfx/"}
-                ];
-              </pre>
 
               <p>In case you did not notice yet, we didn't specify any extension when adding the audio element to the resource list, but instead, the path where the audio can be found. Why? Simply because we cannot know which format is supported by the browser. Instead, we let melonJS find the right format, and then load the right audio file accordingly.</p>
 
