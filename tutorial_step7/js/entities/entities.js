@@ -198,9 +198,6 @@ game.EnemyEntity = me.Entity.extend(
         this.endX   = x + width - settings.framewidth
         this.pos.x  = x + width - settings.framewidth;
 
-        // manually update the entity bounds as we manually change the position
-        this.updateBounds();
-
         // to remember which side we were walking
         this.walkLeft = false;
 
