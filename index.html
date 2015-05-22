@@ -236,7 +236,7 @@ index.css
                     }
 
                     // add "#debug" to the URL to enable the debug Panel
-                    if (document.location.hash === "#debug") {
+                    if (me.game.HASH.debug === true) {
                       window.onReady(function () {
                         me.plugin.register.defer(this, me.debug.Panel, "debug", me.input.KEY.V);
                       });
@@ -619,6 +619,9 @@ index.css
                     // so that the entity object is created with the right size
                     settings.framewidth = settings.width = 64;
                     settings.frameheight = settings.height = 64;
+
+                    // redefine the default shape (used to define path) with a shape matching the renderable
+                    settings.shapes[0] = new me.Rect(0, 0, settings.framewidth, settings.frameheight);
 
                     // call the parent constructor
                     this._super(me.Entity, 'init', [x, y , settings]);
@@ -1123,7 +1126,7 @@ index.css
               <pre class="brush: js">
                 onResetEvent: function() {
                   // play the audio track
-                  me.audio.playTrack("DST-InertExponent");
+                  me.audio.playTrack("dst-inertexponent");
 
                   ....
                 },
