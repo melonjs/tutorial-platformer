@@ -7,16 +7,16 @@ var game = {
 		// score
 		score : 0
 	},
-	
-	
+
+
     // Run on page load.
     "onload" : function () {
         // Initialize the video.
-        if (!me.video.init(640, 480, {wrapper : "screen", scale : "auto"})) {
+        if (!me.video.init(640, 480, {wrapper : "screen", scale : "auto", scaleMethod : "flex-width"})) {
             alert("Your browser does not support HTML5 canvas.");
             return;
         }
-		
+
         // add "#debug" to the URL to enable the debug Panel
         if (me.game.HASH.debug === true) {
             window.onReady(function () {
@@ -29,7 +29,7 @@ var game = {
 
         // Set a callback to run when loading is complete.
         me.loader.onload = this.loaded.bind(this);
-     
+
         // Load the resources.
         me.loader.preload(game.resources);
 
@@ -43,10 +43,10 @@ var game = {
     "loaded" : function () {
         me.state.set(me.state.MENU, new game.TitleScreen());
         me.state.set(me.state.PLAY, new game.PlayScreen());
-        
+
 		// add our player entity in the entity pool
 		me.pool.register("mainPlayer", game.PlayerEntity);
-        
+
         // Start the game.
         me.state.change(me.state.PLAY);
     }
