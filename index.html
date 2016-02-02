@@ -230,7 +230,7 @@ index.css
                   "onload" : function () {
 
                     // Initialize the video.
-                    if (!me.video.init(640, 480, {wrapper : "screen", scale : "auto"})) {
+                    if (!me.video.init(640, 480, {wrapper : "screen", scale : "auto", scaleMethod : "flex-width"})) {
                       alert("Your browser does not support HTML5 canvas.");
                       return;
                     }
@@ -270,9 +270,10 @@ index.css
               </pre>
               <p>This is very simple. Once the page is loaded, the <b>onload()</b> function is called, the display and audio is initialized, and all game resources begin loading. We also define a callback to be called when everything is ready to be used. Within the callback, we define a new state that will be used for the in game stuff, together with a <a href="http://melonjs.github.io/docs/me.ScreenObject.html"> <b>PlayScreen</b> object</a> that we will use to manage the game event (reset, etc...).</p>
 
-              <p>The only change we will do in the default project template is the given video resolution for the `me.video.init()` function, as for the tutorial we will create a 640x480 canvas.</p>
+              <p>The only change we will do in the default project template is the given video resolution for the `me.video.init()` function, as for the tutorial we will create a 640x480 canvas.
+              Also we will change the <b>scaleMethod</b> to <b>"flex-width"</b>, as it better fits with a platformer game (see the <a href="http://melonjs.github.io/docs/me.video.html#init">`me.video.init`</a> documentation for further information on the various scaling mode available).</p>
 
-             <p>The boilerplate automatically builds the resources list and exposes it to your app as <b>game.resources</b> (build/js/resources.js) when using the <b>grunt serve</b> task.</p>
+              <p>The boilerplate automatically builds the resources list and exposes it to your app as <b>game.resources</b> (build/js/resources.js) when using the <b>grunt serve</b> task.</p>
 
               <p><b>WARNING:</b> If you are not using the boilerplate, you will have to manage the resources.js manually (it is time-consuming, and error-prone). If managing resources.js manually, you can see an <a href="https://github.com/melonjs/tutorial-platformer/blob/gh-pages/tutorial_step9/js/resources.js">example on the git repo</a>.</p>
 
@@ -1206,22 +1207,24 @@ index.css
               <pre class="brush: js">
                 game.TitleScreen = me.ScreenObject.extend({
 
-                    /**    
+                    /**
                      *  action to perform on state change
                      */
                     onResetEvent : function() {
-                        
-                        // title screen
-                        me.game.world.addChild(
-                            new me.Sprite(
-                                0,0, {
-                                   image: me.loader.getImage('title_screen')
-                                }
-                            ),
-                            1
-                        );
 
-                    
+                        // title screen
+                        var backgroundImage = new me.Sprite(
+                            me.game.viewport.width / 2,
+                            me.game.viewport.height / 2,
+                            {
+                               image: me.loader.getImage('title_screen'),
+                            }
+                        );
+                        // scale to fit with the viewport size
+                        backgroundImage.scale(me.game.viewport.width / backgroundImage.width, 1);
+                        // add to the world container
+                        me.game.world.addChild(backgroundImage, 1);
+
                         // add a new renderable component with the scrolling text
                         me.game.world.addChild(new (me.Renderable.extend ({
                             // constructor
@@ -1229,25 +1232,25 @@ index.css
                                 this._super(me.Renderable, 'init', [0, 0, me.game.viewport.width, me.game.viewport.height]);
                                 // font for the scrolling text
                                 this.font = new me.BitmapFont("32x32_font", 32);
-                                
+
                                  // a tween to animate the arrow
                                 this.scrollertween = new me.Tween(this).to({scrollerpos: -2200 }, 10000).onComplete(this.scrollover.bind(this)).start();
-                        
+
                                 this.scroller = "A SMALL STEP BY STEP TUTORIAL FOR GAME CREATION WITH MELONJS       ";
                                 this.scrollerpos = 600;
                             },
-                            
+
                             // some callback for the tween objects
                             scrollover : function() {
                                 // reset to default value
                                 this.scrollerpos = 640;
                                 this.scrollertween.to({scrollerpos: -2200 }, 10000).onComplete(this.scrollover.bind(this)).start();
                             },
-                        
+
                             update : function (dt) {
                                 return true;
                             },
-                            
+
                             draw : function (renderer) {
                                 this.font.draw(renderer, "PRESS ENTER TO PLAY", 20, 240);
                                 this.font.draw(renderer, this.scroller, this.scrollerpos, 440);
@@ -1257,10 +1260,10 @@ index.css
                                 this.scrollertween.stop();
                             }
                         })), 2);
-                        
+
                         // change to play state on press Enter or click/tap
                         me.input.bindKey(me.input.KEY.ENTER, "enter", true);
-                        me.input.bindPointer(me.input.mouse.LEFT, me.input.KEY.ENTER);
+                        me.input.bindPointer(me.input.pointer.LEFT, me.input.KEY.ENTER);
                         this.handler = me.event.subscribe(me.event.KEYDOWN, function (action, keyCode, edge) {
                             if (action === "enter") {
                                 // play something on tap / enter
@@ -1271,12 +1274,12 @@ index.css
                         });
                     },
 
-                    /**    
+                    /**
                      *  action to perform when leaving this screen (state change)
                      */
                     onDestroyEvent : function() {
                         me.input.unbindKey(me.input.KEY.ENTER);
-                        me.input.unbindPointer(me.input.mouse.LEFT);
+                        me.input.unbindPointer(me.input.pointer.LEFT);
                         me.event.unsubscribe(this.handler);
                    }
                 });
