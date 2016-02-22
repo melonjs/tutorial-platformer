@@ -1,18 +1,28 @@
 html {
   height: 100%;
 }
-body {
-  background-color: #F0EFE2;
-  padding-top: 50px;
+
+pre,
+pre[class*="language-"] {
+  margin: .5em 0 2em;
 }
 
 #sidebar h3 {
-  margin-left: 15px;
+  margin-left: 10px;
+}
+#sidebar .logo {
+  display: block;
+  background-color: #55aa00;
+  padding: 5px;
+}
+#sidebar .logo img {
+  height: 35px;
 }
 
 #content {
-  background-color: #fff;
-  padding: 16px 15px 0 15px;
+  padding: 20px 40px 20px 15px;
+  min-width: 400px;
+  max-width: 960px;
 }
 .subcontent {
   padding: 15px;
@@ -56,27 +66,8 @@ body {
 
 
 /* OVERRIDING BOOTSTRAP ===================================== */
-.container { 
-  width: 825px;
-}
 .row {
   margin: 0;
-}
-
-/* navbar */ 
-.navbar-default { 
-  background: #55aa00;
-  margin-bottom: 0;
-  border: 0;
-}
-.navbar-default .navbar-nav li a {
-  color: white;
-  font-weight: bold;
-}
-.navbar > .container .navbar-brand,
-.navbar > .container-fluid .navbar-brand {
-  padding: 9px 20px 8px 20px;
-  margin-left: -20px;
 }
 
 /* sidebar */
@@ -86,7 +77,7 @@ body {
 @media (min-width: 992px) {
   .sidebar {
     position: fixed;
-    top: 50px;
+    top: 0;
     bottom: 0;
     z-index: 1000;
     display: block;
@@ -99,14 +90,4 @@ body {
 }
 .nav-sidebar {
   margin-bottom: 20px;
-}
-.nav-sidebar > li > a {
-  padding-right: 20px;
-  padding-left: 20px;
-}
-.nav-sidebar > .active > a,
-.nav-sidebar > .active > a:hover,
-.nav-sidebar > .active > a:focus {
-  color: #fff;
-  background-color: #428bca;
 }
