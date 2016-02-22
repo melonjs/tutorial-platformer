@@ -1,0 +1,28 @@
+{
+  "name": "melonjs-tutorial-platformer",
+  "version": "1.0.0",
+  "description": "MelonJS Platformer Tutorial",
+  "main": "\"\"",
+  "scripts": {
+    "update:deps": "cp node_modules/bootstrap/dist/css/bootstrap.min.css node_modules/prismjs/prism.js node_modules/prismjs/themes/prism.css vendor/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/melonjs/tutorial-platformer.git"
+  },
+  "author": "melonJS <contact@melonjs.org> (http://www.melonjs.org/)",
+  "contributors": [
+    "Aaron McCleod <aaron.g.mcleod@gmail.com>",
+    "Jay Oster <jay@kodewerx.org>",
+    "Olivier Biot <olivier.biot@me.com>"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/melonjs/tutorial-platformer/issues"
+  },
+  "homepage": "https://github.com/melonjs/tutorial-platformer#readme",
+  "devDependencies": {
+    "bootstrap": "^3.3.6",
+    "prismjs": "^1.4.1"
+  }
+}
