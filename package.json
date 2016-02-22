@@ -2,7 +2,7 @@
   "name": "melonjs-tutorial-platformer",
   "version": "1.0.0",
   "description": "MelonJS Platformer Tutorial",
-  "main": "\"\"",
+  "private": "true",
   "scripts": {
     "update:deps": "cp node_modules/bootstrap/dist/css/bootstrap.min.css node_modules/prismjs/prism.js node_modules/prismjs/themes/prism.css vendor/"
   },
