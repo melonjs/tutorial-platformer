@@ -818,9 +818,6 @@ game.HUD.Container = me.Container.extend({
     // make sure we use screen coordinates
     this.floating = true;
 
-    // make sure our object is always draw first
-    this.z = Infinity;
-
     // give a name
     this.name = "HUD";
 
@@ -911,7 +908,11 @@ game.HUD.ScoreItem = me.Renderable.extend( {
 });
 </code></pre>
 
-              <p>The HUD is already added and removed when we start the game, so there is nothing to do here : </p>
+   <p>The HUD is already added and removed when we start the game, so there is nothing to do here.
+      Note also that we are adding the HUD to the game world after loading the level,
+      as <a href="http://melonjs.github.io/melonJS/docs/me.Container.html">me.Container</a> objects are by default automatically seting the z value
+      (through the <a href="https://melonjs.github.io/melonJS/docs/me.Container.html#autoDepth">autoDepth</a> feature) this will ensure that the HUD is correctly displayed on top of the rest.
+   </p>
 
 <pre><code>game.PlayScreen = me.ScreenObject.extend({
   /**
