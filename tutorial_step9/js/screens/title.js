@@ -6,15 +6,14 @@ game.TitleScreen = me.ScreenObject.extend({
     onResetEvent : function() {
 
         // title screen
-        var backgroundImage = new me.Sprite(
-            me.game.viewport.width / 2,
-            me.game.viewport.height / 2,
-            {
+        var backgroundImage = new me.Sprite(0, 0, {
                image: me.loader.getImage('title_screen'),
             }
         );
-        // scale to fit with the viewport size
-        backgroundImage.scale(me.game.viewport.width / backgroundImage.width, 1);
+
+        // position and scale to fit with the viewport size
+        backgroundImage.anchorPoint.set(0, 0);
+        backgroundImage.scale(me.game.viewport.width / backgroundImage.width, me.game.viewport.height / backgroundImage.height);
         // add to the world container
         me.game.world.addChild(backgroundImage, 1);
 
@@ -24,8 +23,9 @@ game.TitleScreen = me.ScreenObject.extend({
             // constructor
             init : function() {
                 this._super(me.Renderable, 'init', [0, 0, me.game.viewport.width, me.game.viewport.height]);
+
                 // font for the scrolling text
-                this.font = new me.BitmapFont("32x32_font", 32);
+                this.font = new me.BitmapFont(me.loader.getBinary('PressStart2P'), me.loader.getImage('PressStart2P'));
 
                  // a tween to animate the arrow
                 this.scrollertween = new me.Tween(this).to({scrollerpos: -2200 }, 10000).onComplete(this.scrollover.bind(this)).start();

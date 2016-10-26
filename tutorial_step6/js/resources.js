@@ -14,18 +14,19 @@ game.resources = [
 	// our enemty entity
 	{name: "wheelie_right",       type:"image",	src: "data/img/sprite/wheelie_right.png"},
 	// game font
-	{name: "32x32_font",          type:"image",	src: "data/img/font/32x32_font.png"},
-	
-	/* 
-	 * Maps. 
+    { name: "PressStart2P",       type:"image", src: "data/fnt/PressStart2P.png" },
+    { name: "PressStart2P",       type:"binary", src: "data/fnt/PressStart2P.fnt"},
+
+	/*
+	 * Maps.
  	 */
 	{name: "area01",              type: "tmx",	src: "data/map/area01.tmx"}
 
-	/* 
-	 * Background music. 
-	 */	
-	
-	/* 
-	 * Sound effects. 
+	/*
+	 * Background music.
+	 */
+
+	/*
+	 * Sound effects.
 	 */
 ];
