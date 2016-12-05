@@ -13,22 +13,23 @@ game.resources = [
 	{name: "spinning_coin_gold",  type:"image",	src: "data/img/sprite/spinning_coin_gold.png"},
 	// our enemty entity
 	{name: "wheelie_right",       type:"image",	src: "data/img/sprite/wheelie_right.png"},
-	// game font
-	{name: "32x32_font",          type:"image",	src: "data/img/font/32x32_font.png"},
-	
-	/* 
-	 * Maps. 
+    // game font
+    { name: "PressStart2P",       type:"image", src: "data/fnt/PressStart2P.png" },
+    { name: "PressStart2P",       type:"binary", src: "data/fnt/PressStart2P.fnt"},
+
+	/*
+	 * Maps.
  	 */
 	{name: "area01",              type: "tmx",	src: "data/map/area01.tmx"},
 
 
-	/* 
-	 * Background music. 
-	 */	
+	/*
+	 * Background music.
+	 */
 	{name: "dst-inertexponent", type: "audio", src: "data/bgm/"},
-	
-	/* 
-	 * Sound effects. 
+
+	/*
+	 * Sound effects.
 	 */
 	{name: "cling", type: "audio", src: "data/sfx/"},
 	{name: "stomp", type: "audio", src: "data/sfx/"},

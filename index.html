@@ -790,7 +790,16 @@ onCollision : function (response, other) {
 
               <p>It's time to display some score when we collect those coins.</p>
 
-              <p>We will use a bitmap font <b>(data/img/font/32x32_font.png)</b> to display our score</p>
+              <p>We will use a bitmap font to display our score ! For the sake of convenience we are providing both the required bitmap and data information,
+                 but generating the required files by yourself is quite simple, just follow the small how-to <a href="https://github.com/melonjs/melonJS/wiki/How-to-generate-and-use-Bitmap-Font-in-melonJS">here</a> </p>
+
+              <p>Under the <b>`data\fnt`</b> folder you will find two files : a .PNG (the actual texture) and a .FNT (the font definition file), and the font example we provide is named "PressStart2P",
+                 we just need to add the following line to your existing assset lists to preload them :
+<pre><code>// game font
+{ name: "PressStart2P", type:"image", src: "data/fnt/PressStart2P.png" },
+{ name: "PressStart2P", type:"binary", src: "data/fnt/PressStart2P.fnt"},
+</code></pre>
+                be careful here, as the .FNT file type need to be set to binary.</p>
 
               <p>The boilerplate we used earlier already contains a HUD Skeleton that we will use as a base for our game. The skeleton is quite simple and consist of:</p>
               <ul>
@@ -821,8 +830,8 @@ game.HUD.Container = me.Container.extend({
     // give a name
     this.name = "HUD";
 
-    // add our child score object at the right-bottom position
-    this.addChild(new game.HUD.ScoreItem(630, 440));
+    // add our child score object
+    this.addChild(new game.HUD.ScoreItem(-10, -10));
   }
 });
 
@@ -834,12 +843,12 @@ game.HUD.ScoreItem = me.Renderable.extend({
    * constructor
    */
   init : function (x, y) {
-    // call the parent constructor
-    // (size does not matter here)
-    this._super(me.Renderable, 'init', [x, y, 10, 10]);
+      // call the parent constructor
+      // (size does not matter here)
+      this._super(me.Renderable, 'init', [x, y, 10, 10]);
 
-    // local copy of the global score
-    this.score = -1;
+      // local copy of the global score
+      this.score = -1;
   },
 
   /**
@@ -878,9 +887,12 @@ game.HUD.ScoreItem = me.Renderable.extend( {
     // (size does not matter here)
     this._super(me.Renderable, 'init', [x, y, 10, 10]);
 
-    // create a font
-    this.font = new me.BitmapFont("32x32_font", 32);
-    this.font.set("right");
+    // create the font object
+    this.font = new me.BitmapFont(me.loader.getBinary('PressStart2P'), me.loader.getImage('PressStart2P'));
+
+    // font alignment to right, bottom
+    this.font.textAlign = "right";
+    this.font.textBaseline = "bottom";
 
     // local copy of the global score
     this.score = -1;
@@ -903,7 +915,8 @@ game.HUD.ScoreItem = me.Renderable.extend( {
    * draw the score
    */
   draw : function (renderer) {
-    this.font.draw (renderer, game.data.score, this.pos.x, this.pos.y);
+        // this.pos.x, this.pos.y are the relative position from the screen right bottom
+		this.font.draw (renderer, game.data.score, me.game.viewport.width + this.pos.x, me.game.viewport.height + this.pos.y);
   }
 });
 </code></pre>
@@ -1158,15 +1171,14 @@ game.TitleScreen = me.ScreenObject.extend({
    */
   onResetEvent : function () {
     // title screen
-    var backgroundImage = new me.Sprite(
-      me.game.viewport.width / 2,
-      me.game.viewport.height / 2,
-      {
-        image: me.loader.getImage('title_screen'),
-      }
+    var backgroundImage = new me.Sprite(0, 0, {
+            image: me.loader.getImage('title_screen'),
+        }
     );
-    // scale to fit with the viewport size
-    backgroundImage.scale(me.game.viewport.width / backgroundImage.width, 1);
+
+    // position and scale to fit with the viewport size
+    backgroundImage.anchorPoint.set(0, 0);
+    backgroundImage.scale(me.game.viewport.width / backgroundImage.width, me.game.viewport.height / backgroundImage.height);
 
     // add to the world container
     me.game.world.addChild(backgroundImage, 1);
@@ -1178,7 +1190,7 @@ game.TitleScreen = me.ScreenObject.extend({
         this._super(me.Renderable, 'init', [0, 0, me.game.viewport.width, me.game.viewport.height]);
 
         // font for the scrolling text
-        this.font = new me.BitmapFont("32x32_font", 32);
+        this.font = new me.BitmapFont(me.loader.getBinary('PressStart2P'), me.loader.getImage('PressStart2P'));
 
         // a tween to animate the arrow
         this.scrollertween = new me.Tween(this).to({scrollerpos: -2200 }, 10000).onComplete(this.scrollover.bind(this)).start();
