@@ -114,7 +114,7 @@
               <p>Here's what my level looked like when I finished it : <img src="media/step1_tiled_level_design.png" alt="Tiled level design"/></p>
               <p>Finally, let's define a background color for our level, by using the color picker tool (Map/Map Properties), and just specify any color you prefer.</p>
               <img src="media/step1_background_color.png" alt= "Setting a background color in Tiled"/>
-              <p>To finish, let's save our new map as "area01" under the "data" folder. We are done with the first step!</p>
+              <p>To finish, let's save our new map as "area01" under the "/data/map/" folder (the Grunt task for building the resources.js file will check only this specific location for maps), and we are done with the first step!</p>
             </div>
           </div>
 
@@ -1116,7 +1116,7 @@ onCollision : function (response, other) {
 
               <p>You should know how to create a level now. However, here I will show you how to go to another level.</p>
 
-              <p>To do this, melonJS has an Object call <a href="http://melonjs.github.io/melonJS/docs/me.LevelEntity.html">me.LevelEntity</a>, that we will add in Tiled and specify what to do when our main player hit it :</p>
+              <p>To do this, melonJS has an Object named <a href="http://melonjs.github.io/melonJS/docs/me.LevelEntity.html">me.LevelEntity</a>, that we will add to the Entities layer in Tiled and specify what to do when our main player hit it :</p>
 
               <img src= "media/step8_next_level.png" alt="Creating an object to go to next level"/>
 
