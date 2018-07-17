@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" orientation="orthogonal" renderorder="right-down" width="40" height="15" tilewidth="32" tileheight="32" backgroundcolor="#66ccff">
- <tileset firstgid="1" name="area01_level_tiles" tilewidth="32" tileheight="32">
+<map version="1.0" tiledversion="1.1.5" orientation="orthogonal" renderorder="right-down" width="40" height="15" tilewidth="32" tileheight="32" infinite="0" backgroundcolor="#66ccff" nextobjectid="9">
+ <tileset firstgid="1" name="area01_level_tiles" tilewidth="32" tileheight="32" tilecount="140" columns="20">
   <image source="../img/map/area01_level_tiles.png" width="640" height="241"/>
  </tileset>
  <layer name="background" width="40" height="15">
@@ -9,10 +9,10 @@
   </data>
  </layer>
  <objectgroup color="#00ff00" name="Entities">
-  <object name="mainPlayer" x="128" y="224" width="32" height="64">
+  <object id="1" name="mainPlayer" x="128" y="224" width="48" height="64">
    <properties>
+    <property name="framewidth" type="int" value="64"/>
     <property name="image" value="gripe_run_right"/>
-    <property name="framewidth" value="64"/>
    </properties>
   </object>
  </objectgroup>
@@ -22,12 +22,12 @@
   </data>
  </layer>
  <objectgroup color="#ff0000" name="collision">
-  <object x="0" y="96" width="64" height="256"/>
-  <object x="64" y="288" width="128" height="64"/>
-  <object x="0" y="352" width="32" height="128"/>
-  <object x="32" y="416" width="256" height="64"/>
-  <object x="288" y="384" width="352" height="96"/>
-  <object x="640" y="416" width="608" height="64"/>
-  <object x="1248" y="0" width="32" height="480"/>
+  <object id="2" x="0" y="96" width="64" height="256"/>
+  <object id="3" x="64" y="288" width="128" height="64"/>
+  <object id="4" x="0" y="352" width="32" height="128"/>
+  <object id="5" x="32" y="416" width="256" height="64"/>
+  <object id="6" x="288" y="384" width="352" height="96"/>
+  <object id="7" x="640" y="416" width="608" height="64"/>
+  <object id="8" x="1248" y="0" width="32" height="480"/>
  </objectgroup>
 </map>

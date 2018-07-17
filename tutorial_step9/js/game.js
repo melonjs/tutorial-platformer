@@ -16,13 +16,6 @@ var game = {
             return;
         }
 
-        // add "#debug" to the URL to enable the debug Panel
-        if (me.game.HASH.debug === true) {
-            window.onReady(function () {
-                me.plugin.register.defer(this, me.debug.Panel, "debug", me.input.KEY.V);
-            });
-        }
-
         // Initialize the audio.
         me.audio.init("mp3,ogg");
 
@@ -51,7 +44,10 @@ var game = {
 		// enable the keyboard
 		me.input.bindKey(me.input.KEY.LEFT,		"left");
 		me.input.bindKey(me.input.KEY.RIGHT,	"right");
+		// map X, Up Arrow and Space for jump1
 		me.input.bindKey(me.input.KEY.X,		"jump", true);
+		me.input.bindKey(me.input.KEY.UP,		"jump", true);
+		me.input.bindKey(me.input.KEY.SPACE,	"jump", true);
 
         // Start the game.
         me.state.change(me.state.MENU);

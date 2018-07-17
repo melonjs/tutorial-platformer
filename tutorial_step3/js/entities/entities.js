@@ -1,89 +1,99 @@
 /**
  * Player Entity
  */
-game.PlayerEntity = me.Entity.extend({	
-  
+game.PlayerEntity = me.Sprite.extend({
+
     /**
      * constructor
      */
-	init:function (x, y, settings)
-	{
+	init:function (x, y, settings) {
+
 		// call the constructor
-		this._super(me.Entity, 'init', [x, y , settings]);
-		
-		// set the default horizontal & vertical speed (accel vector)
-		this.body.setVelocity(3, 15);
-        
+		this._super(me.Sprite, 'init', [x, y , settings]);
+
+        // define a basic walking animation (using all frames)
+        this.addAnimation("walk",  [0, 1, 2, 3, 4, 5, 6, 7]);
+        // define a standing animation (using the first frame)
+        this.addAnimation("stand",  [0]);
+        // set the standing animation as default
+        this.setCurrentAnimation("stand");
+
+
+        // add a physic body on this renderable
+        this.body = new me.Body(this);
+        this.body.addShape(new me.Rect(this.width / 4, 0, this.width / 2, this.height));
+        // enable physic collision (off by default for basic me.Renderable)
+        this.isKinematic = false;
+
+        // max walking & jumping speed
+        this.body.setMaxVelocity(3, 15);
+        this.body.setFriction(0.4, 0);
+
  		// set the display to follow our position on both axis
 		me.game.viewport.follow(this.pos, me.game.viewport.AXIS.BOTH);
 
 		// ensure the player is updated even when outside of the viewport
 		this.alwaysUpdate = true;
-        
-        // define a basic walking animation (using all frames)
-        this.renderable.addAnimation("walk",  [0, 1, 2, 3, 4, 5, 6, 7]);
-        // define a standing animation (using the first frame)
-        this.renderable.addAnimation("stand",  [0]);
-        // set the standing animation as default
-        this.renderable.setCurrentAnimation("stand");
-		
 	},
 
     /**
      * update the entity
      */
-	update : function (dt){
-			
+	update : function (dt) {
+
 		if (me.input.isKeyPressed('left'))
 		{
 			// flip the sprite on horizontal axis
-			this.renderable.flipX(true);
-			// update the entity velocity
-			this.body.vel.x -= this.body.accel.x * me.timer.tick;
+			this.flipX(true);
+			// update the default force
+			this.body.force.x = -this.body.maxVel.x;
             // change to the walking animation
-            if (!this.renderable.isCurrentAnimation("walk")) {
-                this.renderable.setCurrentAnimation("walk");
+            if (!this.isCurrentAnimation("walk")) {
+                this.setCurrentAnimation("walk");
             }
 		}
 		else if (me.input.isKeyPressed('right'))
 		{
 			// unflip the sprite
-			this.renderable.flipX(false);
+			this.flipX(false);
 			// update the entity velocity
-			this.body.vel.x += this.body.accel.x * me.timer.tick;
+			this.body.force.x = this.body.maxVel.x;
             // change to the walking animation
-            if (!this.renderable.isCurrentAnimation("walk")) {
-                this.renderable.setCurrentAnimation("walk");
+            if (!this.isCurrentAnimation("walk")) {
+                this.setCurrentAnimation("walk");
             }
 		}
 		else
 		{
-			this.body.vel.x = 0;
+			this.body.force.x = 0;
             // change to the standing animation
-            this.renderable.setCurrentAnimation("stand");
+            this.setCurrentAnimation("stand");
 		}
+
 		if (me.input.isKeyPressed('jump'))
-		{	
+		{
 			if (!this.body.jumping && !this.body.falling)
 			{
 				// set current vel to the maximum defined value
 				// gravity will then do the rest
-				this.body.vel.y = -this.body.maxVel.y * me.timer.tick;
-				// set the jumping flag
-				this.body.jumping = true;
+				this.body.force.y = -this.body.maxVel.y
 			}
 		}
-		
+        else
+        {
+            this.body.force.y = 0;
+        }
+
 		// apply physics to the body (this moves the entity)
 		this.body.update(dt);
 
         // handle collisions against other shapes
         me.collision.check(this);
-			 
+
         // return true if we moved or if the renderable was updated
-        return (this._super(me.Entity, 'update', [dt]) || this.body.vel.x !== 0 || this.body.vel.y !== 0);
+        return (this._super(me.Sprite, 'update', [dt]) || this.body.vel.x !== 0 || this.body.vel.y !== 0);
 	},
-    
+
    /**
      * colision handler
      */
@@ -91,6 +101,6 @@ game.PlayerEntity = me.Entity.extend({
         // Make all other objects solid
         return true;
     }
-    
+
 
 });

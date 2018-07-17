@@ -79,9 +79,9 @@
                     <li>a title screen background</li>
                   </ul>
                 </li>
-                <li>The melonJS <a href="http://www.melonjs.org/download.html"> library</a>, to be copied under the /lib directory (be sure to download both the minified and plain version, as the latter might potentially be required for debugging purpose)
+                <li><a href="https://github.com/melonjs/melonJS/releases"> melonJS library</a> 6.0.0 or higher, to be copied under the /lib directory (be sure to download both the minified and plain version, as the latter might potentially be required for debugging purpose)
                 </li>
-                <li>The melonJS <a href="http://www.melonjs.org/docs/index.html">documentation</a> for more details </li>
+                <li>The melonJS <a href="http://melonjs.github.io/melonJS/docs/">documentation</a> for more details </li>
               </ul>
               <p>
                <b>Testing/debugging :</b><br/>
@@ -184,24 +184,11 @@ var game = {
       return;
     }
 
-    // add "#debug" to the URL to enable the debug Panel
-    if (me.game.HASH.debug === true) {
-      window.onReady(function () {
-        me.plugin.register.defer(this, me.debug.Panel, "debug", me.input.KEY.V);
-      });
-    }
-
     // Initialize the audio.
     me.audio.init("mp3,ogg");
 
-    // Set a callback to run when loading is complete.
-    me.loader.onload = this.loaded.bind(this);
-
-    // Load the resources.
-    me.loader.preload(game.resources);
-
-    // Initialize melonJS and display a loading screen.
-    me.state.change(me.state.LOADING);
+    // set all ressources to be loaded
+    me.loader.preload(game.resources, this.loaded.bind(this));
   },
 
   // Run on game resources loaded.
@@ -396,7 +383,10 @@ loaded : function () {
   // enable the keyboard
   me.input.bindKey(me.input.KEY.LEFT,  "left");
   me.input.bindKey(me.input.KEY.RIGHT, "right");
-  me.input.bindKey(me.input.KEY.X,     "jump", true);
+  // map X, Up Arrow and Space for jump
+  me.input.bindKey(me.input.KEY.X,      "jump", true);
+  me.input.bindKey(me.input.KEY.UP,     "jump", true);
+  me.input.bindKey(me.input.KEY.SPACE,  "jump", true);
 
   // start the game
   me.state.change(me.state.PLAY);

@@ -9,11 +9,14 @@ Note that due to the 'cross-origin request' policy implemented in most browsers 
 
 Questions, need help ?
 -------------------------------------------------------------------------------
-If you need help, you can try the [melonJS developer forum](http://groups.google.com/group/melonjs), or in #melonjs on irc.freenode.net.
-For any other questions, feel free to send us an [email](mailto:contact@melonjs.org).
+If you need technical support, you can contact us through the following channels :
+* [melonJS developer forum](http://www.html5gamedevs.com/forum/32-melonjs/)
+* [gitter web chat](https://gitter.im/melonjs/public)
+* [melonJS wikipage](https://github.com/melonjs/melonJS/wiki)
 
+For any other non technical related questions, feel free to also send us an [email](mailto:contact@melonjs.org).
 
 -------------------------------------------------------------------------------
-Copyright (C) 2011 - 2015, Olivier Biot, Jason Oster, Aaron McLeod
+Copyright (C) 2011 - 2018 Olivier Biot
 
 melonJS is licensed under the [MIT License](http://www.opensource.org/licenses/mit-license.php)
