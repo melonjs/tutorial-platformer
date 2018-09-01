@@ -14,7 +14,7 @@ game.PlayerEntity = me.Entity.extend( {
         this.body.setFriction(0.4, 0);
 
         // set the display to follow our position on both axis
-        me.game.viewport.follow(this.pos, me.game.viewport.AXIS.BOTH);
+        me.game.viewport.follow(this.pos, me.game.viewport.AXIS.BOTH, 0.4);
 
         // ensure the player is updated even when outside of the viewport
         this.alwaysUpdate = true;
@@ -168,7 +168,7 @@ game.EnemyEntity = me.Sprite.extend(
     {
         // save the area size as defined in Tiled
         var width = settings.width;
-        
+
         // define this here instead of tiled
         settings.image = "wheelie_right";
 
