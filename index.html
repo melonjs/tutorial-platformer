@@ -87,7 +87,7 @@
                <b>Testing/debugging :</b><br/>
                 If you just want to use the filesystem, the problem is you'll run into "cross-origin request" security errors. With Chrome, you need to use the "--disable-web-security" parameter or better "--allow-file-access-from-files" when launching the browser. This must be done in order to test any local content, else the browser will complain when trying to load assets through XHR. <strong>Though this method is not recommended, </strong> since as long as you have the option enabled, you're adding security vulnerabilities to your environmnet.
               </p>
-               <p> A second and easier option is to use a local web server, as for example detailed in the melonJS <a href="https://github.com/melonjs/boilerplate">boilerplate</a> README, by using the <b>grunt serve</b> tool, and that will allow you to test your game in your browser using the <a href="http://localhost:8000">http://localhost:8000</a> url.</p>
+               <p> A second and easier option is to use a local web server, as for example detailed in the melonJS <a href="https://github.com/melonjs/boilerplate">boilerplate</a> README, by using the <b>npm run serve</b> tool, and that will allow you to test your game in your browser using the <a href="http://localhost:8000">http://localhost:8000</a> url.</p>
                <p class="c1">Additional Credits :</p>
 
               <ul>
@@ -114,7 +114,7 @@
               <p>Here's what my level looked like when I finished it : <img src="media/step1_tiled_level_design.png" alt="Tiled level design"/></p>
               <p>Finally, let's define a background color for our level, by using the color picker tool (Map/Map Properties), and just specify any color you prefer.</p>
               <img src="media/step1_background_color.png" alt= "Setting a background color in Tiled"/>
-              <p>To finish, let's save our new map as "area01" under the "/data/map/" folder (the Grunt task for building the resources.js file will check only this specific location for maps), and we are done with the first step!</p>
+              <p>To finish, let's save our new map as "area01" under the "/data/map/" folder (the <b>npm run build</b> task for building the resources.js file will check only this specific location for maps), and we are done with the first step!</p>
             </div>
           </div>
 
@@ -210,7 +210,7 @@ var game = {
               <p>The only change we will do in the default project template is the given video resolution for the `me.video.init()` function, as for the tutorial we will create a 640x480 canvas.
               Also we will change the <b>scaleMethod</b> to <b>"flex-width"</b>, as it better fits with a platformer game (see the <a href="http://melonjs.github.io/melonJS/docs/me.video.html#init">`me.video.init`</a> documentation for further information on the various scaling mode available).</p>
 
-              <p>The boilerplate automatically builds the resources list and exposes it to your app as <b>game.resources</b> (build/js/resources.js) when using the <b>grunt serve</b> task.</p>
+              <p>The boilerplate automatically builds the resources list and exposes it to your app as <b>game.resources</b> (build/js/resources.js) when using the <b>npm run serve</b> task.</p>
 
               <p><b>WARNING:</b> If you are not using the boilerplate, you will have to manage the resources.js manually (it is time-consuming, and error-prone). If managing resources.js manually, you can see an <a href="https://github.com/melonjs/tutorial-platformer/blob/gh-pages/tutorial_step9/js/resources.js">example on the git repo</a>.</p>
 
