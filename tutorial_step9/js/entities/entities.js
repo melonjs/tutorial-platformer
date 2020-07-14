@@ -38,7 +38,7 @@ game.PlayerEntity = me.Entity.extend({
             // flip the sprite on horizontal axis
             this.renderable.flipX(true);
             // update the entity velocity
-            this.body.vel.x -= this.body.accel.x * me.timer.tick;
+            this.body.vel.x -= this.body.accel.x;
             // change to the walking animation
             if (!this.renderable.isCurrentAnimation("walk")) {
                 this.renderable.setCurrentAnimation("walk");
@@ -49,7 +49,7 @@ game.PlayerEntity = me.Entity.extend({
             // unflip the sprite
             this.renderable.flipX(false);
             // update the entity velocity
-            this.body.vel.x += this.body.accel.x * me.timer.tick;
+            this.body.vel.x += this.body.accel.x;
             // change to the walking animation
             if (!this.renderable.isCurrentAnimation("walk")) {
                 this.renderable.setCurrentAnimation("walk");
@@ -67,9 +67,8 @@ game.PlayerEntity = me.Entity.extend({
             {
                 // set current vel to the maximum defined value
                 // gravity will then do the rest
-                this.body.vel.y = -this.body.maxVel.y * me.timer.tick;
-                // set the jumping flag
-                this.body.jumping = true;
+                this.body.vel.y = -this.body.maxVel.y;
+
                 // play some audio
                 me.audio.play("jump");
             }
@@ -111,12 +110,9 @@ game.PlayerEntity = me.Entity.extend({
                 break;
 
             case me.collision.types.ENEMY_OBJECT:
-                if ((response.overlapV.y>0) && !this.body.jumping) {
+                if ((response.overlapV.y>0) && this.body.falling) {
                     // bounce (force jump)
-                    this.body.falling = false;
-                    this.body.vel.y = -this.body.maxVel.y * me.timer.tick;
-                    // set the jumping flag
-                    this.body.jumping = true;
+                    this.body.vel.y = -this.body.maxVel.y;
                     // play some audio
                     me.audio.play("stomp");
                 }

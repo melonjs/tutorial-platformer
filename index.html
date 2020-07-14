@@ -690,10 +690,7 @@ update : function (dt) {
     if (!this.body.jumping &amp;&amp; !this.body.falling) {
       // set current vel to the maximum defined value
       // gravity will then do the rest
-      this.body.vel.y = -this.body.maxVel.y * me.timer.tick;
-
-      // set the jumping flag
-      this.body.jumping = true;
+      this.body.vel.y = -this.body.maxVel.y;
     }
   }
 
@@ -741,13 +738,9 @@ onCollision : function (response, other) {
       break;
 
     case me.collision.types.ENEMY_OBJECT:
-      if ((response.overlapV.y>0) &amp;&amp; !this.body.jumping) {
+      if ((response.overlapV.y>0) &amp;&amp; this.body.falling) {
         // bounce (force jump)
-        this.body.falling = false;
-        this.body.vel.y = -this.body.maxVel.y * me.timer.tick;
-
-        // set the jumping flag
-        this.body.jumping = true;
+        this.body.vel.y = -this.body.maxVel.y;
       }
       else {
         // let's flicker in case we touched an enemy
@@ -1023,10 +1016,7 @@ me.audio.init("mp3,ogg");
   if (!this.body.jumping &amp;&amp; !this.body.falling) {
     // set current vel to the maximum defined value
     // gravity will then do the rest
-    this.body.vel.y = -this.body.maxVel.y * me.timer.tick;
-
-    // set the jumping flag
-    this.body.jumping = true;
+    this.body.vel.y = -this.body.maxVel.y;
 
     // play some audio
     me.audio.play("jump");
@@ -1046,13 +1036,9 @@ onCollision : function (response, other) {
       // ...
 
       case me.collision.types.ENEMY_OBJECT:
-        if ((response.overlapV.y>0) &amp;&amp; !this.body.jumping) {
+        if ((response.overlapV.y>0) &amp;&amp; this.body.falling) {
           // bounce (force jump)
-          this.body.falling = false;
-          this.body.vel.y = -this.body.maxVel.y * me.timer.tick;
-
-          // set the jumping flag
-          this.body.jumping = true;
+          this.body.vel.y = -this.body.maxVel.y;
 
           // play some audio
           me.audio.play("stomp");

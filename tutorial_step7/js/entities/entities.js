@@ -68,7 +68,7 @@ game.PlayerEntity = me.Entity.extend({
  			{
  				// set current vel to the maximum defined value
  				// gravity will then do the rest
- 				this.body.force.y = -this.body.maxVel.y
+ 				this.body.force.y = -this.body.maxVel.y;
                 // play some audio
                 me.audio.play("jump");
  			}
@@ -114,12 +114,9 @@ game.PlayerEntity = me.Entity.extend({
                 break;
 
             case me.collision.types.ENEMY_OBJECT:
-                if ((response.overlapV.y>0) && !this.body.jumping) {
+                if ((response.overlapV.y>0) && this.body.falling) {
                     // bounce (force jump)
-                    this.body.falling = false;
                     this.body.vel.y = -this.body.maxVel.y * me.timer.tick;
-                    // set the jumping flag
-                    this.body.jumping = true;
                     // play some audio
                     me.audio.play("stomp");
                 }
