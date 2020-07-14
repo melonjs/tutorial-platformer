@@ -1,19 +1,19 @@
-game.TitleScreen = me.ScreenObject.extend({
+game.TitleScreen = me.Stage.extend({
 
     /**
      *  action to perform on state change
      */
     onResetEvent : function() {
 
-        // title screen
-        var backgroundImage = new me.Sprite(0, 0, {
+        // new sprite for the title screen, position at the center of the game viewport
+        var backgroundImage = new me.Sprite(me.game.viewport.width / 2, me.game.viewport.height / 2, {
                image: me.loader.getImage('title_screen'),
             }
         );
 
-        // position and scale to fit with the viewport size
-        backgroundImage.anchorPoint.set(0, 0);
+        // scale to fit with the viewport size
         backgroundImage.scale(me.game.viewport.width / backgroundImage.width, me.game.viewport.height / backgroundImage.height);
+
         // add to the world container
         me.game.world.addChild(backgroundImage, 1);
 
@@ -25,7 +25,7 @@ game.TitleScreen = me.ScreenObject.extend({
                 this._super(me.Renderable, 'init', [0, 0, me.game.viewport.width, me.game.viewport.height]);
 
                 // font for the scrolling text
-                this.font = new me.BitmapFont(me.loader.getBinary('PressStart2P'), me.loader.getImage('PressStart2P'));
+                this.font = new me.BitmapText(0, 0, {font: "PressStart2P"});
 
                 this.scroller = "A SMALL STEP BY STEP TUTORIAL FOR GAME CREATION WITH MELONJS       ";
                 this.scrollerpos = 600;
@@ -47,7 +47,7 @@ game.TitleScreen = me.ScreenObject.extend({
 
             draw : function (renderer) {
                 this.font.textAlign = "center";
-                this.font.draw(renderer, "PRESS ENTER TO PLAY", me.game.viewport.width / 2, 240);
+                this.font.draw(renderer, "PRESS ENTER TO PLAY", me.game.viewport.width, 540);
                 this.font.textAlign = "left";
                 this.font.draw(renderer, this.scroller, this.scrollerpos, 440);
             },

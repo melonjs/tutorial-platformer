@@ -72,14 +72,12 @@
                 <li>
                   The tutorial <a href="tutorial_data.zip">data files</a>, to be uncompressed into the (here above) template data directory, and which contains the following :
                   <ul>
-                    <li>a level tileset</li>
-                    <li>two backgrounds for parallax layers</li>
-                    <li>some basic spritesheets </li>
-                    <li>some audio sfx and music</li>
-                    <li>a title screen background</li>
+                    <li>a level tileset (area01_level_tiles.png)</li>
+                    <li>two backgrounds for parallax layers (background.png & clouds.png)</li>
+                    <li>some basic spritesheets (player & enemey animation spritesheet, spinning coin)</li>
+                    <li>some audio sfx and music (in both mp3 and ogg format)</li>
+                    <li>a title screen background (title_screen.png)</li>
                   </ul>
-                </li>
-                <li><a href="https://github.com/melonjs/melonJS/releases"> melonJS library</a> 6.0.0 or higher, to be copied under the /lib directory (be sure to download both the minified and plain version, as the latter might potentially be required for debugging purpose)
                 </li>
                 <li>The melonJS <a href="http://melonjs.github.io/melonJS/docs/">documentation</a> for more details </li>
               </ul>
@@ -142,8 +140,8 @@ data/
      gripe_run_right.png
      spinning_coin_gold.png
      wheelie_right.png
-    area01_bkg0.png
-    area01_bkg1.png
+    background.png
+    clouds.png
    map/
    sfx/
     cling.mp3
@@ -205,7 +203,7 @@ var game = {
 };
 </code></pre>
 
-              <p>This is very simple. Once the page is loaded, the <b>onload()</b> function is called, the display and audio is initialized, and all game resources begin loading. We also define a callback to be called when everything is ready to be used. Within the callback, we define a new state that will be used for the in game stuff, together with a <a href="http://melonjs.github.io/melonJS/docs/me.ScreenObject.html"> <b>PlayScreen</b> object</a> that we will use to manage the game event (reset, etc...).</p>
+              <p>This is very simple. Once the page is loaded, the <b>onload()</b> function is called, the display and audio is initialized, and all game resources begin loading. We also define a callback to be called when everything is ready to be used. Within the callback, we define a new state that will be used for the in game stuff, together with a <a href="http://melonjs.github.io/melonJS/docs/me.Stage.html"> <b>PlayScreen</b> object</a> that we will use to manage the game event (reset, etc...).</p>
 
               <p>The only change we will do in the default project template is the given video resolution for the `me.video.init()` function, as for the tutorial we will create a 640x480 canvas.
               Also we will change the <b>scaleMethod</b> to <b>"flex-width"</b>, as it better fits with a platformer game (see the <a href="http://melonjs.github.io/melonJS/docs/me.video.html#init">`me.video.init`</a> documentation for further information on the various scaling mode available).</p>
@@ -216,9 +214,9 @@ var game = {
 
               <p>Also note that although we use here directly the tmx file, for production we do recommend using the json format (that can also be exported directly from Tiled), as it gives a smaller file size, allows for much faster level loading and prevents from any server issue with the .tmx extension. </p>
 
-              <p>Finally, let's open the js/screens/play.js file and in the <a href="http://melonjs.github.io/melonJS/docs/me.ScreenObject.html#onResetEvent">onResetEvent()</a> function (which is called on a state change), we ask the <a href="http://melonjs.github.io/melonJS/docs/me.levelDirector.html">level director</a> to display our previously preloaded level, by adding a call to the <b>loadLevel</b> function and our default level name :</p>
+              <p>Finally, let's open the js/screens/play.js file and in the <a href="http://melonjs.github.io/melonJS/docs/me.Stage.html#onResetEvent">onResetEvent()</a> function (which is called on a state change), we ask the <a href="http://melonjs.github.io/melonJS/docs/me.levelDirector.html">level director</a> to display our previously preloaded level, by adding a call to the <b>loadLevel</b> function and our default level name :</p>
 
-<pre><code>game.PlayScreen = me.ScreenObject.extend({
+<pre><code>game.PlayScreen = me.Stage.extend({
   /**
    * action to perform on state change
    */
@@ -249,7 +247,7 @@ var game = {
               <h3>Try it out</h3>
 
               <p>(click on the image to see it running in your browser), you should see something like this</p>
-              <a href="./tutorial_step2/index.html"><img src="media/tutorial_step2.png" alt="Step 2 results"/></a>
+              <a href="./tutorial_step2/index.html" target="_blank"><img src="media/tutorial_step2.png" alt="Step 2 results"/></a>
               <p>Yes, nothing fancy yet, but that's only the beginning!</p>
 
               <p>Also in case you didn't notice, since we defined a 640x480 display in our application, we only see a part of the map (the half of it to be exact), which is normal. <b>melonJS</b> automatically creates a corresponding viewport, and we will be able to navigate through the map in the next step, when we will add a "main player"</p>
@@ -430,7 +428,7 @@ loaded : function () {
 
               <p> Save everything, and if you now re-open your index.html, you should see something like this: (click on the image to see it running in your browser)</p>
 
-              <a href="./tutorial_step3/index.html"><img src="media/tutorial_step3.png" alt="Step 3 Results"/></a>
+              <a href="./tutorial_step3/index.html" target="_blank"><img src="media/tutorial_step3.png" alt="Step 3 Results"/></a>
 
               <p>You will also notice that the display is automatically following our player, scrolling the environment.</p>
 
@@ -458,19 +456,19 @@ loaded : function () {
 
               <p>Then we will use the two following backgrounds:</p>
 
-              <p><b>/data/img/area01_bkg0.png</b> for the first background layer</p>
-              <img src="media/area01_bkg0.png" alt="Parallax background 1"/>
+              <p><b>/data/img/background.png</b> for the first background layer</p>
+              <img src="media/background.png" alt="Parallax background 1"/>
 
-              <p><b>/data/img/area01_bkg1.png</b> for the second background layer</p>
-              <img src="media/area01_bkg1.png" alt="Parallax background 2"/>
+              <p><b>/data/img/clouds.png</b> for the second background layer</p>
+              <img src="media/clouds.png" alt="Parallax background 2"/>
 
               <p>Open Tiled, and add two new <a href="http://melonjs.github.io/melonJS/docs/me.ImageLayer.html"> <b>Image Layers</b></a>, name them to whatever you like and make sure to adjust correctly the layer order (the display order being from bottom to top) </p>
               <img src="media/step4_layer.png" alt="Layering parallax layers"/>
 
               <p>Now right-click the layers to define their properties and set the following property : </p>
               <ul>
-                <li>Click the <b>browse</b> button and select the <b>area01_bkg0</b> image for the first layer (<b>Parallax_layer1</b> on the picture)</li>
-                <li>Do this again for the second layer (Parallax_layer2)</li>
+                <li>Click the <b>browse</b> button and select the <b>background.png</b> image for the first layer (<b>Parallax_layer1</b> on the picture)</li>
+                <li>Do this again for the second layer (Parallax_layer2) with the <b>clouds.png</b> image</li>
               </ul>
 
               <img src="media/step4_Imagelayer_property.png" alt="Configuring Image Layer properties"/>
@@ -482,7 +480,7 @@ loaded : function () {
               <h3>Try it out</h3>
 
               <p>"Et voila!". If you now open your index.html, you should see:</p>
-              <a href="./tutorial_step4/index.html"><img src="media/tutorial_step4.png" alt=
+              <a href="./tutorial_step4/index.html" target="_blank"><img src="media/tutorial_step4.png" alt=
               "Step 4 results"/></a>
 
               <p>Play around with your player, and enjoy the view :)</p>
@@ -771,7 +769,7 @@ onCollision : function (response, other) {
               <h3>Try it out</h3>
 
               <p>And this is what you should get (note that I completed the level a little bit, adding platforms, etc...):</p>
-              <a href="./tutorial_step5/index.html"><img src="media/tutorial_step5.png" alt="Step 5 results"/></a>
+              <a href="./tutorial_step5/index.html" target="_blank"><img src="media/tutorial_step5.png" alt="Step 5 results"/></a>
 
               <p>Try to collect your coins, avoid the enemy or jump on it!</p>
             </div>
@@ -883,7 +881,7 @@ game.HUD.ScoreItem = me.Renderable.extend( {
     this._super(me.Renderable, 'init', [x, y, 10, 10]);
 
     // create the font object
-    this.font = new me.BitmapFont(me.loader.getBinary('PressStart2P'), me.loader.getImage('PressStart2P'));
+    this.font = new me.BitmapText(0, 0, {font: "PressStart2P"});
 
     // font alignment to right, bottom
     this.font.textAlign = "right";
@@ -922,7 +920,7 @@ game.HUD.ScoreItem = me.Renderable.extend( {
       (through the <a href="https://melonjs.github.io/melonJS/docs/me.Container.html#autoDepth">autoDepth</a> feature) this will ensure that the HUD is correctly displayed on top of the rest.
    </p>
 
-<pre><code>game.PlayScreen = me.ScreenObject.extend({
+<pre><code>game.PlayScreen = me.Stage.extend({
   /**
    * action to perform on state change
    */
@@ -969,7 +967,7 @@ game.HUD.ScoreItem = me.Renderable.extend( {
               <h3>Try it out</h3>
 
               <p>We can now check the result, and we should now have our score displayed in the bottom-right corner of the screen:</p>
-              <a href="./tutorial_step6/index.html"><img src="media/tutorial_step6.png" alt="Step 6 results"/></a>
+              <a href="./tutorial_step6/index.html" target="_blank"><img src="media/tutorial_step6.png" alt="Step 6 results"/></a>
             </div>
           </div><!-- end part 6 -->
 
@@ -1117,7 +1115,7 @@ onCollision : function (response, other) {
 
               <p>Assuming that our new level is called "area02", we just need to add a <b>"to"</b> property with <b>"area02"</b> for the value. So that when our player will hit the Object, the engine will automatically load the "area02" level.<br/> Optionally we can also ask the engine to add a fadeOut/fadeIn effect when changing level by adding the <b>"fade" color</b> and <b>"duration" (in ms)</b> properties (as in the image)</p>
 
-              <p>click <a href="./tutorial_step8/index.html">here</a> to see the final result.</p>
+              <p>click <a href="./tutorial_step8/index.html" target="_blank">here</a> to see the final result.</p>
             </div>
           </div> <!-- end part 8 -->
 
@@ -1133,12 +1131,12 @@ onCollision : function (response, other) {
 
               <p>and on top of it we will add some message, and wait for the user input to start the game!</p>
 
-              <p>First let's declare a new Object, extending <a href="http://melonjs.github.io/melonJS/docs/me.ScreenObject.html">me.ScreenObject</a>:</p>
+              <p>First let's declare a new Object, extending <a href="http://melonjs.github.io/melonJS/docs/me.Stage.html">me.Stage</a>:</p>
 
 <pre><code>/**
  * A title screen
  */
-game.TitleScreen = me.ScreenObject.extend({
+game.TitleScreen = me.Stage.extend({
   // reset function
   onResetEvent : function () {
     // ...
@@ -1160,59 +1158,60 @@ game.TitleScreen = me.ScreenObject.extend({
 
               <p>Additionally, I also want to add a small scrolling text about this tutorial.</p>
 
-<pre><code>game.TitleScreen = me.ScreenObject.extend({
+<pre><code>game.TitleScreen = me.Stage.extend({
   /**
    * action to perform on state change
    */
   onResetEvent : function () {
-    // title screen
-    var backgroundImage = new me.Sprite(0, 0, {
-            image: me.loader.getImage('title_screen'),
-        }
-    );
 
-    // position and scale to fit with the viewport size
-    backgroundImage.anchorPoint.set(0, 0);
-    backgroundImage.scale(me.game.viewport.width / backgroundImage.width, me.game.viewport.height / backgroundImage.height);
+      // new sprite for the title screen, position at the center of the game viewport
+      var backgroundImage = new me.Sprite(me.game.viewport.width / 2, me.game.viewport.height / 2, {
+             image: me.loader.getImage('title_screen'),
+          }
+      );
 
-    // add to the world container
-    me.game.world.addChild(backgroundImage, 1);
+      // scale to fit with the viewport size
+      backgroundImage.scale(me.game.viewport.width / backgroundImage.width, me.game.viewport.height / backgroundImage.height);
 
-    // add a new renderable component with the scrolling text
+      // add to the world container
+      me.game.world.addChild(backgroundImage, 1);
+
     me.game.world.addChild(new (me.Renderable.extend ({
-      // constructor
-      init : function () {
-        this._super(me.Renderable, 'init', [0, 0, me.game.viewport.width, me.game.viewport.height]);
+        // constructor
+        init : function() {
+            this._super(me.Renderable, 'init', [0, 0, me.game.viewport.width, me.game.viewport.height]);
 
-        // font for the scrolling text
-        this.font = new me.BitmapFont(me.loader.getBinary('PressStart2P'), me.loader.getImage('PressStart2P'));
+            // font for the scrolling text
+            this.font = new me.BitmapText(0, 0, {font: "PressStart2P"});
 
-        // a tween to animate the arrow
-        this.scrollertween = new me.Tween(this).to({scrollerpos: -2200 }, 10000).onComplete(this.scrollover.bind(this)).start();
+            this.scroller = "A SMALL STEP BY STEP TUTORIAL FOR GAME CREATION WITH MELONJS       ";
+            this.scrollerpos = 600;
 
-        this.scroller = "A SMALL STEP BY STEP TUTORIAL FOR GAME CREATION WITH MELONJS       ";
-        this.scrollerpos = 600;
-      },
+             // a tween to animate the arrow
+            this.scrollertween = new me.Tween(this).to({scrollerpos: -2200 }, 10000).onComplete(this.scrollover.bind(this)).start();
+        },
 
-      // some callback for the tween objects
-      scrollover : function () {
-        // reset to default value
-        this.scrollerpos = 640;
-        this.scrollertween.to({scrollerpos: -2200 }, 10000).onComplete(this.scrollover.bind(this)).start();
-      },
+        // some callback for the tween objects
+        scrollover : function() {
+            // reset to default value
+            this.scrollerpos = 640;
+            this.scrollertween.to({scrollerpos: -2200 }, 10000).onComplete(this.scrollover.bind(this)).start();
+        },
 
-      update : function (dt) {
-        return true;
-      },
+        update : function (dt) {
+            return true;
+        },
 
-      draw : function (renderer) {
-        this.font.draw(renderer, "PRESS ENTER TO PLAY", 20, 240);
-        this.font.draw(renderer, this.scroller, this.scrollerpos, 440);
-      },
-      onDestroyEvent : function () {
-        //just in case
-        this.scrollertween.stop();
-      }
+        draw : function (renderer) {
+            this.font.textAlign = "center";
+            this.font.draw(renderer, "PRESS ENTER TO PLAY", me.game.viewport.width, 540);
+            this.font.textAlign = "left";
+            this.font.draw(renderer, this.scroller, this.scrollerpos, 440);
+        },
+        onDestroyEvent : function() {
+            //just in case
+            this.scrollertween.stop();
+        }
     })), 2);
 
     // change to play state on press Enter or click/tap
@@ -1241,7 +1240,7 @@ game.TitleScreen = me.ScreenObject.extend({
 
               <p>What do we have above?</p>
               <ol>
-                <li>1) In the onResetEvent function, we create two renderables components and add them to our game world. The first is a basic Sprite object that will display our title background image, and the second handles the "press ENTER" message and a scroller based on a Tween object. Note: Concerning the font, if you check carefully the corresponding asset (32x32_font.png), you will notice that it only contains uppercase letters, so be sure as well to only use uppercase letter in your text. </li>
+                <li>1) In the onResetEvent function, we create two renderables components and add them to our game world. The first is a Sprite object that will display our title background image, and the second handles the "press ENTER" message and a scroller based on a Tween object. Note: Concerning the font, if you check carefully the corresponding asset (32x32_font.png), you will notice that it only contains uppercase letters, so be sure as well to only use uppercase letter in your text. </li>
 
                 <li>2) We also register to key event, or mouse/tap event to automatically switch to the PLAY state if pressed.</li>
                 <li>3) On destroy, we unbind the key and pointer events.</li>
@@ -1283,7 +1282,7 @@ loaded : function () {
 
               <p>Congratulations! You reached the end of this tutorial, time to test it, and you should have something like this:</p>
 
-              <a href="./tutorial_step9/index.html"><img src="media/tutorial_step9.png" alt="Your completed game"/></a>
+              <a href="./tutorial_step9/index.html" target="_blank"><img src="media/tutorial_step9.png" alt="Your completed game"/></a>
             </div>
           </div> <!-- end part 9 -->
 

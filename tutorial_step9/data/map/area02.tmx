@@ -3,14 +3,14 @@
  <tileset firstgid="1" name="area01_level_tiles" tilewidth="32" tileheight="32" tilecount="140" columns="20">
   <image source="../img/map/area01_level_tiles.png" width="640" height="241"/>
  </tileset>
- <imagelayer name="Parallax1">
-  <image source="../img/area01_bkg0.png" width="640" height="480"/>
+ <imagelayer name="parallax1">
+  <image source="../img/background.png"/>
   <properties>
    <property name="ratio" value="0.25"/>
   </properties>
  </imagelayer>
- <imagelayer name="Parallax2">
-  <image source="../img/area01_bkg1.png" width="327" height="480"/>
+ <imagelayer name="parallax2">
+  <image source="../img/clouds.png"/>
   <properties>
    <property name="ratio" value="0.35"/>
   </properties>

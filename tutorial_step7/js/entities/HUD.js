@@ -42,7 +42,7 @@ game.HUD.ScoreItem = me.Renderable.extend( {
 		this._super(me.Renderable, 'init', [x, y, 10, 10]);
 
 		// create the font object
-		this.font = new me.BitmapFont(me.loader.getBinary('PressStart2P'), me.loader.getImage('PressStart2P'));
+		this.font = new me.BitmapText(0, 0, {font: "PressStart2P"});
 
         // font alignment to right, bottom
         this.font.textAlign = "right";
@@ -69,7 +69,7 @@ game.HUD.ScoreItem = me.Renderable.extend( {
 	 * draw the score
 	 */
 	draw : function (renderer) {
-		this.font.draw (renderer, game.data.score, me.game.viewport.width + this.pos.x, me.game.viewport.height + this.pos.y);
+		this.font.draw(renderer, game.data.score, me.game.viewport.width + this.pos.x, me.game.viewport.height + this.pos.y);
 	}
 
 });
