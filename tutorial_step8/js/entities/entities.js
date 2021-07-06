@@ -248,7 +248,7 @@ game.CoinEntity = me.CollectableEntity.extend(
              // res.y >0 means touched by something on the bottom
              // which mean at top position for this one
              if (this.alive && (response.overlapV.y > 0) && response.a.body.falling) {
-                 this.renderable.flicker(750);
+                 this.flicker(750);
              }
              return false;
          }

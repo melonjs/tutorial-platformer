@@ -619,7 +619,7 @@ game.CoinEntity = me.CollectableEntity.extend({
              // res.y >0 means touched by something on the bottom
              // which mean at top position for this one
              if (this.alive && (response.overlapV.y > 0) && response.a.body.falling) {
-                 this.renderable.flicker(750);
+                 this.flicker(750);
              }
              return false;
          }
@@ -632,7 +632,7 @@ game.CoinEntity = me.CollectableEntity.extend({
               <p>As you can see here, I specified the <b>settings.image</b> and <b>settings.framewidth</b> properties in the constructor directly, meaning that in Tiled, I won't have to add these properties to my Object (Once again, it's up to you to decide how to use it).</p>
               <p>Also, I am using the <b>width</b> property given by Tiled to specify a path on which this enemy will run. Finally, in the onCollision method, I make the enemy flicker if something is jumping on top of it.</p>
 
-              <p>Note that an Object Entity drawable component (either a single sprite of animation) is accessible through the Entity `renderable` property, which explains here why we do here the following : `this.renderable.flicker(750);`</p>
+              <p>Note. This me.Sprite extends me.Renderable class, so you can use the <b>this.flicker(750)</b> method directly.</p>
 
               <p>Then again, we add these new objects in the Object Pool</p>
 
