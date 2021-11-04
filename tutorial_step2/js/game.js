@@ -1,16 +1,25 @@
+import * as me from '/node_modules/melonjs/dist/melonjs.module.js'
+
+import TitleScreen from './screens/title.js'
+import PlayScreen from './screens/play.js'
+
+import PlayerEntity from "./entities/entities.js";
+
+import resources from './resources.js'
+
 
 /* Game namespace */
-var game = {
+let game = {
 
 	// an object where to store game information
-	data : {
+	data: {
 		// score
 		score : 0
 	},
 
 
     // Run on page load.
-    "onload" : function () {
+    onload() {
         // Initialize the video.
         if (!me.video.init(640, 480, {parent : "screen", scale : "auto", scaleMethod : "flex-width"})) {
             alert("Your browser does not support HTML5 canvas.");
@@ -21,10 +30,10 @@ var game = {
         me.audio.init("mp3,ogg");
 
         // Set a callback to run when loading is complete.
-        me.loader.onload = this.loaded.bind(this);
+        me.loader.onload = game.loaded.bind(this);
 
         // Load the resources.
-        me.loader.preload(game.resources);
+        me.loader.preload( resources );
 
         // Initialize melonJS and display a loading screen.
         me.state.change(me.state.LOADING);
@@ -33,14 +42,17 @@ var game = {
 
 
     // Run on game resources loaded.
-    "loaded" : function () {
-        me.state.set(me.state.MENU, new game.TitleScreen());
-        me.state.set(me.state.PLAY, new game.PlayScreen());
+    loaded() {
+        me.state.set(me.state.MENU, new TitleScreen());
+        me.state.set(me.state.PLAY, new PlayScreen());
 
 		// add our player entity in the entity pool
-		me.pool.register("mainPlayer", game.PlayerEntity);
+		me.pool.register("mainPlayer", PlayerEntity);
 
         // Start the game.
         me.state.change(me.state.PLAY);
     }
 };
+
+// here's where the magic starts
+me.device.onReady( game.onload );

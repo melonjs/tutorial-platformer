@@ -1,4 +1,4 @@
-game.resources = [
+export default [
 	/**
 	 * Graphics.
 	 */

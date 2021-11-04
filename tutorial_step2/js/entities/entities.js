@@ -1,37 +1,38 @@
+import * as me from '/node_modules/melonjs/dist/melonjs.module.js'
+
 /**
  * Player Entity
  */
-game.PlayerEntity = me.Entity.extend({    
-  
+
+
+
+export default class PlayerEntity extends me.Entity {
     /**
-     * constructor
+     *
+     * @param x
+     * @param y
+     * @param settings
      */
-    init:function (x, y, settings) {
-        // call the constructor
-        this._super(me.Entity, 'init', [x, y , settings]);
-    },
+    constructor(x, y, settings) {
+        super(x, y, settings);
+    }
 
     /**
-     * update the entity
+     * Update the Entity
+     *
+     * @param dt
+     * @returns {any|boolean}
      */
-    update : function (dt) {
-        
-        // apply physics to the body (this moves the entity)
-        this.body.update(dt);
+    update(dt) {
+        return (super.update(dt) || this.body.vel.x !== 0 || this.body.vel.y !== 0);
+    }
 
-        // handle collisions against other shapes
-        me.collision.check(this);
-             
-        // return true if we moved or if the renderable was updated
-        return (this._super(me.Entity, 'update', [dt]) || this.body.vel.x !== 0 || this.body.vel.y !== 0);
-    },
-    
-   /**
-     * colision handler
-     * (called when colliding with other objects)
+    /**
+     * Collision Handler
+     *
+     * @returns {boolean}
      */
-    onCollision : function (response, other) {
-        // Make all other objects solid
+    onCollision() {
         return true;
     }
-});
+}
