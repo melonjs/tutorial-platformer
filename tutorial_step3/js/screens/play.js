@@ -1,27 +1,33 @@
-game.PlayScreen = me.Stage.extend({
+import * as me from '/node_modules/melonjs/dist/melonjs.module.js'
+
+import HUD from '../entities/HUD.js'
+import data from '../data.js'
+
+export default class PlayScreen extends me.Stage {
+
 	/**
 	 *  action to perform on state change
 	 */
-	onResetEvent: function() {
+	onResetEvent() {
 
 		// load a level
-		me.levelDirector.loadLevel("area01");
+		me.level.load("area01");
 
 		// reset the score
-		game.data.score = 0;
+		data.score = 0;
 
 		// add our HUD to the game world
-		this.HUD = new game.HUD.Container();
+		this.HUD = new HUD.Container();
 		me.game.world.addChild(this.HUD);
 
-	},
+	}
 
 
 	/**
 	 *  action to perform when leaving this screen (state change)
 	 */
-	onDestroyEvent: function() {
+	onDestroyEvent() {
 		// remove the HUD from the game world
 		me.game.world.removeChild(this.HUD);
 	}
-});
+}
