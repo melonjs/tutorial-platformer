@@ -203,42 +203,57 @@ index.css
                     <p>The boilerplate also provides a bunch of default code, but first let's have a look at our
                         js/game.js skeleton:</p>
 
-                    <pre><code>/* game namespace */
-var game = {
-  /**
-   * an object where to store game global data
-   */
-  data : {
-    score : 0
-  },
+                    <pre><code>import * as me from '/node_modules/melonjs/dist/melonjs.module.js'
 
-  // Run on page load.
-  onload : function () {
-    // Initialize the video.
-    if (!me.video.init(640, 480, {parent : "screen", scale : "auto", scaleMethod : "flex-width"})) {
-      alert("Your browser does not support HTML5 canvas.");
-      return;
+import TitleScreen from './screens/title.js'
+import PlayScreen from './screens/play.js'
+
+import PlayerEntity from "./entities/entities.js";
+
+import resources from './resources.js'
+
+
+/* Game namespace */
+let game = {
+
+    // Run on page load.
+    onload() {
+        // Initialize the video.
+        if (!me.video.init(640, 480, {parent : "screen", scale : "auto", scaleMethod : "flex-width"})) {
+            alert("Your browser does not support HTML5 canvas.");
+            return;
+        }
+
+        // Initialize the audio.
+        me.audio.init("mp3,ogg");
+
+        // Set a callback to run when loading is complete.
+        me.loader.onload = game.loaded.bind(this);
+
+        // Load the resources.
+        me.loader.preload( resources );
+
+        // Initialize melonJS and display a loading screen.
+        me.state.change(me.state.LOADING);
+    },
+
+
+
+    // Run on game resources loaded.
+    loaded() {
+        me.state.set(me.state.MENU, new TitleScreen());
+        me.state.set(me.state.PLAY, new PlayScreen());
+
+		// add our player entity in the entity pool
+		me.pool.register("mainPlayer", PlayerEntity);
+
+        // Start the game.
+        me.state.change(me.state.PLAY);
     }
-
-    // Initialize the audio.
-    me.audio.init("mp3,ogg");
-
-    // set all ressources to be loaded
-    me.loader.preload(game.resources, this.loaded.bind(this));
-  },
-
-  // Run on game resources loaded.
-  loaded : function () {
-    me.state.set(me.state.MENU, new game.TitleScreen());
-    me.state.set(me.state.PLAY, new game.PlayScreen());
-
-    // add our player entity in the entity pool
-    me.pool.register("mainPlayer", game.PlayerEntity);
-
-    // Start the game.
-    me.state.change(me.state.PLAY);
-  }
 };
+
+// here's where the magic starts
+me.device.onReady( game.onload );
 </code></pre>
 
                     <p>This is very simple. Once the page is loaded, the <b>onload()</b> function is called, the display
@@ -275,30 +290,40 @@ var game = {
                         display our previously preloaded level, by adding a call to the <b>loadLevel</b> function and
                         our default level name :</p>
 
-                    <pre><code>game.PlayScreen = me.Stage.extend({
-  /**
-   * action to perform on state change
-   */
-  onResetEvent : function () {
-    // load a level
-    me.levelDirector.loadLevel("area01");
+                    <pre><code>import * as me from '/node_modules/melonjs/dist/melonjs.module.js'
 
-    // reset the score
-    game.data.score = 0;
+import HUD from '../entities/HUD.js'
+import data from '../data.js'
 
-    // add our HUD to the game world
-    this.HUD = new game.HUD.Container();
-    me.game.world.addChild(this.HUD);
-  },
+export default class PlayScreen extends me.Stage {
 
-  /**
-   * action to perform when leaving this screen (state change)
-   */
-  onDestroyEvent : function () {
-    // remove the HUD from the game world
-    me.game.world.removeChild(this.HUD);
-  }
-});
+	/**
+	 *  action to perform on state change
+	 */
+	onResetEvent() {
+
+		// load a level
+		me.level.load("area01");
+
+		// reset the score
+		data.score = 0;
+
+		// add our HUD to the game world
+		this.HUD = new HUD.Container();
+		me.game.world.addChild(this.HUD);
+
+	}
+
+
+	/**
+	 *  action to perform when leaving this screen (state change)
+	 */
+	onDestroyEvent() {
+		// remove the HUD from the game world
+		me.game.world.removeChild(this.HUD);
+	}
+}
+
 </code></pre>
 
                     <p>That's all! If you did everything correctly, and open your index.html (Remember that if you don’t
