@@ -81,9 +81,11 @@
     <property name="image" value="spinning_coin_gold"/>
    </properties>
   </object>
-  <object id="29" name="me.LevelEntity" x="1248" y="0" width="32" height="128">
+  <object id="29" name="me.Trigger" x="1248" y="0" width="32" height="128">
    <properties>
     <property name="to" value="area02"/>
+    <property name="fade" value="#000000" />
+    <property name="duration" value="250" />
    </properties>
   </object>
  </objectgroup>

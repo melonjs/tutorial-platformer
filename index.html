@@ -1018,66 +1018,80 @@ onCollision(response, other) {
                     <p>The Score Object is defined as <b>floating</b> (so that when we add it to our HUD container we
                         use screen coordinates) and just for now caches the score value (defined under game.data).</p>
 
-                    <pre><code>/**
- * a HUD container and child items
- */
-game.HUD = game.HUD || {};
-
-game.HUD.Container = me.Container.extend({
-  init: function () {
-    // call the constructor
-    this._super(me.Container, 'init');
-
-    // persistent across level change
-    this.isPersistent = true;
-
-    // make sure we use screen coordinates
-    this.floating = true;
-
-    // give a name
-    this.name = "HUD";
-
-    // add our child score object
-    this.addChild(new game.HUD.ScoreItem(-10, -10));
-  }
-});
+                    <pre><code>let HUD = {};
 
 /**
- * a basic HUD item to display score
+ * a HUD container and child items
  */
-game.HUD.ScoreItem = me.Renderable.extend({
-  /**
-   * constructor
-   */
-  init : function (x, y) {
-      // call the parent constructor
-      // (size does not matter here)
-      this._super(me.Renderable, 'init', [x, y, 10, 10]);
 
-      // local copy of the global score
-      this.score = -1;
-  },
+export class Container extends me.Container {
+	constructor() {
+		super();
 
-  /**
-   * update function
-   */
-  update : function (dt) {
-    // we don't do anything fancy here, so just
-    // return true if the score has been updated
-    if (this.score !== game.data.score) {
-      this.score = game.data.score;
-      return true;
-    }
-    return false;
-  },
+		// persistent across level change
+		this.isPersistent = true;
 
-  /**
-   * draw the score
-   */
-  draw : function (renderer) {
-    // draw it baby !
-  }
-});
+		// make sure we use screen coordinates
+		this.floating = true;
+
+		// give a name
+		this.name = "HUD";
+
+		// add our child score object at the top left corner
+		this.addChild(new HUD.ScoreItem(5, 5));
+	}
+}
+HUD.Container = Container;
+
+
+
+export class ScoreItem extends me.Renderable {
+	/**
+	 *
+	 * @param x
+	 * @param y
+	 */
+	constructor(x, y) {
+		super(x, y, 10, 10);
+
+
+		// create the font object
+		this.font = new me.BitmapText(0, 0, {font: "PressStart2P"});
+
+		// font alignment to right, bottom
+		this.font.textAlign = "right";
+		this.font.textBaseline = "bottom";
+
+		// local copy of the global score
+		this.score = -1;
+	}
+
+	/**
+	 *
+	 * @returns {boolean}
+	 */
+	update() {
+		// we don't do anything fancy here, so just
+		// return true if the score has been updated
+		if (this.score !== data.score) {
+			this.score = data.score;
+			return true;
+		}
+		return false;
+	}
+
+
+	/**
+	 * draw the score
+	 */
+	draw(renderer) {
+        // do some rendering
+	}
+}
+HUD.ScoreItem = ScoreItem;
+
+
+export default HUD;
 </code></pre>
 
                     <p> Now let's display our current score ! For that we will just simply complete the given ScoreItem
@@ -1085,49 +1099,53 @@ game.HUD.ScoreItem = me.Renderable.extend({
                         the score using our bitmap font : </p>
 
                     <pre><code>/**
- * a basic HUD item to display score
+ * Code to draw the score to the HUD
  */
-game.HUD.ScoreItem = me.Renderable.extend( {
-  /**
-   * constructor
-   */
-  init : function (x, y) {
-    // call the parent constructor
-    // (size does not matter here)
-    this._super(me.Renderable, 'init', [x, y, 10, 10]);
 
-    // create the font object
-    this.font = new me.BitmapText(0, 0, {font: "PressStart2P"});
+export class ScoreItem extends me.Renderable {
+	/**
+	 *
+	 * @param x
+	 * @param y
+	 */
+	constructor(x, y) {
+		super(x, y, 10, 10);
 
-    // font alignment to right, bottom
-    this.font.textAlign = "right";
-    this.font.textBaseline = "bottom";
 
-    // local copy of the global score
-    this.score = -1;
-  },
+		// create the font object
+		this.font = new me.BitmapText(0, 0, {font: "PressStart2P"});
 
-  /**
-   * update function
-   */
-  update : function (dt) {
-    // we don't draw anything fancy here, so just
-    // return true if the score has been updated
-    if (this.score !== game.data.score) {
-      this.score = game.data.score;
-      return true;
-    }
-    return false;
-  },
+		// font alignment to right, bottom
+		this.font.textAlign = "right";
+		this.font.textBaseline = "bottom";
 
-  /**
-   * draw the score
-   */
-  draw : function (renderer) {
-        // this.pos.x, this.pos.y are the relative position from the screen right bottom
-		this.font.draw (renderer, game.data.score, me.game.viewport.width + this.pos.x, me.game.viewport.height + this.pos.y);
-  }
-});
+		// local copy of the global score
+		this.score = -1;
+	}
+
+	/**
+	 *
+	 * @returns {boolean}
+	 */
+	update() {
+		// we don't do anything fancy here, so just
+		// return true if the score has been updated
+		if (this.score !== data.score) {
+			this.score = data.score;
+			return true;
+		}
+		return false;
+	}
+
+
+	/**
+	 * draw the score
+	 */
+	draw(renderer) {
+		this.font.draw (renderer, data.score, me.game.viewport.width + this.pos.x, me.game.viewport.height + this.pos.y);
+	}
+}
+HUD.ScoreItem = ScoreItem;
 </code></pre>
 
                     <p>The HUD is already added and removed when we start the game, so there is nothing to do here.
@@ -1138,40 +1156,44 @@ game.HUD.ScoreItem = me.Renderable.extend( {
                         feature) this will ensure that the HUD is correctly displayed on top of the rest.
                     </p>
 
-                    <pre><code>game.PlayScreen = me.Stage.extend({
-  /**
-   * action to perform on state change
-   */
-  onResetEvent : function () {
-    // load a level
-    me.levelDirector.loadLevel("area01");
+                    <pre><code>export default class PlayScreen extends me.Stage {
 
-    // reset the score
-    game.data.score = 0;
+	/**
+	 *  action to perform on state change
+	 */
+	onResetEvent() {
 
-    // add our HUD to the game world
-    this.HUD = new game.HUD.Container();
-    me.game.world.addChild(this.HUD);
-  },
+		// load a level
+		me.level.load("area01");
 
-  /**
-   * action to perform when leaving this screen (state change)
-   */
-  onDestroyEvent : function () {
-    // remove the HUD from the game world
-    me.game.world.removeChild(this.HUD);
-  }
-});
+		// reset the score
+		data.score = 0;
+
+		// add our HUD to the game world
+		this.HUD = new HUD.Container();
+		me.game.world.addChild(this.HUD);
+
+	}
+
+
+	/**
+	 *  action to perform when leaving this screen (state change)
+	 */
+	onDestroyEvent() {
+		// remove the HUD from the game world
+		me.game.world.removeChild(this.HUD);
+	}
+}
 </code></pre>
 
                     <p> Last step is of course to actually change the score when a coin is collected ! Now let's modify
                         our Coin Object: </p>
 
-                    <pre><code>onCollision : function () {
+                    <pre><code>onCollision() {
   // do something when collected
 
   // give some score
-  game.data.score += 250;
+  data.score += 250;
 
   // make sure it cannot be collected "again"
   this.body.setCollisionMask(me.collision.types.NO_OBJECT);
@@ -1227,7 +1249,7 @@ me.audio.init("mp3,ogg");
                                 href="http://melonjs.github.io/melonJS/docs/me.audio.html#play"><b>me.audio.play()</b></a>
                         and use the <b>"cling"</b> audio resource. that's all!</p>
 
-                    <pre><code>onCollision : function () {
+                    <pre><code>onCollision() {
   // do something when collected
 
   // play a "coin collected" sound
@@ -1270,9 +1292,9 @@ me.audio.init("mp3,ogg");
                         handler function of the mainPlayer:</p>
 
                     <pre><code>/**
- * colision handler
+ * collision handler
  */
-onCollision : function (response, other) {
+onCollision(response, other) {
 
       // ...
 
@@ -1307,7 +1329,7 @@ onCollision : function (response, other) {
                             href="http://melonjs.github.io/melonJS/docs/me.audio.html#playTrack"><b>me.audio.playTrack()</b></a>
                         function, specifying the audio track to be used:</p>
 
-                    <pre><code>onResetEvent : function () {
+                    <pre><code>onResetEvent() {
   // play the audio track
   me.audio.playTrack("dst-inertexponent");
 
@@ -1318,7 +1340,7 @@ onCollision : function (response, other) {
                     <p>And we also need to modify the <b>onDestroyEvent()</b> function to stop the current track when
                         exiting the game:</p>
 
-                    <pre><code>onDestroyEvent : function () {
+                    <pre><code>onDestroyEvent() {
 
   // ...
 
@@ -1341,9 +1363,10 @@ onCollision : function (response, other) {
                         level.</p>
 
                     <p>To do this, melonJS has an Object named <a
-                            href="http://melonjs.github.io/melonJS/docs/me.LevelEntity.html">me.LevelEntity</a>, that we
+                            href="http://melonjs.github.io/melonJS/docs/me.Trigger.html">me.Trigger</a>, that we
                         will add to the Entities layer in Tiled and specify what to do when our main player hit it :</p>
 
+                    <p class="alert alert-danger">TODO: Redo the image for this step. We use me.Trigger, not me.LevelEntity</p>
                     <img src="media/step8_next_level.png" alt="Creating an object to go to next level"/>
 
                     <p>Assuming that our new level is called "area02", we just need to add a <b>"to"</b> property with
