@@ -1366,7 +1366,6 @@ onCollision(response, other) {
                             href="http://melonjs.github.io/melonJS/docs/me.Trigger.html">me.Trigger</a>, that we
                         will add to the Entities layer in Tiled and specify what to do when our main player hit it :</p>
 
-                    <p class="alert alert-danger">TODO: Redo the image for this step. We use me.Trigger, not me.LevelEntity</p>
                     <img src="media/step8_next_level.png" alt="Creating an object to go to next level"/>
 
                     <p>Assuming that our new level is called "area02", we just need to add a <b>"to"</b> property with
@@ -1399,17 +1398,17 @@ onCollision(response, other) {
                     <pre><code>/**
  * A title screen
  */
-game.TitleScreen = me.Stage.extend({
+export default class TitleScreen extends me.Stage {
   // reset function
-  onResetEvent : function () {
+  onResetEvent() {
     // ...
   },
 
   // destroy function
-  onDestroyEvent : function () {
+  onDestroyEvent() {
     // ...
   }
-});
+};
 </code></pre>
 
                     <p>So now we want to:</p>
@@ -1421,84 +1420,48 @@ game.TitleScreen = me.Stage.extend({
 
                     <p>Additionally, I also want to add a small scrolling text about this tutorial.</p>
 
-                    <pre><code>game.TitleScreen = me.Stage.extend({
-  /**
-   * action to perform on state change
-   */
-  onResetEvent : function () {
+                    <pre><code>export default class TitleScreen extends me.Stage {
 
-      // new sprite for the title screen, position at the center of the game viewport
-      var backgroundImage = new me.Sprite(me.game.viewport.width / 2, me.game.viewport.height / 2, {
-             image: me.loader.getImage('title_screen'),
-          }
-      );
+	onResetEvent() {
 
-      // scale to fit with the viewport size
-      backgroundImage.scale(me.game.viewport.width / backgroundImage.width, me.game.viewport.height / backgroundImage.height);
+		// new sprite for the title screen, position at the center of the game viewport
+		var backgroundImage = new me.Sprite(me.game.viewport.width / 2, me.game.viewport.height / 2, {
+				image: me.loader.getImage('title_screen'),
+			}
+		);
 
-      // add to the world container
-      me.game.world.addChild(backgroundImage, 1);
+		// scale to fit with the viewport size
+		backgroundImage.scale(me.game.viewport.width / backgroundImage.width, me.game.viewport.height / backgroundImage.height);
 
-    me.game.world.addChild(new (me.Renderable.extend ({
-        // constructor
-        init : function() {
-            this._super(me.Renderable, 'init', [0, 0, me.game.viewport.width, me.game.viewport.height]);
+		// add to the world container
+		me.game.world.addChild(backgroundImage, 1);
 
-            // font for the scrolling text
-            this.font = new me.BitmapText(0, 0, {font: "PressStart2P"});
+		me.game.world.addChild(new TitleText());
 
-            this.scroller = "A SMALL STEP BY STEP TUTORIAL FOR GAME CREATION WITH MELONJS       ";
-            this.scrollerpos = 600;
+		// change to play state on press Enter or click/tap
+		me.input.bindKey(me.input.KEY.ENTER, "enter", true);
+		// me.input.bindPointer(me.input.pointer.RIGHT, me.input.KEY.ENTER);
+		console.log(me.input, me.input.pointer);
 
-             // a tween to animate the arrow
-            this.scrollertween = new me.Tween(this).to({scrollerpos: -2200 }, 10000).onComplete(this.scrollover.bind(this)).start();
-        },
+		this.handler = me.event.on(me.event.KEYDOWN, function (action, keyCode, edge) {
+			if (action === "enter") {
+				// play something on tap / enter
+				// this will unlock audio on mobile devices
+				me.audio.play("cling");
+				me.state.change(me.state.PLAY);
+			}
+		});
+	}
 
-        // some callback for the tween objects
-        scrollover : function() {
-            // reset to default value
-            this.scrollerpos = 640;
-            this.scrollertween.to({scrollerpos: -2200 }, 10000).onComplete(this.scrollover.bind(this)).start();
-        },
-
-        update : function (dt) {
-            return true;
-        },
-
-        draw : function (renderer) {
-            this.font.textAlign = "center";
-            this.font.draw(renderer, "PRESS ENTER TO PLAY", me.game.viewport.width, 540);
-            this.font.textAlign = "left";
-            this.font.draw(renderer, this.scroller, this.scrollerpos, 440);
-        },
-        onDestroyEvent : function() {
-            //just in case
-            this.scrollertween.stop();
-        }
-    })), 2);
-
-    // change to play state on press Enter or click/tap
-    me.input.bindKey(me.input.KEY.ENTER, "enter", true);
-    me.input.bindPointer(me.input.pointer.LEFT, me.input.KEY.ENTER);
-    this.handler = me.event.subscribe(me.event.KEYDOWN, function (action, keyCode, edge) {
-      if (action === "enter") {
-        // play something on tap / enter
-        // this will unlock audio on mobile devices
-        me.audio.play("cling");
-        me.state.change(me.state.PLAY);
-      }
-    });
-  },
-
-  /**
-   * action to perform when leaving this screen (state change)
-   */
-  onDestroyEvent : function () {
-    me.input.unbindKey(me.input.KEY.ENTER);
-    me.input.unbindPointer(me.input.pointer.LEFT);
-    me.event.unsubscribe(this.handler);
-  }
-});
+	/**
+	 * action to perform when leaving this screen (state change)
+	 */
+	onDestroyEvent() {
+		me.input.unbindKey(me.input.KEY.ENTER);
+		// me.input.unbindPointer(me.input.pointer.LEFT);
+		me.event.off(me.event.KEYDOWN, this.handler);
+	}
+}
 </code></pre>
 
                     <p>What do we have above?</p>
@@ -1528,7 +1491,7 @@ game.TitleScreen = me.Stage.extend({
                     <pre><code>/*
  * callback when everything is loaded
  */
-loaded : function () {
+loaded() {
   // set the "Play/Ingame" Screen Object
   me.state.set(me.state.MENU, new game.TitleScreen());
 
@@ -1539,9 +1502,9 @@ loaded : function () {
   me.state.transition("fade", "#FFFFFF", 250);
 
   // register our player entity in the object pool
-  me.pool.register("mainPlayer", game.PlayerEntity);
-  me.pool.register("CoinEntity", game.CoinEntity);
-  me.pool.register("EnemyEntity", game.EnemyEntity);
+  me.pool.register("mainPlayer", Entities.PlayerEntity);
+  me.pool.register("CoinEntity", Entities.CoinEntity);
+  me.pool.register("EnemyEntity", Entities.EnemyEntity);
 
   // enable the keyboard
   me.input.bindKey(me.input.KEY.LEFT, "left");
@@ -1579,6 +1542,32 @@ loaded : function () {
                     <p>Never forget that this is all for fun, so have fun!</p>
                 </div>
             </div> <!-- end part 10 -->
+
+
+            <!-- Part 11, Refactoring ================================================================================ -->
+            <div>
+                <a id="part11" class="offset-anchor"></a>
+
+                <div class="subcontent">
+                    <h2>Part 11: Refactoring</h2>
+
+                    <p>So far, we've just converted the old es5 template into es6-compatible code. However, this leaves
+                        much to be desired. Ideally, there should only be one class definition per file, to ease in
+                        maintenance.</p>
+
+                    <p>The first thing we'll do is break apart our "entities.js" file into sub parts.
+                        the file will be renamed to "index.js", and the contents will be changed to look
+                        like this: </p>
+
+                    <p>
+                        <img src="/media/step_11_new_entities_js.png" alt="The new contents of index.js">
+                    </p>
+
+
+
+                    <a href="./tutorial_stepz_refactored/index.html" target="_blank">The Refactored Source Code</a>
+                </div>
+            </div>
 
         </div> <!-- end content -->
     </div> <!-- end row -->
