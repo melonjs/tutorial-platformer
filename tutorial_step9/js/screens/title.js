@@ -54,6 +54,10 @@ export default class TitleScreen extends me.Stage {
 		// scale to fit with the viewport size
 		backgroundImage.scale(me.game.viewport.width / backgroundImage.width, me.game.viewport.height / backgroundImage.height);
 
+		// there currently is a bug in melonjs where me.input.pointer is null if registerPointerEvent has not been called previously
+		// here we are just telling melonjs we want to use pointer events, and setting the callback to a noop
+		me.input.registerPointerEvent('pointerdown', null, null);
+
 		// add to the world container
 		me.game.world.addChild(backgroundImage, 1);
 
@@ -61,8 +65,7 @@ export default class TitleScreen extends me.Stage {
 
 		// change to play state on press Enter or click/tap
 		me.input.bindKey(me.input.KEY.ENTER, "enter", true);
-		// me.input.bindPointer(me.input.pointer.RIGHT, me.input.KEY.ENTER);
-		console.log(me.input, me.input.pointer);
+		me.input.bindPointer(me.input.pointer.LEFT, me.input.KEY.ENTER);
 
 		this.handler = me.event.on(me.event.KEYDOWN, function (action, keyCode, edge) {
 			if (action === "enter") {
@@ -79,7 +82,7 @@ export default class TitleScreen extends me.Stage {
 	 */
 	onDestroyEvent() {
 		me.input.unbindKey(me.input.KEY.ENTER);
-		// me.input.unbindPointer(me.input.pointer.LEFT);
+		me.input.unbindPointer(me.input.pointer.LEFT);
 		me.event.off(me.event.KEYDOWN, this.handler);
 	}
 }
