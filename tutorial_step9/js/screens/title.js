@@ -51,12 +51,13 @@ export default class TitleScreen extends me.Stage {
 			}
 		);
 
+		// as of writing, there's a bug in melonjs where me.input.pointer is not initialized right.
+		// this will be fixed soon, but until then, this is a work around.
+		if(typeof me.input.pointer === 'undefined')
+			me.input.registerPointerEvent('pointerdown', null, null);
+
 		// scale to fit with the viewport size
 		backgroundImage.scale(me.game.viewport.width / backgroundImage.width, me.game.viewport.height / backgroundImage.height);
-
-		// there currently is a bug in melonjs where me.input.pointer is null if registerPointerEvent has not been called previously
-		// here we are just telling melonjs we want to use pointer events, and setting the callback to a noop
-		me.input.registerPointerEvent('pointerdown', null, null);
 
 		// add to the world container
 		me.game.world.addChild(backgroundImage, 1);

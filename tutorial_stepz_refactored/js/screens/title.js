@@ -16,7 +16,8 @@ export default class TitleScreen extends me.Stage {
 
 		// there currently is a bug in melonjs where me.input.pointer is null if registerPointerEvent has not been called previously
 		// here we are just telling melonjs we want to use pointer events, and setting the callback to a noop
-		me.input.registerPointerEvent('pointerdown', null, null);
+		if(typeof me.input.pointer === 'undefined')
+			me.input.registerPointerEvent('pointerdown', null, null);
 
 		// add to the world container
 		me.game.world.addChild(backgroundImage, 1);
