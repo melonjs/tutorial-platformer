@@ -19,3 +19,7 @@ $RECYCLE.BIN/
 # Package manager stuff
 bower_components/
 node_modules/
+
+
+# ignore intellij
+.idea
