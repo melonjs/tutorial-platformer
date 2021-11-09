@@ -26,6 +26,6 @@
     "prismjs": "^1.4.1"
   },
   "dependencies": {
-    "melonjs": "^10.0.2"
+    "melonjs": "^10.1.0"
   }
 }
