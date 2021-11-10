@@ -204,7 +204,7 @@ index.css
                     <p>The boilerplate also provides a bunch of default code, but first let's have a look at our
                         js/game.js skeleton:</p>
 
-                    <pre><code>import * as me from '/node_modules/melonjs/dist/melonjs.module.js'
+                    <pre><code>import * as me from 'https://cdn.jsdelivr.net/npm/melonjs@10.1.0/dist/melonjs.module.js'
 
 import TitleScreen from './screens/title.js'
 import PlayScreen from './screens/play.js'
@@ -291,7 +291,7 @@ me.device.onReady( game.onload );
                         display our previously preloaded level, by adding a call to the <b>loadLevel</b> function and
                         our default level name :</p>
 
-                    <pre><code>import * as me from '/node_modules/melonjs/dist/melonjs.module.js'
+                    <pre><code>import * as me from 'https://cdn.jsdelivr.net/npm/melonjs@10.1.0/dist/melonjs.module.js'
 
 import HUD from '../entities/HUD.js'
 import data from '../data.js'
@@ -363,7 +363,7 @@ export default class PlayScreen extends me.Stage {
                     <p>Then it's time to create our entity, open the `js/entities/entities.js` example file, and let's
                         complete it to match with the following : </p>
 
-                    <pre><code>import * as me from '/node_modules/melonjs/dist/melonjs.module.js'
+                    <pre><code>import * as me from 'https://cdn.jsdelivr.net/npm/melonjs@10.1.0/dist/melonjs.module.js'
 
 /**
  * Player Entity
@@ -1566,7 +1566,7 @@ loaded() {
                     <p>Notice that we're importing each corresponding entity type from its own file. This will allow for
                         easier maintenance in the future. Go ahead and copy the following code into js/entities/player-entity.js</p>
 
-                    <pre><code>import * as me from '/node_modules/melonjs/dist/melonjs.module.js'
+                    <pre><code>import * as me from 'https://cdn.jsdelivr.net/npm/melonjs@10.1.0/dist/melonjs.module.js'
 
 
 export default class PlayerEntity extends me.Entity {
