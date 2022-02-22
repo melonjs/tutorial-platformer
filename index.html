@@ -147,8 +147,7 @@
                     <p>Finally, let's define a background color for our level, by using the color picker tool (Map/Map
                         Properties), and just specify any color you prefer.</p>
                     <img src="media/step1_background_color.png" alt="Setting a background color in Tiled"/>
-                    <p>To finish, let's save our new map as "area01" under the "src/data/map/" folder, and then after adding it
-                        to the list of assets to load, and we are done with the first step!</p>
+                    <p>To finish, let's save our new map as "area01" under the "src/data/map/" folder, and we are done with the first step!</p>
                 </div>
             </div>
 
@@ -161,128 +160,148 @@
                         you should have something like this:</p>
 
                     <pre>
-data/
-  bgm/
-    dst-inertexponent.mp3
-    dst-inertexponent.ogg
-  img/
-    font/
-     32x32_font.png
-    gui/
-     title_screen.png
-    map/
-     area01_level_tiles.png
-     license.txt
-    sprite/
-     gripe_run_right.png
-     spinning_coin_gold.png
-     wheelie_right.png
-    background.png
-    clouds.png
-   map/
-   sfx/
-    cling.mp3
-    cling.ogg
-    jump.mp3
-    jump.ogg
-    stomp.mp3
-    stomp.ogg
-js/
-  game.js
-  resources.js
-  entities/
-    HUD.js
-    entities.js
-  screens/
-    play.js
-    title.js
-index.html
-index.css
+
+src
+└── data
+│    ├── bgm
+│    │    ├── dst-inertexponent.mp3
+│    │    └── dst-inertexponent.ogg
+│    ├── fnt
+│    │    ├── PressStart2P.png
+│    │    └── PressStart2P.fnt
+|    ├── img
+|    |    ├── gui
+|    │    │    └──  title_screen.png
+|    |    ├── map
+|    │    │    └── area01_level_tiles.png
+|    |    ├── sprite
+|    │    │    ├── gripe_run_right.png
+|    │    │    ├── spinning_coin_gold.png
+|    │    │    └── wheelie_right.png
+│    │    ├── background.png
+│    │    └── clouds.png
+|    ├── map
+|    ├── sfx
+│    │    ├── cling.mp3
+│    │    ├── cling.ogg
+│    │    ├── jump.mp3
+│    │    ├── jump.ogg
+│    │    ├── stomp.mp3
+│    │    └── stomp.ogg
+└── js
+|    ├── renderables
+|    └── stage
+├── index.js
+├── index.css
+├── index.html
+└── manifest.js
+
+
 </pre>
 
-                    <p>The boilerplate also provides a bunch of default code, but first let's have a look at our
-                        js/game.js skeleton:</p>
+<p>The boilerplate also provides a bunch of default code, but first let's have a look first at our index.js file:</p>
 
-                    <pre><code>import * as me from 'https://cdn.jsdelivr.net/npm/melonjs@10.1.0/dist/melonjs.module.js'
+<pre><code>
 
-import TitleScreen from './screens/title.js'
-import PlayScreen from './screens/play.js'
+import * as me from 'https://cdn.jsdelivr.net/npm/melonjs@10/dist/melonjs.module.js';
 
-import PlayerEntity from "./entities/entities.js";
+import TitleScreen from './js/stage/title.js';
+import PlayScreen from './js/stage/play.js';
+import PlayerEntity from "./js/renderables/player-entity.js";
+import CoinEntity from "./js/renderables/coin-entity.js";
+import EnemyEntity from "./js/renderables/enemy-entity.js";
 
-import resources from './resources.js'
+import DataManifest from './manifest.js';
 
 
 /* Game namespace */
-let game = {
+me.device.onReady(() => {
 
-    // Run on page load.
-    onload() {
-        // Initialize the video.
-        if (!me.video.init(640, 480, {parent : "screen", scale : "auto", scaleMethod : "flex-width"})) {
-            alert("Your browser does not support HTML5 canvas.");
-            return;
-        }
+    // Initialize the video.
+    if (!me.video.init(640, 480, {parent : "screen", scale : "auto"})) {
+        alert("Your browser does not support HTML5 canvas.");
+        return;
+    }
 
-        // Initialize the audio.
-        me.audio.init("mp3,ogg");
-
-        // Set a callback to run when loading is complete.
-        me.loader.onload = game.loaded.bind(this);
-
-        // Load the resources.
-        me.loader.preload( resources );
-
-        // Initialize melonJS and display a loading screen.
-        me.state.change(me.state.LOADING);
-    },
+    // initialize the debug plugin in development mode.
+    import('./js/plugin/debug/debugPanel.js').then((plugin) => {
+        // automatically register the debug panel
+        me.utils.function.defer(me.plugin.register, this, plugin.DebugPanelPlugin, "debugPanel");
+    });
 
 
+    // Initialize the audio.
+    me.audio.init("mp3,ogg");
 
-    // Run on game resources loaded.
-    loaded() {
+    // allow cross-origin for image/texture loading
+    me.loader.crossOrigin = "anonymous";
+
+    // set and load all resources.
+    me.loader.preload(DataManifest, function() {
+        // set the user defined game stages
         me.state.set(me.state.MENU, new TitleScreen());
         me.state.set(me.state.PLAY, new PlayScreen());
 
+
+        // set a global fading transition for the screen
+        me.state.transition("fade", "#FFFFFF", 250);
+
+
 		// add our player entity in the entity pool
 		me.pool.register("mainPlayer", PlayerEntity);
+		me.pool.register("CoinEntity", CoinEntity);
+		me.pool.register("EnemyEntity", EnemyEntity);
+
+
+        // enable the keyboard
+        me.input.bindKey(me.input.KEY.LEFT,  "left");
+        me.input.bindKey(me.input.KEY.RIGHT, "right");
+        // map X, Up Arrow and Space for jump
+        me.input.bindKey(me.input.KEY.X,      "jump", true);
+        me.input.bindKey(me.input.KEY.UP,     "jump", true);
+        me.input.bindKey(me.input.KEY.SPACE,  "jump", true);
 
         // Start the game.
-        me.state.change(me.state.PLAY);
-    }
-};
+        me.state.change(me.state.MENU);
+    });
 
-// here's where the magic starts
-me.device.onReady( game.onload );
+});
+
 </code></pre>
 
-                    <p>This is very simple. Once the page is loaded, the <b>onload()</b> function is called, the display
-                        and audio is initialized, and all game resources begin loading. We also define a callback to be
-                        called when everything is ready to be used. Within the callback, we define a new state that will
-                        be used for the in game stuff, together with a <a
-                                href="http://melonjs.github.io/melonJS/docs/me.Stage.html"> <b>PlayScreen</b> object</a>
+                    <p>This is very simple. Once the page is loaded, the display and audio is initialized, and set all game resources to be preloaded.
+                        Once done, we define a new state that will be used for the in game stuff, together with a <a
+                                href="http://melonjs.github.io/melonJS/docs/me.Stage.html"> <b>PlayScreen</b> Stage object</a>
                         that we will use to manage the game event (reset, etc...).</p>
 
-                    <p>The only change we will do in the default project template is the given video resolution for the
+                    <p>The only change we will do here for now is chaging the given video resolution for the
                         `me.video.init()` function, as for the tutorial we will create a 640x480 canvas.
                         Also we will change the <b>scaleMethod</b> to <b>"flex-width"</b>, as it better fits with a
                         platformer game (see the <a href="http://melonjs.github.io/melonJS/docs/me.video.html#init">`me.video.init`</a>
                         documentation for further information on the various scaling mode available).</p>
+
+                    <p>Then we need to actually add both the TMX level we created in the first step together with its tileset
+                        to the list of assets to load in the data manifest by add the two below lines to the <b>manifest.js</b> file (full format described <a
+                            href="https://github.com/melonjs/melonJS/wiki/resources">here</a>).
+
+<pre><code>{name: "area01_level_tiles",  type:"image",	src: "data/img/map/area01_level_tiles.png"},
+{name: "area01",              type: "tmx",	src: "data/map/area01.tmx"}
+</code></pre>
 
                     <p>Also note that although we use here directly the tmx file, for production we do recommend using
                         the json format (that can also be exported directly from Tiled), as it gives a smaller file
                         size, allows for much faster level loading and prevents from any server issue with the .tmx
                         extension. </p>
 
-                    <p>Finally, let's open the js/screens/play.js file and in the <a
+                    <p>Finally, let's open the ./js/stage/play.js file and in the <a
                             href="http://melonjs.github.io/melonJS/docs/me.Stage.html#onResetEvent">onResetEvent()</a>
                         function (which is called on a state change), we use the level <a
                                 href="http://melonjs.github.io/melonJS/docs/me.level.html#.load">load function</a> to
                         display our previously preloaded level, using our default level name :</p>
 
-                    <pre><code>import * as me from 'https://cdn.jsdelivr.net/npm/melonjs@10.1.0/dist/melonjs.module.js'
+                    <pre><code>import * as me from 'https://cdn.jsdelivr.net/npm/melonjs@10/dist/melonjs.module.js'
 
-import HUD from '../entities/HUD.js'
+import HUD from '../renderables/hud/container.js'
 import data from '../data.js'
 
 export default class PlayScreen extends me.Stage {
@@ -299,7 +318,7 @@ export default class PlayScreen extends me.Stage {
 		data.score = 0;
 
 		// add our HUD to the game world
-		this.HUD = new HUD.Container();
+		this.HUD = new HUDContainer();
 		me.game.world.addChild(this.HUD);
 
 	}
@@ -349,10 +368,10 @@ export default class PlayScreen extends me.Stage {
 
                     <img src="media/gripe_run_right.png" alt="Gripe run right"/>
 
-                    <p>Then it's time to create our entity, open the `js/entities/entities.js` example file, and let's
+                    <p>Then it's time to create our entity, open the `./js/renderables/player.js` example file, and let's
                         complete it to match with the following : </p>
 
-                    <pre><code>import * as me from 'https://cdn.jsdelivr.net/npm/melonjs@10.1.0/dist/melonjs.module.js'
+                    <pre><code>import * as me from 'https://cdn.jsdelivr.net/npm/melonjs@10/dist/melonjs.module.js'
 
 /**
  * Player Entity
@@ -976,8 +995,8 @@ onCollision(response, other) {
 
                     <p>Under the <b>`data\fnt`</b> folder you will find two files : a .PNG (the actual texture) and a
                         .FNT (the font definition file), and the font example we provide is named "PressStart2P",
-                        we just need to add the following line to your existing assset lists to preload them :
-                    <pre><code>// game font
+                        we just need to add the following line to your existing assets lists to preload them :
+<pre><code>// game font
 { name: "PressStart2P", type:"image", src: "data/fnt/PressStart2P.png" },
 { name: "PressStart2P", type:"binary", src: "data/fnt/PressStart2P.fnt"},
 </code></pre>
@@ -986,7 +1005,7 @@ onCollision(response, other) {
                     <p>The boilerplate we used earlier already contains a HUD Skeleton that we will use as a base for
                         our game. The skeleton is quite simple and consist of:</p>
                     <ul>
-                        <li>an object called <b>game.HUD.Container</b>, that inherits from <a
+                        <li>an object called <b>gHUDContainer</b>, that inherits from <a
                                 href="http://melonjs.github.io/melonJS/docs/me.Container.html">me.Container</a></li>
                         <li>a basic score object called <b>game.HUD.ScoreItem</b>, that inherits from <a
                                 href="http://melonjs.github.io/melonJS/docs/me.Renderable.html">me.Renderable</a></li>
@@ -1000,80 +1019,80 @@ onCollision(response, other) {
                     <p>The Score Object is defined as <b>floating</b> (so that when we add it to our HUD container we
                         use screen coordinates) and just for now caches the score value (defined under game.data).</p>
 
-                    <pre><code>let HUD = {};
+<pre><code>
+import * as me from 'https://cdn.jsdelivr.net/npm/melonjs@10/dist/melonjs.module.js'
+import ScoreItem from "./score-item.js";
 
-/**
- * a HUD container and child items
- */
 
-export class Container extends me.Container {
-	constructor() {
-		super();
+export default class HUDContainer extends me.Container {
+    constructor() {
+        super();
 
-		// persistent across level change
-		this.isPersistent = true;
+        // persistent across level change
+        this.isPersistent = true;
 
-		// make sure we use screen coordinates
-		this.floating = true;
+        // make sure we use screen coordinates
+        this.floating = true;
 
-		// give a name
-		this.name = "HUD";
+        // give a name
+        this.name = "HUD";
 
-		// add our child score object at the top left corner
-		this.addChild(new HUD.ScoreItem(5, 5));
-	}
+        // add our child score object at the top left corner
+        this.addChild(new ScoreItem(5, 5));
+    }
 }
-HUD.Container = Container;
+</code></pre>
 
 
-
-export class ScoreItem extends me.Renderable {
-	/**
-	 *
-	 * @param x
-	 * @param y
-	 */
-	constructor(x, y) {
-		super(x, y, 10, 10);
+<pre><code>
+import * as me from 'https://cdn.jsdelivr.net/npm/melonjs@10/dist/melonjs.module.js'
+import data from './../../data.js'
 
 
-		// create the font object
-		this.font = new me.BitmapText(0, 0, {font: "PressStart2P"});
-
-		// font alignment to right, bottom
-		this.font.textAlign = "right";
-		this.font.textBaseline = "bottom";
-
-		// local copy of the global score
-		this.score = -1;
-	}
-
-	/**
-	 *
-	 * @returns {boolean}
-	 */
-	update() {
-		// we don't do anything fancy here, so just
-		// return true if the score has been updated
-		if (this.score !== data.score) {
-			this.score = data.score;
-			return true;
-		}
-		return false;
-	}
+export default class ScoreItem extends me.Renderable {
+    /**
+     *
+     * @param x
+     * @param y
+     */
+    constructor(x, y) {
+        super(x, y, 10, 10);
 
 
-	/**
-	 * draw the score
-	 */
-	draw(renderer) {
-        // do some rendering
-	}
+        // create the font object
+        this.font = new me.BitmapText(0, 0, {font: "PressStart2P"});
+
+        // font alignment to right, bottom
+        this.font.textAlign = "right";
+        this.font.textBaseline = "bottom";
+
+        // local copy of the global score
+        this.score = -1;
+    }
+
+    /**
+     *
+     * @returns {boolean}
+     */
+    update() {
+        // we don't do anything fancy here, so just
+        // return true if the score has been updated
+        if (this.score !== data.score) {
+            this.score = data.score;
+            return true;
+        }
+
+        return false;
+    }
+
+
+    /**
+     * draw the score
+     */
+    draw(renderer) {
+        this.font.draw (renderer, data.score, me.game.viewport.width + this.pos.x, me.game.viewport.height + this.pos.y);
+    }
 }
-HUD.ScoreItem = ScoreItem;
-
-
-export default HUD;
 </code></pre>
 
                     <p> Now let's display our current score ! For that we will just simply complete the given ScoreItem
@@ -1450,7 +1469,7 @@ export default class TitleScreen extends me.Stage {
                         <li>1) In the onResetEvent function, we create two renderables components and add them to our
                             game world. The first is a Sprite object that will display our title background image, and
                             the second handles the "press ENTER" message and a scroller based on a Tween object. Note:
-                            Concerning the font, if you check carefully the corresponding asset (32x32_font.png), you
+                            Concerning the font, if you check carefully the corresponding asset (PressStart2P.png), you
                             will notice that it only contains uppercase letters, so be sure as well to only use
                             uppercase letter in your text.
                         </li>
@@ -1520,202 +1539,12 @@ loaded() {
                         problem, or ask us the question on <a href="https://discord.gg/aur7JMk">discord</a></p>
 
                     <p>Never forget that this is all for fun, so have fun!</p>
-                </div>
-            </div> <!-- end part 10 -->
-
-
-            <!-- Part 11, Refactoring ================================================================================ -->
-            <div>
-                <a id="part11" class="offset-anchor"></a>
-
-                <div class="subcontent">
-                    <h2>Part 11: Refactoring</h2>
-
-                    <p>So far, we've just converted the old es5 template into es6-compatible code. However, this leaves
-                        much to be desired. Ideally, there should only be one class definition per file, to ease in
-                        maintenance.</p>
-
-                    <p>The first thing we'll do is break apart our "entities.js" file into sub parts.
-                        the file will be renamed to "index.js", and the contents will be changed to look
-                        like this: </p>
-
-                    <p>
-                        <img src="/media/step_11_new_entities_js.png" alt="The new contents of index.js">
-                    </p>
-
-                    <p>Notice that we're importing each corresponding entity type from its own file. This will allow for
-                        easier maintenance in the future. Go ahead and copy the following code into js/entities/player-entity.js</p>
-
-                    <pre><code>import * as me from 'https://cdn.jsdelivr.net/npm/melonjs@10.1.0/dist/melonjs.module.js'
-
-
-export default class PlayerEntity extends me.Entity {
-    /**
-     *
-     * @param x
-     * @param y
-     * @param settings
-     */
-    constructor(x, y, settings) {
-        super(x, y, settings);
-
-
-        // max walking & jumping speed
-        this.body.setMaxVelocity(3, 15);
-        this.body.setFriction(0.4, 0);
-
-        // we need to tell the game that this is a PLAYER_OBJECT, now that there are other entities that can collide
-        // with a player
-        this.body.collisionType = me.collision.types.PLAYER_OBJECT;
-
-        // set the display to follow our position on both axis
-        me.game.viewport.follow(this.pos, me.game.viewport.AXIS.BOTH, 0.4);
-
-        // ensure the player is updated even when outside of the viewport
-        this.alwaysUpdate = true;
-
-        // define a basic walking animation (using all frames)
-        this.renderable.addAnimation("walk",  [0, 1, 2, 3, 4, 5, 6, 7]);
-
-        // define a standing animation (using the first frame)
-        this.renderable.addAnimation("stand",  [0]);
-
-        // set the standing animation as default
-        this.renderable.setCurrentAnimation("stand");
-    }
-
-    /**
-     * Update the Entity
-     *
-     * @param dt
-     * @returns {any|boolean}
-     */
-    update(dt) {
-        if (me.input.isKeyPressed('left')) {
-
-            // flip the sprite on horizontal axis
-            this.renderable.flipX(true);
-            // update the default force
-            this.body.force.x = -this.body.maxVel.x;
-            // change to the walking animation
-            if (!this.renderable.isCurrentAnimation("walk")) {
-                this.renderable.setCurrentAnimation("walk");
-            }
-        } else if (me.input.isKeyPressed('right')) {
-
-            // unflip the sprite
-            this.renderable.flipX(false);
-            // update the entity velocity
-            this.body.force.x = this.body.maxVel.x;
-            // change to the walking animation
-            if (!this.renderable.isCurrentAnimation("walk")) {
-                this.renderable.setCurrentAnimation("walk");
-            }
-        } else {
-            this.body.force.x = 0;
-            // change to the standing animation
-            this.renderable.setCurrentAnimation("stand");
-        }
-
-        if (me.input.isKeyPressed('jump')) {
-
-            if (!this.body.jumping && !this.body.falling)
-            {
-                // set current vel to the maximum defined value
-                // gravity will then do the rest
-                this.body.force.y = -this.body.maxVel.y
-
-                // play some audio
-                me.audio.play("jump");
-            }
-        } else {
-            this.body.force.y = 0;
-        }
-
-
-        return (super.update(dt) || this.body.vel.x !== 0 || this.body.vel.y !== 0);
-    }
-
-    /**
-     * Collision Handler
-     *
-     * @returns {boolean}
-     */
-    onCollision(response, other) {
-        switch (response.b.body.collisionType) {
-            case me.collision.types.WORLD_SHAPE:
-                // Simulate a platform object
-                if (other.type === "platform") {
-                    if (this.body.falling &&
-                        !me.input.isKeyPressed('down') &&
-
-                        // Shortest overlap would move the player upward
-                        (response.overlapV.y > 0) &&
-
-                        // The velocity is reasonably fast enough to have penetrated to the overlap depth
-                        (~~this.body.vel.y >= ~~response.overlapV.y)
-                    ) {
-                        // Disable collision on the x axis
-                        response.overlapV.x = 0;
-
-                        // Respond to the platform (it is solid)
-                        return true;
-                    }
-
-                    // Do not respond to the platform (pass through)
-                    return false;
-                }
-                break;
-
-            case me.collision.types.ENEMY_OBJECT:
-                if ((response.overlapV.y>0) && this.body.falling) {
-                    // bounce (force jump)
-                    this.body.vel.y = -this.body.maxVel.y;
-
-                    // play some audio
-                    me.audio.play("stomp");
-                }
-                else {
-                    // let's flicker in case we touched an enemy
-                    this.renderable.flicker(750);
-                }
-
-            // Fall through
-
-            default:
-                // Do not respond to other objects (e.g. coins)
-                return false;
-        }
-
-        // Make the object solid
-        return true;
-    }
-}</code></pre>
-                    <p>Now, do the same for CoinEntity (in a coin-entity.js file) and EnemyEntity and update the index.js
-                        file to reflect this. This is shown in the screenshot above.</p>
-
-                    <p>The next thing we want to refactor is the HUD definition. It's another file that has multiple
-                        class definitions, so let's break that apart, too.</p>
-
-                    <p><img src="/media/step11_refactor_hud.png" alt="The Structure of the new hud folder"></p>
-
-                    <p>Here's the contents for the index.js file, but the contents of container.js and score-item.js are left
-                         to the reader to deduce.</p>
-
-                    <pre><code>import Container from "./container.js";
-import ScoreItem from "./score-item.js";
-
-
-export default {
-    Container,
-    ScoreItem
-}</code></pre>
 
                     <p>If you get stuck, just open the "tutorial_stepz_refactored" folder found in this source code.</p>
 
                     <a href="./tutorial_stepz_refactored/index.html" target="_blank">The Refactored Source Code</a>
                 </div>
-            </div>
+            </div> <!-- end part 10 -->
 
         </div> <!-- end content -->
     </div> <!-- end row -->

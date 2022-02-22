@@ -1,5 +1,5 @@
-import * as me from 'https://cdn.jsdelivr.net/npm/melonjs@10.1.0/dist/melonjs.module.js'
-import TitleText from '../entities/title-text.js'
+import * as me from 'https://cdn.jsdelivr.net/npm/melonjs@10/dist/melonjs.module.js';
+import TitleText from '../renderables/title-text.js';
 
 
 export default class TitleScreen extends me.Stage {

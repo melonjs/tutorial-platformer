@@ -1,7 +1,7 @@
-import * as me from 'https://cdn.jsdelivr.net/npm/melonjs@10.1.0/dist/melonjs.module.js'
+import * as me from 'https://cdn.jsdelivr.net/npm/melonjs@10/dist/melonjs.module.js';
 
-import HUD from '../entities/hud/index.js'
-import data from '../data.js'
+import HUDContainer from '../renderables/hud/container.js'
+import data from './../data.js'
 
 export default class PlayScreen extends me.Stage {
 
@@ -17,7 +17,7 @@ export default class PlayScreen extends me.Stage {
 		data.score = 0;
 
 		// add our HUD to the game world
-		this.HUD = new HUD.Container();
+		this.HUD = new HUDContainer();
 		me.game.world.addChild(this.HUD);
 
 		// play the background music
@@ -31,7 +31,6 @@ export default class PlayScreen extends me.Stage {
 	onDestroyEvent() {
 		// remove the HUD from the game world
 		me.game.world.removeChild(this.HUD);
-
 
 		// stop the current audio track
 		me.audio.stopTrack();

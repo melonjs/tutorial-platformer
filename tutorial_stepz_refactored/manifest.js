@@ -1,5 +1,7 @@
-export default [
-	/**
+// a melonJS data manifest
+// note : this is note a webpack manifest
+const DataManifest = [
+    /**
 	 * Graphics.
 	 */
 	// our level tileset
@@ -26,7 +28,7 @@ export default [
     { name: "PressStart2P",       type:"image", src: "data/fnt/PressStart2P.png" },
     { name: "PressStart2P",       type:"binary", src: "data/fnt/PressStart2P.fnt"},
 
-	
+
 	/*
 	 * Maps.
  	 */
@@ -45,3 +47,5 @@ export default [
 	{name: "stomp", type: "audio", src: "data/sfx/"},
 	{name: "jump",  type: "audio", src: "data/sfx/"}
 ];
+
+export default DataManifest;

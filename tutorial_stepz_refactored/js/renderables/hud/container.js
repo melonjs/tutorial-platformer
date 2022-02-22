@@ -1,8 +1,8 @@
-import * as me from 'https://cdn.jsdelivr.net/npm/melonjs@10.1.0/dist/melonjs.module.js'
+import * as me from 'https://cdn.jsdelivr.net/npm/melonjs@10/dist/melonjs.module.js'
 import ScoreItem from "./score-item.js";
 
 
-export default class Container extends me.Container {
+export default class HUDContainer extends me.Container {
     constructor() {
         super();
 

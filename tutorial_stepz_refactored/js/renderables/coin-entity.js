@@ -1,5 +1,5 @@
-import * as me from 'https://cdn.jsdelivr.net/npm/melonjs@10.1.0/dist/melonjs.module.js'
-import data from "../data.js";
+import * as me from 'https://cdn.jsdelivr.net/npm/melonjs@10/dist/melonjs.module.js';
+import data from "./../data.js";
 
 
 export default class CoinEntity extends me.Collectable {
