@@ -147,9 +147,7 @@
                     <p>Finally, let's define a background color for our level, by using the color picker tool (Map/Map
                         Properties), and just specify any color you prefer.</p>
                     <img src="media/step1_background_color.png" alt="Setting a background color in Tiled"/>
-                    <p>To finish, let's save our new map as "area01" under the "/data/map/" folder (the <b>npm run
-                        build</b> task for building the resources.js file will check only this specific location for
-                        maps), and we are done with the first step!</p>
+                    <p>To finish, let's save our new map as "area01" under the "src/data/map/" folder, and we are done with the first step!</p>
                 </div>
             </div>
 
@@ -158,7 +156,7 @@
                 <a id="part2" class="offset-anchor"></a>
                 <div class="subcontent">
                     <h2>Part 2: Loading our level</h2>
-                    <p>First of all, and after unzipping the tutorial assets into the boilerplate directory structure,
+                    <p>First of all, and after unzipping the tutorial assets into the boilerplate <b>"src/data"</b> directory structure,
                         you should have something like this:</p>
 
                     <pre>
@@ -605,10 +603,10 @@ loaded() {
 
                     <p>Then we will use the two following backgrounds:</p>
 
-                    <p><b>/data/img/background.png</b> for the first background layer</p>
+                    <p><b>src/data/img/background.png</b> for the first background layer</p>
                     <img src="media/background.png" alt="Parallax background 1"/>
 
-                    <p><b>/data/img/clouds.png</b> for the second background layer</p>
+                    <p><b>src/data/img/clouds.png</b> for the second background layer</p>
                     <img src="media/clouds.png" alt="Parallax background 2"/>
 
                     <p>Open Tiled, and add two new <a href="http://melonjs.github.io/melonJS/docs/me.ImageLayer.html">
@@ -1377,7 +1375,7 @@ onCollision(response, other) {
                     <h2>Part 9: Adding a title screen</h2>
 
                     <p>To finish, let's add a title screen to our game, using the <b>title_screen.png</b> files in the
-                        <b>"/data/img/gui/"</b> folder (and of course to be added in the resource list, as we done it
+                        <b>"src/data/img/gui/"</b> folder (and of course to be added in the resource list, as we done it
                         previously for other images):</p>
 
                     <img src="media/title_screen.jpg" alt="Title screen"/>
