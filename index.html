@@ -286,10 +286,9 @@ me.device.onReady( game.onload );
 
                     <p>Finally, let's open the js/screens/play.js file and in the <a
                             href="http://melonjs.github.io/melonJS/docs/me.Stage.html#onResetEvent">onResetEvent()</a>
-                        function (which is called on a state change), we ask the <a
-                                href="http://melonjs.github.io/melonJS/docs/me.levelDirector.html">level director</a> to
-                        display our previously preloaded level, by adding a call to the <b>loadLevel</b> function and
-                        our default level name :</p>
+                        function (which is called on a state change), we use the level <a
+                                href="http://melonjs.github.io/melonJS/docs/me.level.html#.load">load function</a> to
+                        display our previously preloaded level, using our default level name :</p>
 
                     <pre><code>import * as me from 'https://cdn.jsdelivr.net/npm/melonjs@10.1.0/dist/melonjs.module.js'
 
@@ -465,8 +464,7 @@ export default class PlayerEntity extends me.Entity {
                     <p>I think the above code is quite easy to understand. Basically, we extend the <a
                             href="http://melonjs.github.io/melonJS/docs/me.Entity.html"> Entity</a>, configure the
                         default player speed, tweak the camera, test if some keys are pressed and manage our player
-                        movement (by setting player speed, and then calling the entity Body <a
-                                href="http://melonjs.github.io/melonJS/docs/me.Body.html#update"> update</a> function).
+                        movement (by setting the player speed).
                         Also, you may notice that I'm testing the final velocity (this.body.vel.x and this.body.vel.y)
                         of my object, which allows me to know if my object actually moved, and control if I want the
                         sprite animation to run or not.</p>
@@ -513,10 +511,8 @@ loaded() {
                             and since in this case the engine will take the actual image height as a value for it.
                         </li>
                     </ul>
-                    <p>These two parameters will be passed as parameters (<a
-                            href="http://melonjs.github.io/melonJS/docs/me.ObjectSettings.html"><b>settings</b>
-                        object</a> here above used by the constructor) when the object will be created. Now you can
-                        either specify these fields here in Tiled, or directly in your code (when dealing with multiple
+                    <p>These two parameters will be passed as settings parameters (to the constructor) when the object will be created.
+                        Now you can either specify these fields here in Tiled, or directly in your code (when dealing with multiple
                         objects, it can be easier to just specify the name in Tiled, and manage the rest in the
                         constructor directly).</p>
 
@@ -857,11 +853,6 @@ me.pool.register("EnemyEntity", EnemyEntity);
                         set their name to either CoinEntity or EnemyEntity.</p>
 
                     <img src="media/tutorial_tiled_step5.png" alt="Step 5"/>
-
-                    <p>Before testing, we also need to modify our player to check for collision with other entities. In
-                        order to do this, if not yet done we need to add a call to the <a
-                                href="http://melonjs.github.io/melonJS/docs/me.Collision.html#check"> <b>me.collision.check(this)</b></a>
-                        function in our mainPlayer code, see below :</p>
 
                     <pre><code>/**
  * update the player pos
@@ -1536,8 +1527,7 @@ loaded() {
                         and you can now explore how to go further by yourself. This is an important part of programming
                         and game development.</p>
                     <p>If you get stuck on any of the challenges or parts of the tutorial, please search for the
-                        problem, or ask us the question on our forum @<a
-                                href="http://www.html5gamedevs.com/forum/32-melonjs/">html5gamedevs</a></p>
+                        problem, or ask us the question on <a href="https://discord.gg/aur7JMk">discord</a></p>
 
                     <p>Never forget that this is all for fun, so have fun!</p>
                 </div>
