@@ -147,7 +147,8 @@
                     <p>Finally, let's define a background color for our level, by using the color picker tool (Map/Map
                         Properties), and just specify any color you prefer.</p>
                     <img src="media/step1_background_color.png" alt="Setting a background color in Tiled"/>
-                    <p>To finish, let's save our new map as "area01" under the "src/data/map/" folder, and we are done with the first step!</p>
+                    <p>To finish, let's save our new map as "area01" under the "src/data/map/" folder, and then after adding it
+                        to the list of assets to load, and we are done with the first step!</p>
                 </div>
             </div>
 
@@ -267,15 +268,6 @@ me.device.onReady( game.onload );
                         Also we will change the <b>scaleMethod</b> to <b>"flex-width"</b>, as it better fits with a
                         platformer game (see the <a href="http://melonjs.github.io/melonJS/docs/me.video.html#init">`me.video.init`</a>
                         documentation for further information on the various scaling mode available).</p>
-
-                    <p>The boilerplate automatically builds the resources list and exposes it to your app as <b>game.resources</b>
-                        (build/js/resources.js) when using the <b>npm run dev</b> task.</p>
-
-                    <p><b>WARNING:</b> If you are not using the boilerplate, you will have to manage the resources.js
-                        manually (it is time-consuming, and error-prone). If managing resources.js manually, you can see
-                        an
-                        <a href="https://github.com/melonjs/tutorial-platformer/blob/gh-pages/tutorial_step9/js/resources.js">example
-                            on the git repo</a>.</p>
 
                     <p>Also note that although we use here directly the tmx file, for production we do recommend using
                         the json format (that can also be exported directly from Tiled), as it gives a smaller file
