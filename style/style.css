@@ -12,11 +12,11 @@ pre[class*="language-"] {
 }
 #sidebar .logo {
   display: block;
-  background-color: #55aa00;
-  padding: 5px;
+  background-color: #202020;
+  padding: 10px;
 }
 #sidebar .logo img {
-  height: 35px;
+  height: 70px;
 }
 
 #content {
