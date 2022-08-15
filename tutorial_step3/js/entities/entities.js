@@ -1,4 +1,4 @@
-import * as me from 'https://cdn.jsdelivr.net/npm/melonjs@10.1.0/dist/melonjs.module.js'
+import * as me from 'https://cdn.jsdelivr.net/npm/melonjs@13/dist/melonjs.module.js'
 
 /**
  * Player Entity
@@ -65,7 +65,6 @@ export default class PlayerEntity extends me.Entity {
                 this.renderable.setCurrentAnimation("walk");
             }
         } else {
-            this.body.force.x = 0;
             // change to the standing animation
             this.renderable.setCurrentAnimation("stand");
         }

@@ -1,4 +1,4 @@
-import * as me from 'https://cdn.jsdelivr.net/npm/melonjs@10.1.0/dist/melonjs.module.js'
+import * as me from 'https://cdn.jsdelivr.net/npm/melonjs@13/dist/melonjs.module.js'
 
 import HUD from '../entities/HUD.js'
 import data from '../data.js'

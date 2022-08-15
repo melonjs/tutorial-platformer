@@ -1,4 +1,4 @@
-import * as me from 'https://cdn.jsdelivr.net/npm/melonjs@10/dist/melonjs.module.js';
+import * as me from 'https://cdn.jsdelivr.net/npm/melonjs@13/dist/melonjs.module.js';
 
 
 export default class EnemyEntity extends me.Sprite {
@@ -51,22 +51,25 @@ export default class EnemyEntity extends me.Sprite {
     update(dt) {
         if (this.alive)
         {
-            if (this.walkLeft && this.pos.x <= this.startX)
-            {
-                this.walkLeft = false;
-                this.body.force.x = this.body.maxVel.x;
-            }
-            else if (!this.walkLeft && this.pos.x >= this.endX)
-            {
-                this.walkLeft = true;
-                this.body.force.x = -this.body.maxVel.x;
+            if (this.walkLeft === true) {
+                if (this.pos.x <= this.startX) {
+                    // if reach start position
+                    this.walkLeft = false;
+                    this.flipX(false);
+                } else {
+                    this.body.force.x = -this.body.maxVel.x;
+                }
             }
 
-            this.flipX(this.walkLeft);
-        }
-        else
-        {
-            this.body.force.x = 0;
+            if (this.walkLeft === false) {
+                if (this.pos.x >= this.endX) {
+                    // if reach the end position
+                    this.walkLeft = true;
+                    this.flipX(true);
+                } else {
+                    this.body.force.x = this.body.maxVel.x;
+                }
+            }
         }
 
         // return true if we moved or if the renderable was updated
