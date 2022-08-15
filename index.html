@@ -206,7 +206,7 @@ src
 
 <pre><code>
 
-import * as me from 'https://cdn.jsdelivr.net/npm/melonjs@10/dist/melonjs.module.js';
+import * as me from 'melonjs/dist/melonjs.module.js';
 
 import TitleScreen from './js/stage/title.js';
 import PlayScreen from './js/stage/play.js';
@@ -291,10 +291,15 @@ me.device.onReady(() => {
 {name: "area01",              type: "tmx",	src: "data/map/area01.tmx"}
 </code></pre>
 
-                    <p>Also note that although we use here directly the tmx file, for production we do recommend using
+                    <p>Note that although we use here directly the tmx file, for production we do recommend using
                         the json format (that can also be exported directly from Tiled), as it gives a smaller file
                         size, allows for much faster level loading and prevents from any server issue with the .tmx
                         extension. </p>
+
+                        <p>Also please do note that here we import melonJS using the <b>'melonjs/dist/melonjs.module.js'</b> path, 
+                            under the assumption that you use the boilerplate. If however you prefer using a CDN network for delivery
+                            you can use <b>'https://esm.run/melonjs'</b> or any other format or version provided through <a
+                            href="https://www.jsdelivr.com/package/npm/melonjs">jsDelivr</a></p>.
 
                     <p>Finally, let's open the ./js/stage/play.js file and in the <a
                             href="http://melonjs.github.io/melonJS/docs/me.Stage.html#onResetEvent">onResetEvent()</a>
@@ -302,7 +307,9 @@ me.device.onReady(() => {
                                 href="http://melonjs.github.io/melonJS/docs/me.level.html#.load">load function</a> to
                         display our previously preloaded level, using our default level name :</p>
 
-                    <pre><code>import * as me from 'https://cdn.jsdelivr.net/npm/melonjs@10/dist/melonjs.module.js'
+                    <pre><code>
+
+import * as me from 'melonjs/dist/melonjs.module.js';
 
 import HUD from '../renderables/hud/container.js'
 import data from '../data.js'
@@ -374,7 +381,9 @@ export default class PlayScreen extends me.Stage {
                     <p>Then it's time to create our entity, open the `./js/renderables/player.js` example file, and let's
                         complete it to match with the following : </p>
 
-                    <pre><code>import * as me from 'https://cdn.jsdelivr.net/npm/melonjs@10/dist/melonjs.module.js'
+                    <pre><code>
+                        
+import * as me from 'melonjs/dist/melonjs.module.js';
 
 /**
  * Player Entity
@@ -1023,7 +1032,7 @@ onCollision(response, other) {
                         use screen coordinates) and just for now caches the score value (defined under game.data).</p>
 
 <pre><code>
-import * as me from 'https://cdn.jsdelivr.net/npm/melonjs@10/dist/melonjs.module.js'
+import * as me from 'melonjs/dist/melonjs.module.js';
 import ScoreItem from "./score-item.js";
 
 
@@ -1048,7 +1057,7 @@ export default class HUDContainer extends me.Container {
 
 
 <pre><code>
-import * as me from 'https://cdn.jsdelivr.net/npm/melonjs@10/dist/melonjs.module.js'
+import * as me from 'melonjs/dist/melonjs.module.js';
 import data from './../../data.js'
 
 
